@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#include "sbc_frame.h"
+#include "adpcm_block.h"
 
 #define HDR_MAGIC 0x3158544Du /* "MTX1" little-endian */
 
@@ -13,10 +13,12 @@
 #define F_ERASED    11
 #define F_LEN       12  /* 3 x u32 */
 #define F_DUR       24  /* 3 x u32 */
-#define F_BITPOOL   36
-#define F_BLOCKS    37
-#define F_SUBBANDS  38
+#define F_FORMAT    36
+#define F_BLOCK_SZ  37
+#define F_RATE_CODE 38
 #define F_CHANNELS  39
+#define TAPE_FORMAT_ADPCM_BLOCK 1u
+#define TAPE_RATE_CODE_44100    1u
 #define F_CRC       60
 
 /* ------------------------------------------------------------------ */
@@ -97,10 +99,10 @@ static void serialize(const tape_store_t *ts, uint32_t generation, uint8_t *rec)
         }
     }
     rec[F_ERASED] = erased_mask;
-    rec[F_BITPOOL] = (uint8_t)TAPE_SBC_BITPOOL;
-    rec[F_BLOCKS] = (uint8_t)TAPE_SBC_BLOCKS;
-    rec[F_SUBBANDS] = (uint8_t)TAPE_SBC_SUBBANDS;
-    rec[F_CHANNELS] = (uint8_t)TAPE_SBC_CHANNELS;
+    rec[F_FORMAT] = TAPE_FORMAT_ADPCM_BLOCK;
+    rec[F_BLOCK_SZ] = (uint8_t)(ADPCM_BLOCK_BYTES / 256u);
+    rec[F_RATE_CODE] = TAPE_RATE_CODE_44100;
+    rec[F_CHANNELS] = (uint8_t)TAPE_CHANNELS;
 
     put_u32(rec, F_CRC, tape_crc32(rec, F_CRC));
 }
@@ -161,8 +163,8 @@ static int commit(tape_store_t *ts)
 /* slot data scanning                                                  */
 /* ------------------------------------------------------------------ */
 
-/* Finds the end of sequentially-written data in a slot: the offset of the
- * first fully-erased page.
+/* Finds the end of sequentially-written data in a slot: the offset just
+ * past the last complete ADPCM block.
  *
  * Deliberately a linear forward scan, not a binary search. A power loss
  * during the erase-ahead leaves a half-erased block whose tail still holds
@@ -171,67 +173,35 @@ static int commit(tape_store_t *ts)
  * and resurrect old audio. Scanning forward stops at the erased gap, which
  * is exactly where the new recording ended.
  *
- * A page of real SBC cannot be all-0xFF (every frame starts with 0x9C), so
- * a fully-erased page is an unambiguous terminator. Costs ~5k reads on a
- * 5 MiB slot, but only ever runs on crash recovery.
+ * The terminator is a block that fails validation — erased flash always
+ * does (0xFF is past the highest legal step index), and so does a block
+ * torn mid-write (its payload checksum will not match). That is stricter
+ * than looking for an all-0xFF page: ADPCM nibbles can legitimately be
+ * 0xFF, block headers cannot.
+ *
+ * Costs ~10k reads on a full slot, but only ever runs on crash recovery.
  */
 static int scan_data_end(tape_store_t *ts, int slot, uint32_t *out_end)
 {
     const flash_hal_t *f = ts->flash;
     uint32_t base = TAPE_SLOT_ADDR(slot);
-    uint8_t buf[1024];
-    uint32_t chunk = (uint32_t)sizeof(buf);
+    uint8_t buf[ADPCM_BLOCK_BYTES];
 
-    if (f->page_size > chunk) {
-        return TAPE_ERR_ARG;
-    }
-
-    uint32_t first_erased = TAPE_SLOT_SIZE;
-    for (uint32_t off = 0; off < TAPE_SLOT_SIZE; off += chunk) {
-        uint32_t n = chunk;
-        if (off + n > TAPE_SLOT_SIZE) {
-            n = TAPE_SLOT_SIZE - off;
-        }
-        if (f->read(f, base + off, buf, n) != FLASH_OK) {
+    uint32_t off = 0;
+    while (off + ADPCM_BLOCK_BYTES <= TAPE_SLOT_SIZE) {
+        if (f->read(f, base + off, buf, ADPCM_BLOCK_BYTES) != FLASH_OK) {
             return TAPE_ERR_IO;
         }
-        for (uint32_t p = 0; p + f->page_size <= n; p += f->page_size) {
-            bool erased = true;
-            for (uint32_t i = 0; i < f->page_size; i++) {
-                if (buf[p + i] != 0xFFu) {
-                    erased = false;
-                    break;
-                }
-            }
-            if (erased) {
-                first_erased = off + p;
-                break;
-            }
-        }
-        if (first_erased != TAPE_SLOT_SIZE) {
+        /* Validation covers the payload checksum, so a block whose header
+         * landed but whose data was cut short by the power loss is
+         * rejected here: 23 ms lost, no garbage audio kept. */
+        if (!adpcm_block_looks_valid(buf, ADPCM_BLOCK_BYTES)) {
             break;
         }
+        off += ADPCM_BLOCK_BYTES;
     }
 
-    if (first_erased == 0) {
-        *out_end = 0;
-        return TAPE_OK;
-    }
-    if (first_erased == TAPE_SLOT_SIZE) {
-        *out_end = TAPE_SLOT_SIZE; /* slot completely full */
-        return TAPE_OK;
-    }
-
-    /* Walk back through the last written page to the final non-0xFF byte. */
-    uint32_t last_page = first_erased - f->page_size;
-    if (f->read(f, base + last_page, buf, f->page_size) != FLASH_OK) {
-        return TAPE_ERR_IO;
-    }
-    uint32_t i = f->page_size;
-    while (i > 0 && buf[i - 1u] == 0xFFu) {
-        i--;
-    }
-    *out_end = last_page + i;
+    *out_end = off;
     return TAPE_OK;
 }
 
@@ -245,8 +215,8 @@ static int repair_slot(tape_store_t *ts, int slot)
         return rc;
     }
 
-    uint32_t frames = ts->frame_bytes ? end / ts->frame_bytes : 0;
-    uint32_t length = frames * ts->frame_bytes;
+    uint32_t blocks = end / ADPCM_BLOCK_BYTES;
+    uint32_t length = blocks * ADPCM_BLOCK_BYTES;
 
     if (length == 0) {
         ts->slots[slot].state = TAPE_SLOT_EMPTY;
@@ -257,9 +227,7 @@ static int repair_slot(tape_store_t *ts, int slot)
         ts->slots[slot].state = TAPE_SLOT_VALID;
         ts->slots[slot].length = length;
         ts->slots[slot].duration_ms =
-            sbc_bytes_to_ms(length, TAPE_SBC_SAMPLE_RATE, TAPE_SBC_SUBBANDS,
-                            TAPE_SBC_BLOCKS, TAPE_SBC_CHANNELS,
-                            TAPE_SBC_BITPOOL);
+            adpcm_blocks_to_ms(blocks, TAPE_SAMPLE_RATE);
         ts->slots[slot].erased = false;
     }
     return commit(ts);
@@ -274,8 +242,7 @@ static void init_common(tape_store_t *ts, const flash_hal_t *flash)
     memset(ts, 0, sizeof(*ts));
     ts->flash = flash;
     ts->rec_slot = -1;
-    ts->frame_bytes = sbc_frame_bytes(TAPE_SBC_SUBBANDS, TAPE_SBC_BLOCKS,
-                                      TAPE_SBC_CHANNELS, TAPE_SBC_BITPOOL);
+    ts->block_bytes = ADPCM_BLOCK_BYTES;
 }
 
 int tape_store_format(tape_store_t *ts, const flash_hal_t *flash)
@@ -438,14 +405,12 @@ int tape_store_end_record(tape_store_t *ts)
     }
     int slot = ts->rec_slot;
 
-    /* Only whole frames are playable. */
-    uint32_t frames = ts->frame_bytes ? ts->rec_written / ts->frame_bytes : 0;
-    uint32_t length = frames * ts->frame_bytes;
+    /* Only whole ADPCM blocks are playable. */
+    uint32_t blocks = ts->rec_written / ADPCM_BLOCK_BYTES;
+    uint32_t length = blocks * ADPCM_BLOCK_BYTES;
 
     ts->slots[slot].length = length;
-    ts->slots[slot].duration_ms =
-        sbc_bytes_to_ms(length, TAPE_SBC_SAMPLE_RATE, TAPE_SBC_SUBBANDS,
-                        TAPE_SBC_BLOCKS, TAPE_SBC_CHANNELS, TAPE_SBC_BITPOOL);
+    ts->slots[slot].duration_ms = adpcm_blocks_to_ms(blocks, TAPE_SAMPLE_RATE);
     ts->slots[slot].state = length ? TAPE_SLOT_VALID : TAPE_SLOT_EMPTY;
     ts->slots[slot].erased = false;
 

@@ -8,6 +8,35 @@ first prototype run.
 
 ## [Unreleased]
 
+### Changed (2026-08-25, firmware M3 — stored format is ADPCM, not SBC)
+
+- **ESP-IDF's A2DP source accepts PCM only.** `esp_a2d_source_data_cb_t` is
+  handed a "buffer to be filled with PCM data stream"; Bluedroid encodes SBC
+  internally and exposes no API for pre-encoded frames. The brief's
+  "playback is read-frames-and-transmit" is therefore unbuildable as
+  written — storing SBC would mean decoding it back to PCM at playback just
+  so the stack could re-encode it.
+- **Tape now stores block-framed IMA ADPCM.** 512-byte blocks: 4-byte header
+  (predictor, step index, payload checksum) + 508 B of nibbles = 1016
+  samples = 23.04 ms, 22,223 B/s. Playback is read-block → table-lookup
+  decode → PCM to Bluedroid, which is far cheaper than SBC decode and keeps
+  the spirit of the locked "no DSP at playback" decision.
+- Blocks are self-contained, so **seeking is free** — track skip,
+  pause/resume and the reel position display all depend on it.
+- **Slot size 5 MiB → 5.125 MiB** (82 erase blocks) to preserve the full
+  four-minute take at ADPCM's higher bitrate. Flagged deviation from the
+  locked "3 x 5 MB slots"; keeps that decision's substance (three fixed
+  slots, no dynamic allocation) and the 4-minute promise. 576 KiB spare.
+- Retires M6 risk #1 (SBC-encode-while-capturing timing) — we no longer
+  encode SBC at all.
+- Crash recovery now validates a **payload checksum** per block. Without it
+  a torn write whose header landed but whose data was cut short was
+  wrongly accepted, keeping 23 ms of noise — a real bug the yank sweep
+  caught once the format changed.
+- Host tests: added `test_adpcm_block` (block geometry, capacity,
+  independent decodability, truncation rejection). 5 suites, ~4,100
+  assertions, green.
+
 ### Added (2026-08-25, firmware Phase A — M0/M1/M2)
 
 - `firmware/` — ESP-IDF project skeleton: pin map (`main/include/board.h`),

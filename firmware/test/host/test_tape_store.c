@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "mock_flash.h"
-#include "sbc_frame.h"
+#include "adpcm_block.h"
 #include "tape_store.h"
 #include "test_util.h"
 
@@ -13,23 +13,31 @@
 
 static uint32_t frame_len(void)
 {
-    return sbc_frame_bytes(TAPE_SBC_SUBBANDS, TAPE_SBC_BLOCKS,
-                           TAPE_SBC_CHANNELS, TAPE_SBC_BITPOOL);
+    return ADPCM_BLOCK_BYTES;
 }
 
-/* Synthetic stream that looks like SBC: syncword per frame, never 0xFF
- * (so byte-exact comparisons stay meaningful). */
+/* Synthetic stream of structurally valid ADPCM blocks: each carries a
+ * decodable header (step index <= 88, reserved 0x00) and a payload that is
+ * never 0xFF, so byte-exact comparisons stay meaningful and no block looks
+ * like erased flash or like a torn write. */
 static void fill_stream(uint8_t *buf, uint32_t len, uint32_t seed)
 {
-    uint32_t fl = frame_len();
     uint32_t x = seed | 1u;
     for (uint32_t i = 0; i < len; i++) {
-        if (i % fl == 0) {
-            buf[i] = SBC_SYNCWORD;
+        uint32_t pos = i % ADPCM_BLOCK_BYTES;
+        x = x * 1664525u + 1013904223u;
+        if (pos == 2u) {
+            buf[i] = (uint8_t)((x >> 16) % 89u); /* valid step index */
         } else {
-            x = x * 1664525u + 1013904223u;
             buf[i] = (uint8_t)((x >> 16) % 0xFEu); /* 0x00..0xFD */
         }
+    }
+    /* Stamp each whole block's payload checksum so the blocks pass the same
+     * validation crash recovery uses. */
+    for (uint32_t off = 0; off + ADPCM_BLOCK_BYTES <= len;
+         off += ADPCM_BLOCK_BYTES) {
+        buf[off + 3u] = adpcm_block_checksum(buf + off + ADPCM_BLOCK_HEADER,
+                                             ADPCM_BLOCK_DATA);
     }
 }
 
@@ -100,8 +108,7 @@ static void test_record_and_read_back(void)
 
     /* Duration should match the storage-budget arithmetic. */
     uint32_t expect_ms =
-        sbc_bytes_to_ms(len, TAPE_SBC_SAMPLE_RATE, TAPE_SBC_SUBBANDS,
-                        TAPE_SBC_BLOCKS, TAPE_SBC_CHANNELS, TAPE_SBC_BITPOOL);
+        adpcm_blocks_to_ms(len / ADPCM_BLOCK_BYTES, TAPE_SAMPLE_RATE);
     CHECK_EQ(ts.slots[1].duration_ms, expect_ms);
 
     CHECK_EQ(tape_store_read(&ts, 1, 0, back, len), TAPE_OK);
@@ -162,7 +169,7 @@ static void test_partial_frame_is_dropped(void)
     flash_hal_t *f = mock_flash_create(TAPE_FLASH_SIZE);
     tape_store_t ts;
     uint32_t fl = frame_len();
-    uint32_t len = fl * 5u + 13u; /* trailing partial frame */
+    uint32_t len = fl * 5u + 13u; /* trailing partial block */
     uint8_t *data = (uint8_t *)malloc(len);
     fill_stream(data, len, 3);
 

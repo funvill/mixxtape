@@ -8,7 +8,7 @@
  *    a torn write fails CRC and the previous record still wins.
  *  - Only the slot being recorded may be damaged by a yank. A slot left
  *    in RECORDING state is repaired at mount by scanning for the last
- *    complete SBC frame — you keep what was recorded, like real tape.
+ *    complete ADPCM block — you keep what was recorded, like real tape.
  *  - Recording never erases on the critical path: slots are pre-erased in
  *    the background, or erased one block ahead of the write pointer.
  *
@@ -56,7 +56,7 @@ typedef struct {
     int      rec_slot;      /* -1 when idle              */
     uint32_t rec_written;   /* bytes committed to flash  */
     uint32_t rec_erased_to; /* bytes erased ahead        */
-    uint32_t frame_bytes;   /* cached SBC frame size     */
+    uint32_t block_bytes;   /* cached ADPCM block size   */
 } tape_store_t;
 
 /* Wipes the header region and marks every slot empty. Does not erase audio. */

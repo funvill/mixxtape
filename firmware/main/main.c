@@ -2,13 +2,13 @@
  * interaction state machine, logging every event over the jig UART.
  *
  * This is deliberately the *only* target-specific code so far. Everything
- * with real logic in it — the slot manager, the SBC arithmetic, the button
+ * with real logic in it — the slot manager, the audio codec, the button
  * grammar — lives in components/ and is covered by host tests, because
  * there is no devkit to try things on (docs/firmware-plan.md sec.7).
  *
  * Still to come, and all gated on the first prototype boards (M4):
  *   - SPI flash HAL implementing flash_hal.h against the W25Q128
- *   - I2S capture and the SBC encoder feeding tape_store
+ *   - I2S capture and ADPCM block encoding feeding tape_store
  *   - A2DP source, pairing by RSSI, bond storage
  *   - WS2812 output via the RMT peripheral
  *   - CC sensing to raise the LED brightness cap
@@ -104,9 +104,9 @@ static void ui_task(void *arg)
 void app_main(void)
 {
     ESP_LOGI(TAG, "mixxtape firmware, M0 skeleton");
-    ESP_LOGI(TAG, "tape: %d slots x %u MiB, SBC mono %u Hz bitpool %u",
-             TAPE_SLOT_COUNT, (unsigned)(TAPE_SLOT_SIZE / (1024u * 1024u)),
-             (unsigned)TAPE_SBC_SAMPLE_RATE, (unsigned)TAPE_SBC_BITPOOL);
+    ESP_LOGI(TAG, "tape: %d slots x %u KiB, ADPCM mono %u Hz",
+             TAPE_SLOT_COUNT, (unsigned)(TAPE_SLOT_SIZE / 1024u),
+             (unsigned)TAPE_SAMPLE_RATE);
 
     configure_inputs();
     xTaskCreate(ui_task, "ui", 4096, NULL, 5, NULL);

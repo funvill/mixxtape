@@ -4,6 +4,34 @@ Resolves the conflict flagged in `docs/firmware-plan.md` §4: the brief's
 two-pass record pipeline needs an ADPCM scratch region that does not fit
 alongside three 5 MiB slots in a 16 MiB flash.
 
+> ## ⚠ Revised after the M3 reference study: the tape stores ADPCM, not SBC
+>
+> **ESP-IDF's A2DP source accepts PCM only.** The API reference is explicit
+> — `esp_a2d_source_data_cb_t` receives a "buffer to be filled with PCM data
+> stream from higher layer", and "for now, the input should be PCM data
+> stream". Bluedroid performs the SBC encoding itself, and exposes **no API
+> for handing it pre-encoded SBC frames**.
+>
+> So the brief's "playback is read-frames-and-transmit" cannot be built as
+> written: storing SBC would force us to *decode* SBC to PCM at playback
+> purely so the stack could re-encode it — the exact real-time DSP the
+> design forbids, plus a generation of extra loss.
+>
+> **The tape therefore stores block-framed IMA ADPCM.** Playback reads a
+> block, decodes it with a few table lookups per sample, and hands PCM to
+> Bluedroid. That is far cheaper than SBC decode and honours the intent of
+> the locked decision better than SBC ever could. Recording is symmetric:
+> I²S PCM → ADPCM → flash, and ADPCM encode is trivially cheap, which also
+> retires the "does SBC encode fit the real-time budget" risk (M6 #1).
+>
+> Consequences: sections 1–4 below are the *original* SBC analysis, kept
+> because the air-format numbers still govern what pairing negotiates.
+> Sections 5 onward describe what is actually built. Slot size grew from
+> 5 MiB to 5.125 MiB (82 erase blocks) to keep the full four-minute take —
+> a deliberate, flagged deviation from the locked "3 x 5 MB slots", which
+> preserves that decision's substance (three fixed slots, no dynamic
+> allocation) and the 4-minute promise the flash size was chosen around.
+
 All sizes are **binary** (MiB = 1,048,576 B). Flash is a W25Q128JV:
 16,777,216 B, 256 B program page, 4 KiB sector erase, 64 KiB block erase.
 
@@ -104,23 +132,41 @@ cable mid-record and you keep what was recorded, exactly like real tape.
 > compile-time constants so reverting is cheap. The ADPCM codec is
 > implemented and tested regardless (small, and needed if two-pass returns).
 
-## 5. Chosen layout (`tape_layout.h`)
+## 5. Chosen layout (`tape_layout.h`) — as built
+
+Stored format: **block-framed IMA ADPCM**, 4 bits/sample, 44.1 kHz mono.
+
+One block is 512 B: a 4-byte header (predictor int16, step index, payload
+checksum) plus 508 B of nibbles = 1016 samples = **23.04 ms**. Overhead is
+0.8 %, giving **22,223 B/s** (`44100 * 512 / 1016`, truncated).
+
+Blocks earn their keep three times over:
+
+- **Seeking is free.** Each block carries its own codec state, so playback
+  can start at any block — which track skip, pause/resume and the reel
+  position display all need.
+- **Erased flash is unmistakable.** A valid header needs a step index ≤ 88;
+  erased flash reads 0xFF. Crash recovery scans for the first invalid block.
+- **Torn writes are detectable.** The payload checksum catches a block whose
+  header landed but whose data was cut short by a power loss — without it,
+  recovery keeps 23 ms of noise. (This was a real bug, caught by the sweep.)
 
 ```
 offset          size          region
 0x000000        64 KiB        header (sectors 0/1 used as ping-pong log)
-0x010000        5 MiB         slot 0
-0x510000        5 MiB         slot 1
-0xA10000        5 MiB         slot 2
-0xF10000        960 KiB       spare / reserved
+0x010000        5.125 MiB     slot 0
+0x530000        5.125 MiB     slot 1
+0xA50000        5.125 MiB     slot 2
+0xF70000        576 KiB       spare / reserved
                               (future: bond table, wear relief)
 ```
 
-Every slot is 64 KiB-block aligned (5 MiB = 80 blocks), so slot erase is
-always whole-block.
+Each slot is 82 erase blocks — the smallest whole-block size holding a full
+four-minute take. Slot erase is therefore always whole-block, and a slot is
+a whole number of ADPCM blocks with no runt at the end.
 
-**Track length at bitpool 26:** 5,242,880 / 20,671 = 253.6 s = **4:13 max**;
-nominal 4:00 uses 4,961,220 B (94.6 % of a slot).
+**Track length:** 5,373,952 / 22,223 = **4:01.8 max**; a nominal 4:00 take
+uses 5,333,760 B (99.3 % of a slot).
 
 ## 6. Header log & crash safety
 
@@ -155,10 +201,16 @@ stall tolerance costs a quarter of the RAM.
 | Stage | Size | Covers |
 |---|---|---|
 | I²S DMA (PCM) | 8.8 KB (100 ms) | DMA/scheduling jitter |
-| SBC ring (post-encoder) | 41 KB (2 s) | 1 s worst-case block erase, 2x margin |
-| Playback prefetch | 8 KB (~400 ms) | flash read latency vs A2DP callbacks |
+| ADPCM ring (post-encoder) | 44 KB (2 s) | 1 s worst-case block erase, 2x margin |
+| Playback prefetch | 8 KB (~360 ms) | flash read latency vs A2DP callbacks |
+| PCM out to Bluedroid | 8.8 KB (100 ms) | decoded ahead of the A2DP callback |
 
-Total ≈ 58 KB of the ESP32's ~320 KB DRAM — comfortable alongside Bluedroid.
+Total ≈ 70 KB of the ESP32's ~320 KB DRAM — comfortable alongside Bluedroid.
+
+Buffer the *encoded* stream, not PCM, wherever there is a choice: ADPCM is
+4x smaller, so the same stall tolerance costs a quarter of the RAM. The one
+unavoidable PCM buffer is the last hop into Bluedroid, which only needs to
+cover callback jitter, not flash stalls.
 
 ## 9. Open item for M6 (needs real sinks)
 

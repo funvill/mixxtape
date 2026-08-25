@@ -23,12 +23,16 @@ arrive.
   source + SBC encoder live in Bluedroid, which is ESP-IDF-only. Do not
   revisit. Keep everything outside the BT/audio core behind the mockable
   HAL (M2) so the framework dependency stays contained.
-- **Playback path is read-frames-and-transmit.** SBC frames stored in flash
-  go straight to `esp_a2d_source_audio_data_send()`. No decode, no
-  resample, no DSP during streaming. If you find yourself decoding during
-  playback, something upstream is wrong.
-- **Encode to SBC at record time** (two-pass, see §4). 44.1 kHz mono
-  throughout — matches A2DP negotiation, eliminates resampling.
+- **Playback must stay cheap.** ESP-IDF's A2DP source takes **PCM** and
+  encodes SBC inside Bluedroid; there is no API for pre-encoded frames
+  (verified in M3 — see `docs/storage-budget.md`). The tape therefore
+  stores block-framed IMA ADPCM and playback is read-block, decode with a
+  few table lookups per sample, hand over PCM. No resampling, no filter
+  banks, no transforms. If you find yourself doing real DSP at playback,
+  something upstream is wrong.
+- **Encode at record time**, one pass: I²S PCM → ADPCM block → flash.
+  44.1 kHz mono throughout — matches A2DP negotiation, eliminates
+  resampling.
 - **Recording must survive a USB yank at any moment.** No battery, no
   graceful-shutdown window. Only the slot being written may be corrupted.
   Sector erases (~40 ms) never happen on the record critical path —
@@ -88,8 +92,8 @@ now assigned to the DNP microSD.
 | Task | Core | Prio | Job |
 |---|---|---|---|
 | `audio_capture` | 1 | high | I²S DMA drain → ring buffer (record only) |
-| `encoder` | 1 | med | Pass 1: ADPCM to scratch. Pass 2 (idle): normalize + SBC encode to slot |
-| `a2dp_stream` | 0 | high | Feed SBC frames from flash on BT callbacks (playback) |
+| `encoder` | 1 | med | Limiter + ADPCM block encode, straight to the slot |
+| `a2dp_stream` | 0 | high | Decode blocks ahead of the A2DP PCM callback (playback) |
 | `storage` | 1 | med | Slot manager, page programs, background pre-erase queue |
 | `ui` | 0 | low | Buttons (debounce, short/long), state machine |
 | `leds` | 0 | low | RMT frames ~30 fps from a state+progress struct |
@@ -98,22 +102,37 @@ BT stack (Bluedroid) lives on core 0; keep the audio/flash pipeline on
 core 1. All inter-task communication via queues; no shared mutable state
 without a mutex.
 
-### Record pipeline (two-pass, from the brief)
+### Record pipeline (one pass, as built)
 
-1. REC held → I²S DMA → ring buffer → **ADPCM** (IMA, 4-bit) appended to the
-   scratch region. Page programs only.
-2. REC released → device idle → analyze peak, normalize, encode **SBC**,
-   write final slot, update header (CRC + generation counter, write-then-
-   commit so a yank mid-pass-2 leaves the old slot header or a clean
-   invalid flag — never a half-valid slot).
-3. Slot invalidation queues **background pre-erase** of scratch + slot for
-   idle time. Reels spin during pass 2 so the wait reads as rewinding.
+Nothing clever happens in real time.
 
-**⚠ Storage budget math to verify first (M1):** 4 min of 44.1 kHz 16-bit
-mono is ~21 MB raw; IMA-ADPCM (4:1) ≈ 5.3 MB — which does **not** fit the
-~1 MB left over by three 5 MB slots. Options: scratch overlays the target
-slot region (recording already invalidates it), shorten max track, or
-resize slots. Decide on paper before writing the slot manager.
+1. REC held → I²S DMA → PCM ring → look-ahead limiter → **ADPCM block**
+   encode → block ring → `tape_store_write()`. Page programs only; the
+   erase frontier runs one 64 KiB block ahead of the write pointer, so a
+   slot erase never sits on the critical path.
+2. REC released → `tape_store_end_record()` truncates to whole blocks and
+   commits a single header record. No pass 2, no wait, no scratch region.
+3. A yank at any point leaves the take truncated to its last complete
+   block and still playable. Recovery is `tape_store_mount()`'s job and is
+   covered by the power-yank sweep in `test/host`.
+
+Level control is a look-ahead limiter (~100 ms in RAM) rather than
+whole-take peak normalisation: one pass cannot know the peak in advance,
+and a limiter is the better tool for a mic capturing a room anyway.
+
+The M1 storage conflict this replaced, and the M3 finding that settled the
+stored format, are both written up in `docs/storage-budget.md`.
+
+### Playback pipeline
+
+`tape_store_read()` a block → `adpcm_block_decode()` → PCM into a small
+ring → the A2DP source data callback drains it. Bluedroid encodes SBC.
+
+The callback runs on the BT task and **must not block**: it is handed a
+buffer and a length, returns how many bytes it filled, and a length of -1
+means flush. So the decode must always be running ahead of it, never
+inside it. Blocks are independently decodable, so seeking (track skip,
+resume after pause) is a block-index calculation, not a re-scan.
 
 ### Pairing / reconnect (brief §6 has the full flow)
 
@@ -174,18 +193,22 @@ line carries the voltage, the other is near 0 — read both, use the higher.
   tests + IDF build).
 - **M1 — Paper math ✅ done.** `docs/storage-budget.md`. Resolved the §4
   conflict: the two-pass ADPCM scratch cannot coexist with three 5 MiB
-  slots, so the default record path is now **one-pass SBC** (Option D),
-  which honours the locked layout exactly and allows bitpool 26 instead of
-  18. **Needs Steven's sign-off** — see that document's §4.
+  slots, so the record path is now **one pass**. M3 then settled the stored
+  format as ADPCM (see below). **Needs Steven's sign-off** — one pass means
+  a look-ahead limiter instead of whole-take peak normalisation, and slots
+  grew to 5.125 MiB to keep the four-minute take.
 - **M2 — Host-testable core ✅ done.** `components/tape` (slot manager,
   append-only header log with CRC + generation, SBC frame math, ADPCM) and
   `components/ui` (button grammar and device state machine), behind
   `flash_hal.h`. `test/host` has a NOR mock with power-loss tearing and a
   sweep that tears every flash operation of a recording in turn. 4 suites,
   ~2,300 assertions, green.
-- **M3 — Reference study:** ESP-IDF `a2dp_source` example and pschatzmann's
-  ESP32-A2DP library; extract the callback/buffer model into our stream
-  task design. Bluedroid's SBC encoder is in IDF — wire it into the build.
+- **M3 — Reference study ✅ done.** The decisive finding: ESP-IDF's A2DP
+  source callback is fed **PCM**, and Bluedroid encodes SBC internally with
+  no API for pre-encoded frames. Stored format changed to block-framed IMA
+  ADPCM; see `docs/storage-budget.md`. Still to mine from the reference
+  code: the callback's buffer-depth and flush (`len == -1`) semantics, which
+  shape the playback prefetch task.
 
 **Phase B: first prototype boards (order 2–3 early, before the run of 20 —
 at ~$14/board they are the devkit)**
@@ -193,8 +216,10 @@ at ~$14/board they are the devkit)**
 - **M4 — Bring-up:** power rails, UART over jig, flash JEDEC ID, mic I²S
   capture to UART dump, LED chain, buttons, tab, CC sense readings.
 - **M5 — Factory test firmware:** automated pass/fail per §3.
-- **M6 — The three risk spikes**, in order: (1) SBC-encode-while-capturing
-  timing on real silicon; (2) A2DP source vs a basket of real sinks
+- **M6 — The risk spikes**, in order: (1) *retired by M3* — we no longer
+  encode SBC ourselves, and ADPCM encode is a handful of ops per sample;
+  what remains is confirming I²S capture keeps up with flash writes;
+  (2) A2DP source vs a basket of real sinks
   (AirPods, cheap TWS, a BT speaker) — connect rate, CoD filtering, RSSI
   threshold tuning; (3) reconnect latency, measured. Each answers a
   question the brief says can kill the design.

@@ -1,5 +1,11 @@
-/* Checks the SBC arithmetic against the table in docs/storage-budget.md.
- * If these numbers move, that document and the slot sizing are both wrong. */
+/* SBC arithmetic for the *air* format only.
+ *
+ * The tape no longer stores SBC: ESP-IDF's A2DP source takes PCM and
+ * encodes SBC inside Bluedroid, so what goes over the air is the stack's
+ * business. These numbers still matter because pairing must negotiate a
+ * configuration real sinks accept (M6), and because docs/storage-budget.md
+ * quotes them.
+ */
 
 #include "sbc_frame.h"
 #include "tape_layout.h"
@@ -29,43 +35,34 @@ static void test_rates(void)
     /* 44100 / (8*16) = 344.531 frames/s */
     CHECK_EQ(sbc_frames_per_sec_milli(44100u, 8u, 16u), 344531u);
 
-    /* Bytes per second per the doc's table. */
     CHECK_EQ(sbc_bytes_per_sec(44100u, 8u, 16u, 1u, 16u), 13781u);
     CHECK_EQ(sbc_bytes_per_sec(44100u, 8u, 16u, 1u, 19u), 15848u);
     CHECK_EQ(sbc_bytes_per_sec(44100u, 8u, 16u, 1u, 26u), 20671u);
 }
 
-static void test_duration_round_trip(void)
+static void test_negotiated_config_is_sane(void)
 {
-    uint32_t four_min = 240u * 1000u;
-    uint32_t bytes = sbc_ms_to_bytes(four_min, 44100u, 8u, 16u, 1u, 26u);
+    /* What we will ask a sink for. Bitpool must sit inside the range every
+     * common sink advertises (typically 2..53) or stored audio cannot be
+     * streamed at all. */
+    CHECK(TAPE_SBC_BITPOOL >= 2u);
+    CHECK(TAPE_SBC_BITPOOL <= 53u);
+    CHECK_EQ(TAPE_SBC_SUBBANDS, 8u);
+    CHECK_EQ(TAPE_SBC_BLOCKS, 16u);
 
-    /* 4:00 at bitpool 26 is 82,687 whole frames = 4,961,220 B (the exact
-     * fractional value, 4,961,250, is not a whole number of frames) and
-     * must fit a 5 MiB slot. */
-    CHECK_EQ(bytes, 4961220u);
-    CHECK(bytes < TAPE_SLOT_SIZE);
-
-    /* Round-tripping back to milliseconds lands within one frame (23 ms). */
-    uint32_t ms = sbc_bytes_to_ms(bytes, 44100u, 8u, 16u, 1u, 26u);
-    CHECK(ms <= four_min);
-    CHECK(four_min - ms < 30u);
+    /* A2DP frames must fit a single L2CAP MTU comfortably. */
+    uint32_t frame = MONO_FRAME(TAPE_SBC_BITPOOL);
+    CHECK(frame > 0u && frame < 512u);
 }
 
-static void test_slot_capacity(void)
+static void test_layout_fits_the_part(void)
 {
-    /* The maximum take a slot can hold, quoted as 4:13 in the doc. */
-    uint32_t ms = sbc_bytes_to_ms(TAPE_SLOT_SIZE, TAPE_SBC_SAMPLE_RATE,
-                                  TAPE_SBC_SUBBANDS, TAPE_SBC_BLOCKS,
-                                  TAPE_SBC_CHANNELS, TAPE_SBC_BITPOOL);
-    CHECK(ms >= 253000u);
-    CHECK(ms <= 254000u);
-
-    /* The configured layout must actually fit the part. */
     CHECK(TAPE_SLOT_BASE + TAPE_SLOT_COUNT * TAPE_SLOT_SIZE <= TAPE_FLASH_SIZE);
-    CHECK_EQ(TAPE_SLOT_SIZE % TAPE_BLOCK_SIZE, 0); /* whole-block erases */
+    CHECK_EQ(TAPE_SLOT_SIZE % TAPE_BLOCK_SIZE, 0); /* whole-block erases   */
     CHECK_EQ(TAPE_SLOT_ADDR(0) % TAPE_BLOCK_SIZE, 0);
     CHECK_EQ(TAPE_SECTOR_SIZE % TAPE_HDR_RECORD_SZ, 0);
+    CHECK_EQ(TAPE_SPARE_BASE, TAPE_SLOT_ADDR(TAPE_SLOT_COUNT));
+    CHECK(TAPE_FLASH_SIZE - TAPE_SPARE_BASE >= 65536u); /* room to grow */
 }
 
 static void test_frame_validity(void)
@@ -85,8 +82,8 @@ TEST_MAIN_BEGIN()
 
 RUN(test_frame_length_formula);
 RUN(test_rates);
-RUN(test_duration_round_trip);
-RUN(test_slot_capacity);
+RUN(test_negotiated_config_is_sane);
+RUN(test_layout_fits_the_part);
 RUN(test_frame_validity);
 
 TEST_MAIN_END()
