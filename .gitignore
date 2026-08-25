@@ -1,0 +1,15 @@
+# KiCad
+*.kicad_sch-bak
+*.kicad_pcb-bak
+*-backups/
+_autosave-*
+fp-info-cache
+*.lck
+*.kicad_prl
+
+# easyeda2kicad API response cache
+.easyeda_cache/
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,5 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "mixxtape_parts")(type "KiCad")(uri "${KIPRJMOD}/parts/mixxtape_parts.kicad_sym")(options "")(descr "Parts fetched from JLCPCB/EasyEDA via easyeda2kicad"))
+  (lib (name "mixxtape_local")(type "KiCad")(uri "${KIPRJMOD}/parts/mixxtape_local.kicad_sym")(options "")(descr "Hand-authored project symbols (tab, castellated header, JST)"))
+)
