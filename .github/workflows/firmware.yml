@@ -1,0 +1,34 @@
+name: firmware
+
+on:
+  push:
+    paths: ['firmware/**', '.github/workflows/firmware.yml']
+  pull_request:
+    paths: ['firmware/**', '.github/workflows/firmware.yml']
+  workflow_dispatch:
+
+jobs:
+  host-tests:
+    # The portable core (slot manager, SBC math, ADPCM, button grammar) is
+    # host-testable by design — there is no devkit, so this is the only
+    # automated proof the logic works until prototype boards exist.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S firmware/test/host -B build -DCMAKE_BUILD_TYPE=Debug
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+  idf-build:
+    runs-on: ubuntu-latest
+    container: espressif/idf:release-v5.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        shell: bash
+        run: |
+          . "$IDF_PATH/export.sh"
+          idf.py -C firmware build

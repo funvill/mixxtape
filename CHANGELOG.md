@@ -8,6 +8,59 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, firmware Phase A — M0/M1/M2)
+
+- `firmware/` — ESP-IDF project skeleton: pin map (`main/include/board.h`),
+  `sdkconfig.defaults` (Classic BT + A2DP source, BLE off, BR/EDR-only
+  controller), component/CMake wiring, and a UI-bring-up `app_main`.
+- `firmware/components/tape` — crash-safe slot manager behind an abstract
+  `flash_hal.h`: append-only ping-pong header log (64-byte records, CRC32 +
+  generation counter), just-in-time erase ahead of the write pointer, and
+  mount-time repair of a slot left mid-recording.
+- `firmware/components/ui` — button grammar and device state machine
+  (REC hold, PLAY short/long, TRACK cycle, MODE 2/5/10 s), pure logic.
+- `firmware/test/host` — NOR flash mock that models erase/program bit
+  semantics and tears any chosen operation, plus a **power-yank sweep**
+  that tears every flash operation of a recording in turn and re-checks the
+  invariants. 4 suites, ~2,300 assertions, all passing in <1 s.
+- `.github/workflows/firmware.yml` — CI: host tests via ctest, plus an
+  ESP-IDF v5.3 container build.
+- `docs/storage-budget.md` — the M1 arithmetic.
+
+### Changed / findings (2026-08-25, firmware)
+
+- **Record pipeline changed to one-pass SBC — needs Steven's sign-off.**
+  The brief's two-pass pipeline needs a 5.05 MiB ADPCM scratch region, but
+  three 5 MiB slots plus a header leave only 960 KiB — a 4.11 MiB deficit,
+  i.e. 44 seconds of scratch instead of 4 minutes. Encoding SBC directly at
+  capture removes the scratch entirely, honours the LOCKED "3 x 5 MiB slots"
+  layout exactly, raises the affordable bitpool from 18 to 26 (121 -> 165
+  kbps), halves flash writes, removes the post-record wait, and makes a
+  power yank *keep* the partial take. Only loss is whole-take peak
+  normalisation, replaced by a look-ahead limiter. ADPCM is implemented and
+  tested regardless. See `docs/storage-budget.md` §4.
+- Slot-repair scanning is a linear forward scan, not a binary search: a torn
+  erase leaves a half-erased block whose tail still holds the previous take,
+  so the slot is not monotonic and a binary search could resurrect stale
+  audio. Caught by the block-crossing yank sweep.
+- `tape_store_erase_slot` disowns a slot's audio *before* erasing it, so a
+  yank mid-erase cannot leave the header claiming playable audio over
+  half-erased flash.
+- Storage-budget table corrected to whole-frame sizes (4:00 at bitpool 26 is
+  4,961,220 B, not the fractional 4,961,250) — caught by `test_sbc_frame`.
+
+### Added (2026-08-25, prior art research)
+
+- `docs/prior-art.md` — eleven cassette-form-factor projects researched:
+  Mixtape Alpha and 8Bit Mix Tape (direct ancestors), plus Mixxtape (Mixxim),
+  the Larry Schotz car cassette adapter, 8BitMixtape NEO, JamHamster's ZX
+  Spectrum cassette, the Cassette Pi IoT scroller, the **Digisette Duo-Aria
+  (2000)** — the only known cassette-shaped device with record + playback,
+  incl. deck playback via edge transducer, predating the Mixxim patent —
+  the ION Bluetooth cassette adapter (mic inside the shell), Milktape /
+  Suck UK USB mixtapes, and NFC mixtape tokens. Per-project takeaways and
+  cross-cutting patterns.
+
 ### Added (2026-08-25, KiCad project setup)
 
 - KiCad 9 project in `hardware/` (`mixxtape.kicad_pro`, `mixxtape.kicad_sch`,
@@ -34,6 +87,35 @@ first prototype run.
   both signals. Schematic fits a cap-coupled RTS reset instead; Q1/Q2 omitted
   until Steven decides (alternative: CH340C/CH343). Flagged on the schematic.
 - LDO uprated to 1 A as the BOM required: AMS1117-3.3 (C6186), SOT-223.
+- **USB-C is now power-only; programming moves to a jig (Steven,
+  2026-08-25):** CH340N, USBLC6 ESD, and their caps removed; USB data pins
+  NC. The castellated hacker header is removed. New J5: six bare pogo pads
+  (3V3, GND, EN, IO0, TX, RX) — the jig carries the USB-UART bridge and
+  auto-program transistors. Saves ~$0.60/board and the castellated-edge
+  surcharge; resolves the CH340N-has-no-DTR question by removing it.
+- **USB-C CC sensing added (2026-08-25):** CC1/CC2 wired through 10 k
+  (R10/R11) to ADC1 on GPIO36/39 so firmware can read the source's current
+  advertisement and raise the LED brightness cap on 1.5 A/3 A supplies.
+  Extra resistors alone cannot unlock more current — the source advertises,
+  the sink measures.
+- **Firmware framework locked: ESP-IDF (Steven, 2026-08-25).** Zephyr was
+  considered and rejected — BLE-first stack, partial BR/EDR host, upstream
+  deprecation proposal for Classic BT, and no supported A2DP path on ESP32;
+  Bluedroid (ESP-IDF) has the proven A2DP source + SBC encoder.
+- **Name change planned (Steven, 2026-08-25):** "mixxtape" collides with
+  Mixxim's commercial product name; will be renamed before going public.
+- `docs/firmware-plan.md` — firmware architecture and milestone plan for
+  agent handoff: task layout, two-pass record pipeline, yank-safety rules,
+  no-devkit de-risking order (host-tested core + early 2–3 board prototype
+  as the bring-up vehicle), factory-test firmware, CC-sense power logic.
+  Flags a storage-budget conflict (4-min ADPCM scratch ≈ 5.3 MB vs ~1 MB
+  spare) to resolve on paper first.
+- **MicroSD footprint added, DNP (Steven, 2026-08-25):** TF-01A push-push
+  socket (**C91145**, ~$0.13 @ 500) as J4, the "studio edition" option for
+  loading songs. SPI-mode wiring sharing VSPI with the audio flash:
+  CS = IO22 (with DNP 10 k pullup R9 so a populated card stays deselected
+  during flash access), card-detect = IO32 (needs internal pullup in
+  firmware), DAT1/DAT2 unused. Default build unchanged — footprint only.
 - **LED level shifter added (Steven, 2026-08-25):** XL-2020RGBC-2812B
   confirmed working from Steven's past projects, including at 3.3 V data —
   but a TI SN74AHCT1G125 (**C7484**, SOT-23-5, ~$0.08) is fitted anyway as

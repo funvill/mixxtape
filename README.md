@@ -33,8 +33,8 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
   label block silkscreened where a cassette's paper label sits.
 - **No battery.** USB-C only (battery footprint present but unpopulated). A
   cassette's promise is that you find it years later and it still works.
-- **Hacker header.** Ten castellated pads on the bottom edge: power, I²S, UART,
-  EN, and spare GPIO.
+- **Jig-programmed.** No USB-UART on the board — USB-C is power only.
+  Firmware loads through six pogo-pin pads via a programming jig.
 
 ## Hardware summary
 
@@ -46,16 +46,19 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
 | Audio | 44.1 kHz mono, SBC-encoded at record time; playback is read-frames-and-transmit |
 | Indicators | 29 × WS2812B-2020 RGB (2 × 12 reel rings + track/REC/BT) |
 | Controls | 4 tactile buttons + break-off write-protect tab |
-| Power | USB-C only; TP4056/LiPo circuit on board but DNP |
+| Power | USB-C only (power + CC sense, no data); TP4056/LiPo circuit on board but DNP |
 | Cost | ~$13.25/board at a run of 20 (~$265 total) |
 
 ## Project status
 
-**Design locked, schematic started.** `hardware/` holds a KiCad 9 project with
-a first-pass schematic (ERC-clean) and JLCPCB part libraries; `firmware/` is
-still empty. Target: a prototype run of 3–5 boards, then a full run of 20.
-Firmware bring-up on a devkit (A2DP source, I²S capture, SBC encode timing)
-comes before final layout.
+**Design locked, schematic and firmware core underway.** `hardware/` holds a
+KiCad 9 project with a first-pass schematic (ERC-clean) and JLCPCB part
+libraries. `firmware/` has the ESP-IDF skeleton plus the host-tested core —
+crash-safe slot manager, SBC arithmetic, and button state machine — proven
+without hardware since there is no devkit. Target: a prototype run of 3–5
+boards, then a full run of 20. The risky parts (A2DP source against real
+earbuds, I²S capture, SBC encode timing) are measured on those first boards
+before the layout is final.
 
 ## Documentation
 
@@ -65,6 +68,9 @@ comes before final layout.
   authoritative spec: locked decisions, GPIO map, behaviour spec, phase order
 - [BOM v3](docs/cassette-recorder-bom-v3.md) — full bill of materials with LCSC
   part numbers and costing
+- [Prior art](docs/prior-art.md) — research on cassette-form-factor projects
+- [Firmware plan](docs/firmware-plan.md) — architecture, milestones, and
+  hardware interface for the firmware agent
 
 ## Prior art
 
