@@ -218,7 +218,16 @@ at ~$14/board they are the devkit)**
 
 - **M4 — Bring-up:** power rails, UART over jig, flash JEDEC ID, mic I²S
   capture to UART dump, LED chain, buttons, tab, CC sense readings.
-- **M5 — Factory test firmware:** automated pass/fail per §3.
+- **M5 — Factory test firmware — harness ✅ done, probes gated on M4.**
+  `components/factory` sequences the suite, aggregates results and emits
+  both an operator table and a one-line machine record; host-tested with
+  mock probes (every step runs after a failure, skips do not fail a board,
+  interactive steps skip on unattended runs, reports never overflow their
+  buffer). `main/factory_main.c` holds the board-side probes: tab sense,
+  buttons and the SPI JEDEC ID read are written; mic, LED walk, CC sense,
+  flash read/write and BT inquiry are stubs that report SKIP until the M4
+  drivers exist, and the runner prints SUITE INCOMPLETE while any remain.
+  Build with `idf.py -DMIXXTAPE_FACTORY_TEST=ON`.
 - **M6 — The risk spikes**, in order: (1) *retired by M3* — we no longer
   encode SBC ourselves, and ADPCM encode is a handful of ops per sample;
   what remains is confirming I²S capture keeps up with flash writes;

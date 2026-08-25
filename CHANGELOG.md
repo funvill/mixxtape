@@ -8,6 +8,27 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, firmware M5 — factory test harness)
+
+- `components/factory` — the harness that gets 20 hand-built boards
+  checked identically: sequences probes, aggregates results, and emits an
+  operator table plus a one-line machine record
+  (`FT|1|flash_id=PASS:0xEF4018|...|VERDICT=PASS`) so the jig's serial log
+  becomes the build record for the run.
+- Design properties, all host-tested with mock probes: every step runs even
+  after one fails (a board with three faults reports three, not one per
+  reflash); each result carries a measured value, not just a verdict;
+  skips never fail a board; interactive steps are skipped automatically on
+  unattended runs; both report formats truncate safely at every buffer size
+  (swept 1..200 bytes).
+- `main/factory_main.c` — board-side probes and the runner, built with
+  `idf.py -DMIXXTAPE_FACTORY_TEST=ON`. Tab sense, button walk and the SPI
+  JEDEC ID read are written; mic, LED walk, CC sense, flash read/write and
+  BT inquiry are stubs reporting SKIP until the M4 drivers exist. The
+  runner prints `SUITE INCOMPLETE` rather than a pass banner while any
+  probe is unimplemented — a green light nobody earned is worse than none.
+- 8 host suites, ~59,000 assertions, green in ~1.6 s.
+
 ### Added (2026-08-25, firmware — playback and the reel display)
 
 - `components/tape/tape_player` — the tape-side sequencer. PLAY runs every

@@ -15,6 +15,7 @@ rejected.
 components/tape/   slot manager, ADPCM codec, tape-side player (portable C)
 components/ui/     button grammar + device state machine     (portable C)
 components/leds/   reel display rendering                    (portable C)
+components/factory/ factory-test harness                     (portable C)
 main/              ESP32 entry point and pin map
 test/host/         host unit tests + NOR flash mock
 ```
@@ -47,6 +48,41 @@ and re-checks the invariants:
 
 This matters because there is no battery: a yanked USB cable is the normal
 way this device powers off.
+
+## Factory test (M5)
+
+Twenty boards get assembled by hand, so each one is probed on the jig
+before production firmware goes on:
+
+```bash
+idf.py -C firmware -DMIXXTAPE_FACTORY_TEST=ON build flash monitor
+```
+
+It probes every subsystem, prints an operator table, and emits one
+greppable line:
+
+```
+FT|1|flash_id=PASS:0xEF4018|mic=PASS:1832|tab=PASS:1|bt=PASS:3|VERDICT=PASS
+```
+
+Log the jig's serial output to a file and that file is the build record for
+the run — when board 14 turns out flaky three months later, you can look it
+up instead of guessing.
+
+Two properties matter and are enforced by tests:
+
+- **Every step runs, even after one fails.** A board with a dead mic *and*
+  a dead flash reports both faults on one pass, not one fault per reflash.
+- **Results carry measured values, not just verdicts.** `mic=PASS:1832`
+  lets you spot the one board reading 40 before it ships.
+
+Interactive steps (LED walk, button presses) are skipped automatically on
+an unattended run rather than blocking the line.
+
+**Probes are not implemented yet.** The harness is host-tested; the probes
+that need drivers M4 has still to write report `SKIP` with a `TODO M4`
+detail, and the runner prints `SUITE INCOMPLETE` rather than a pass banner
+while any remain. `main/factory_main.c` is the bring-up checklist.
 
 ## Target build
 

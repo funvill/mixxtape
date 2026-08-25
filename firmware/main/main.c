@@ -101,8 +101,19 @@ static void ui_task(void *arg)
     }
 }
 
+#ifdef MIXXTAPE_FACTORY_TEST
+void factory_test_main(void);
+#endif
+
 void app_main(void)
 {
+#ifdef MIXXTAPE_FACTORY_TEST
+    /* Built for the jig: probe the board, print the record, stop. The
+     * production image goes on afterwards. */
+    factory_test_main();
+    return;
+#endif
+
     ESP_LOGI(TAG, "mixxtape firmware, M0 skeleton");
     ESP_LOGI(TAG, "tape: %d slots x %u KiB, ADPCM mono %u Hz",
              TAPE_SLOT_COUNT, (unsigned)(TAPE_SLOT_SIZE / 1024u),
