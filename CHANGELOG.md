@@ -8,6 +8,39 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, firmware — record-path limiter)
+
+- `components/audio/limiter` — look-ahead peak limiter with bounded makeup
+  gain, replacing the whole-take peak normalisation that one-pass recording
+  gave up. One gain does both jobs:
+  `target = min(max_gain, ceiling / envelope)` — loud rooms are pulled down
+  and cannot clip, quiet rooms are lifted (up to +18 dB) so an ambient take
+  is actually audible. It is also the better tool than normalisation, which
+  a single door slam defeats.
+- The envelope is a true **sliding maximum** over a window that includes
+  the sample about to leave the delay line, not a decaying peak follower.
+  That makes `|output| <= LIMITER_CEILING` a hard guarantee for any input
+  rather than a fast attack that usually keeps up — a decaying signal
+  defeats the cheap version, and there is a test for exactly that case.
+- Gain falls immediately and rises slowly: the immediate fall lands on
+  audio still inside the 10 ms delay line, so it is inaudible, while the
+  slow rise (~371 ms) stops the noise floor pumping between words. A gate
+  freezes the gain below -44 dBFS so a silent room is not amplified into
+  hiss. Integer throughout, so host and target results are identical.
+- Also feeds the REC lamp and reel brightness via `limiter_level()`.
+- Host tests: the ceiling invariant is checked against full-scale squares,
+  near-Nyquist content, rail-to-rail alternation, noise and a decaying
+  tone; look-ahead is proven by a silence-to-full-scale burst whose *first*
+  cycle already sits at the ceiling; plus delay accounting, gain bounds,
+  gate behaviour, smooth recovery, in-place aliasing, and invariance to
+  chunk size. 11 suites, ~62,000 assertions, green in ~1.8 s.
+
+### Fixed (2026-08-25)
+
+- Level meter decay stalled at 3/255 because the shift-based decay
+  underflows below 2^9, which would have left the REC lamp faintly lit
+  forever after a loud take. Caught by `test_limiter`.
+
 ### Added (2026-08-25, firmware — pairing policy and bond storage)
 
 - `components/bt/pairing` — the selection policy that makes "hold the board

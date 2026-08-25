@@ -17,6 +17,7 @@ add_library(tape_core STATIC
     ${CORE_DIR}/factory/src/factory_test.c
     ${CORE_DIR}/bt/src/pairing.c
     ${CORE_DIR}/bt/src/bonds.c
+    ${CORE_DIR}/audio/src/limiter.c
     ${CORE_DIR}/ui/src/ui_state.c
 )
 target_include_directories(tape_core PUBLIC
@@ -25,6 +26,7 @@ target_include_directories(tape_core PUBLIC
     ${CORE_DIR}/leds/include
     ${CORE_DIR}/factory/include
     ${CORE_DIR}/bt/include
+    ${CORE_DIR}/audio/include
 )
 
 if(MSVC)
@@ -39,7 +41,7 @@ target_include_directories(mock_flash PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 foreach(t test_tape_store test_sbc_frame test_adpcm test_adpcm_block
             test_tape_player test_reels test_ui_state test_factory_test
-            test_pairing test_bonds)
+            test_pairing test_bonds test_limiter)
     add_executable(${t} ${t}.c)
     target_link_libraries(${t} PRIVATE tape_core mock_flash)
     add_test(NAME ${t} COMMAND ${t})

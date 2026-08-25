@@ -115,12 +115,15 @@ is satisfied *more* directly.
 | Flash writes per take | 2x (ADPCM + SBC) | **1x** |
 | Wait after REC release | ~10-20 s pass-2 | **none** |
 | Yank during record | scratch lost, take lost | **take survives, truncated** |
-| Level control | peak normalise (whole take) | look-ahead limiter (~100 ms) |
+| Level control | peak normalise (whole take) | look-ahead limiter (10 ms) |
 
 The only real loss is whole-take peak normalisation. A look-ahead limiter in
 RAM is standard practice for live recorders and is the right tool for a mic
 capturing a room anyway — it also can't be fooled by one loud transient the
-way peak normalisation can.
+way peak normalisation can. Built and tested as `components/audio/limiter`:
+10 ms of look-ahead (882 B of delay line), a sliding-maximum envelope that
+makes the output ceiling a hard guarantee, and makeup gain to +18 dB so
+ambient takes are audible.
 
 The yank behaviour is a genuine *improvement* and very on-theme: pull the
 cable mid-record and you keep what was recorded, exactly like real tape.

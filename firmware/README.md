@@ -17,6 +17,7 @@ components/ui/     button grammar + device state machine     (portable C)
 components/leds/   reel display rendering                    (portable C)
 components/factory/ factory-test harness                     (portable C)
 components/bt/     pairing policy + persistent bond table    (portable C)
+components/audio/  record-path look-ahead limiter            (portable C)
 main/              ESP32 entry point and pin map
 test/host/         host unit tests + NOR flash mock
 ```
@@ -108,5 +109,6 @@ Pairing *policy* and the bond table are written and tested too — what is
 missing there is only the Bluedroid plumbing that feeds them.
 
 Not yet written, all gated on prototype boards (M4): the SPI flash HAL,
-I²S capture, the record-side limiter, the A2DP source and discovery
-callbacks, WS2812 output via RMT, and CC sensing.
+I²S capture, the A2DP source and discovery callbacks, WS2812 output via
+RMT, and CC sensing. Every one of those is a driver — the logic they feed
+is already written and tested.
