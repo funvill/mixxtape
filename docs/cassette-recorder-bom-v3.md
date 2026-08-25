@@ -1,4 +1,16 @@
-# Cassette Mixtape Recorder — BOM v3
+# Bill of materials — v3 (SUPERSEDED)
+
+> **Superseded by [BOM v4](cassette-recorder-bom-v4.md)**, which is
+> generated from the schematic rather than maintained by hand.
+>
+> This document drifted from the board in seven places: it still lists
+> the CH340N USB-UART, the USBLC6 ESD diode and the S8050 auto-reset
+> pair (all deleted when USB-C became power-only), and the ME6211 LDO
+> (replaced by the AMS1117); and it is missing the WS2812 substitute
+> actually fitted, the SN74AHCT1G125 level shifter and the DNP microSD
+> footprint. Kept for the reasoning in its notes, not for its numbers.
+
+---
 
 Single-sided SMT, 2-layer, 100.0 × 63.5 mm. USB-C only (battery circuit DNP).
 Mono MEMS mic → SBC encode at record → A2DP playback. 3 × 4-minute tracks.

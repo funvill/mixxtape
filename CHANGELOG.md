@@ -8,6 +8,38 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, BOM v4 — generated, with live pricing)
+
+- `hardware/scripts/gen_bom.py` — derives the BOM from
+  `hardware/mixxtape.kicad_sch` and reads prices, stock and library type
+  live from JLCPCB, emitting both `docs/cassette-recorder-bom-v4.md` and a
+  JLCPCB-format assembly CSV. Requests are paced and cached because JLC
+  throttles bursts.
+- **BOM v3 had drifted from the schematic in seven places** and is now
+  marked superseded: it still listed the CH340N, USBLC6 and S8050 pair
+  (deleted when USB-C became power-only) and the ME6211 LDO (replaced by
+  the AMS1117), and was missing the fitted WS2812 substitute, the
+  SN74AHCT1G125 level shifter and the DNP microSD footprint. Generating it
+  removes that whole class of error.
+
+### Findings from live JLCPCB data (2026-08-25)
+
+- **⚠ The microphone is out of stock.** MSM261S4030H0R (C2840615) shows
+  zero at JLC — and it is the one part the product cannot ship without.
+  Same-family alternatives are in stock at roughly a third of the price
+  (C51928215, C22390138, C51928210), but the part-number suffix encodes
+  package and port direction, and this design needs a **bottom-ported**
+  mic because there is an acoustic hole through the board beneath it. Each
+  candidate needs its datasheet checked before substituting. Needs Steven.
+- NOR flash is up as the brief predicted: W25Q128 is $2.26 against v3's
+  $1.65.
+- Parts now cost **$11.01/board** at 20 boards ($205.20 components +
+  $15.00 in setup fees for 5 extended parts), against v3's ~$8.50 estimate
+  for components. PCB and assembly labour are quoted separately.
+- At this quantity the per-extended-part setup fee dominates: adding a new
+  extended part costs $3, while using more of one already on the board is
+  nearly free.
+
 ### Added (2026-08-25, user documentation)
 
 - `docs/MANUAL.md` — the manual as it would ship with a board: getting

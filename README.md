@@ -73,8 +73,9 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
   rationale, and open questions
 - [Agent handoff brief](docs/cassette-recorder-agent-brief.md) — the
   authoritative spec: locked decisions, GPIO map, behaviour spec, phase order
-- [BOM v3](docs/cassette-recorder-bom-v3.md) — full bill of materials with LCSC
-  part numbers and costing
+- [BOM v4](docs/cassette-recorder-bom-v4.md) — generated from the schematic
+  with live JLCPCB prices and stock ([v3](docs/cassette-recorder-bom-v3.md)
+  is superseded)
 - [Prior art](docs/prior-art.md) — research on cassette-form-factor projects
 - [Firmware plan](docs/firmware-plan.md) — architecture, milestones, and
   hardware interface for the firmware agent
