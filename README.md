@@ -54,11 +54,11 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
 **Design locked, schematic and firmware core underway.** `hardware/` holds a
 KiCad 9 project with a first-pass schematic (ERC-clean) and JLCPCB part
 libraries. `firmware/` has the ESP-IDF skeleton plus the host-tested core —
-crash-safe slot manager, SBC arithmetic, and button state machine — proven
-without hardware since there is no devkit. Target: a prototype run of 3–5
-boards, then a full run of 20. The risky parts (A2DP source against real
-earbuds, I²S capture, SBC encode timing) are measured on those first boards
-before the layout is final.
+crash-safe slot manager, ADPCM codec, playback sequencer, reel display,
+pairing policy, bond table and record limiter — all proven without hardware,
+since there is no devkit. Target: a prototype run of 3–5 boards, then a full
+run of 20. What is left needs a board in hand: the SPI flash, I²S capture,
+the A2DP plumbing, LED output, and A2DP against real earbuds.
 
 ## Documentation
 
