@@ -42,8 +42,8 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
 |---|---|
 | MCU | ESP32-WROOM-32E (original Xtensa ESP32 — the only ESP32 with Classic Bluetooth / A2DP) |
 | Mic | MSM261S4030H0R I²S MEMS, mono, bottom-ported |
-| Storage | W25Q128 16 MB external NOR flash, separate from module flash |
-| Audio | 44.1 kHz mono, SBC-encoded at record time; playback is read-frames-and-transmit |
+| Storage | W25Q128 16 MB external NOR flash, separate from module flash; 3 fixed slots, ~4 min each |
+| Audio | 44.1 kHz mono, ADPCM-encoded at record time; playback decodes with table lookups and hands PCM to the Bluetooth stack |
 | Indicators | 29 × WS2812B-2020 RGB (2 × 12 reel rings + track/REC/BT) |
 | Controls | 4 tactile buttons + break-off write-protect tab |
 | Power | USB-C only (power + CC sense, no data); TP4056/LiPo circuit on board but DNP |
