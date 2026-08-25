@@ -12,8 +12,9 @@ rejected.
 ## Layout
 
 ```
-components/tape/   slot manager, SBC frame math, ADPCM   (portable C)
-components/ui/     button grammar + device state machine (portable C)
+components/tape/   slot manager, ADPCM codec, tape-side player (portable C)
+components/ui/     button grammar + device state machine     (portable C)
+components/leds/   reel display rendering                    (portable C)
 main/              ESP32 entry point and pin map
 test/host/         host unit tests + NOR flash mock
 ```
@@ -61,7 +62,11 @@ auto-program transistors.
 
 ## State
 
-M0-M2 of the plan are done: project skeleton, storage budget resolved, and
-the host-tested core. Not yet written, all gated on prototype boards (M4):
-the SPI flash HAL, I²S capture, SBC encoding, A2DP source, WS2812 output,
-and CC sensing.
+M0-M3 of the plan are done: project skeleton, storage budget resolved,
+the host-tested core, and the reference study that settled the stored
+format (ADPCM, not SBC — ESP-IDF's A2DP source takes PCM only). Playback
+sequencing and the reel display are written and tested too.
+
+Not yet written, all gated on prototype boards (M4): the SPI flash HAL,
+I²S capture, the record-side limiter, A2DP source and pairing, WS2812
+output via RMT, and CC sensing.

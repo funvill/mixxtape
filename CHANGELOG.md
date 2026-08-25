@@ -8,6 +8,35 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, firmware — playback and the reel display)
+
+- `components/tape/tape_player` — the tape-side sequencer. PLAY runs every
+  recorded track in order as one side, skipping empty slots rather than
+  playing silence; pause/resume, track skip with wrap, and position
+  measured across the whole side (which is what the reels show). Pull-based
+  so the A2DP callback, which must never block, only ever copies out of a
+  ring a prefetch task fills.
+- `components/leds/reels` — the reel display as a pure function of (mode,
+  progress, level, clock). Left ring empties while the right fills; red
+  pulse riding the input level while recording; amber sweep hunting for a
+  sink; green lock; dim reverse spin during background erase; violet while
+  dubbing; slow red pulse when the sink is busy.
+- Host tests: `test_tape_player` (side sequencing verified sample-exact
+  against independently decoded audio, empty-slot skipping, pause/resume,
+  skip wrap, monotonic position, playback after remount) and `test_reels`.
+  7 suites, ~58,000 assertions, green in ~1.3 s.
+
+### Verified (2026-08-25)
+
+- **LED power budget holds.** `test_reels` sweeps every mode across time at
+  worst-case inputs and measures the frame: **119 mA worst case** at the
+  default 500 mA-source brightness cap, 227 mA at the 1.5 A cap — against a
+  200 mA slice of the USB budget (the ESP32 alone bursts to ~240 mA on BT
+  transmit). No mode ever renders all-white. The constraint is now enforced
+  by a test rather than by hoping.
+- Reel conservation: the two rings together always hold the same amount of
+  "tape" across a whole side, to within integer rounding.
+
 ### Changed (2026-08-25, firmware M3 — stored format is ADPCM, not SBC)
 
 - **ESP-IDF's A2DP source accepts PCM only.** `esp_a2d_source_data_cb_t` is

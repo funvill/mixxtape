@@ -198,11 +198,14 @@ line carries the voltage, the other is near 0 — read both, use the higher.
   a look-ahead limiter instead of whole-take peak normalisation, and slots
   grew to 5.125 MiB to keep the four-minute take.
 - **M2 — Host-testable core ✅ done.** `components/tape` (slot manager,
-  append-only header log with CRC + generation, SBC frame math, ADPCM) and
-  `components/ui` (button grammar and device state machine), behind
+  append-only header log with CRC + generation, ADPCM block codec,
+  tape-side player), `components/ui` (button grammar and device state
+  machine) and `components/leds` (reel rendering), all behind
   `flash_hal.h`. `test/host` has a NOR mock with power-loss tearing and a
-  sweep that tears every flash operation of a recording in turn. 4 suites,
-  ~2,300 assertions, green.
+  sweep that tears every flash operation of a recording in turn, plus a
+  power-budget sweep proving no LED mode exceeds its share of the USB
+  budget (119 mA worst case at the default cap). 7 suites, ~58,000
+  assertions, green.
 - **M3 — Reference study ✅ done.** The decisive finding: ESP-IDF's A2DP
   source callback is fed **PCM**, and Bluedroid encodes SBC internally with
   no API for pre-encoded frames. Stored format changed to block-framed IMA
