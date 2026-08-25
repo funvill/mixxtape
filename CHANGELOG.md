@@ -8,6 +8,26 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, user documentation)
+
+- `docs/MANUAL.md` — the manual as it would ship with a board: getting
+  started, the controls, recording and playback, the light language, the
+  write-protect tab and why it is permanent, power, labelling, care,
+  troubleshooting, specifications, and a plain list of what the device
+  deliberately does not do.
+- `docs/FAQ.md` — the questions people actually ask, answered against the
+  design as built, with a closing section of honest limitations (no way to
+  get recordings onto a computer, twelve minutes total, mono, handling
+  noise still unproven, needs mains power, will not play in a deck).
+- Both carry a draft banner and mark unverified claims as such — sound
+  quality, handling noise, AirPods compatibility and reconnect latency are
+  design intent until prototypes exist, and the docs say so rather than
+  implying they are settled.
+- Neither document uses the project's current name, since it collides with
+  Mixxim's commercial product and a rename is planned; they say "your
+  tape" throughout, which reads better anyway and makes the rename a
+  non-event.
+
 ### Added (2026-08-25, firmware — record-path limiter)
 
 - `components/audio/limiter` — look-ahead peak limiter with bounded makeup

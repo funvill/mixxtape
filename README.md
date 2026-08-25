@@ -62,6 +62,13 @@ before the layout is final.
 
 ## Documentation
 
+**For people using one:**
+
+- [Manual](docs/MANUAL.md) — how to record, play, pair, and what the lights mean
+- [FAQ](docs/FAQ.md) — including the honest limitations
+
+**For people building or hacking one:**
+
 - [Project write-up](docs/cassette-project-writeup.md) — the pitch, design
   rationale, and open questions
 - [Agent handoff brief](docs/cassette-recorder-agent-brief.md) — the
