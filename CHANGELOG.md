@@ -8,6 +8,31 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, firmware — pairing policy and bond storage)
+
+- `components/bt/pairing` — the selection policy that makes "hold the board
+  against the speaker" the entire interaction. Class-of-Device filtering
+  drops phones, laptops, peripherals and wearables so the user never sees a
+  list of their own hardware, and rejects the non-sink members of the
+  Audio/Video class (microphones, set-top boxes, VCRs, cameras, monitors).
+  RSSI then makes proximity the selection mechanism. Ties keep the earlier
+  entry so repeated inquiries do not make the board look like it is
+  dithering. Speakers that omit the Audio service bit are still accepted —
+  plenty of cheap ones do.
+- Reconnect backoff with the "sink busy" signal: the sink is usually busy
+  reconnecting to its owner's phone at power-up, so attempts back off
+  exponentially to a cap, and after ~15 s the user is told honestly rather
+  than left watching a hopeful blink. Correct across the millisecond
+  counter wrapping (~49 days).
+- `components/bt/bonds` — persistent bond table in the spare flash region,
+  reusing the tape header's append-only ping-pong log: 8 bonds, ordered
+  most-recently-used first (which is the order power-up tries them),
+  least-recently-used eviction when full, and crash-safe commits.
+- Host tests: a power-yank sweep over the bond log proves an established
+  bond survives a cable pull during a new pairing, the new bond either
+  lands completely or not at all, and the table is still usable
+  afterwards. 10 suites, ~60,000 assertions, green in ~1.9 s.
+
 ### Added (2026-08-25, firmware M5 — factory test harness)
 
 - `components/factory` — the harness that gets 20 hand-built boards
