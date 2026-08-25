@@ -60,6 +60,13 @@ in a real deck (patent risk — do not design toward it).
 
 ## Hardware conventions
 
+- **USB-C is power only** — no USB data path, no USB-UART bridge on the
+  board. Programming happens through the J5 pogo pads via a jig. Do not
+  re-add a CH340/CP2102 or castellated pads; Steven removed them
+  deliberately (2026-08-25).
+- Firmware work follows `docs/firmware-plan.md`; where it and the agent
+  brief's GPIO map differ, the firmware plan wins.
+
 - Every part carries an `LCSC` field with its JLC part number; keep it correct
   — it drives JLCPCB assembly BOM export.
 - WS2812B-2020 positions are fitted with XINGLIGHT XL-2020RGBC-2812B

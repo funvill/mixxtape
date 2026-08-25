@@ -109,22 +109,25 @@ FP = "mixxtape_parts:"
 # (ref, lib, value, footprint, lcsc, dnp, (x, y), {pin: net})
 # net "NC" -> no_connect marker; net None -> leave untouched
 COMPONENTS = [
-    # --- USB front end ---
+    # --- USB-C: power only. Data pins unused; programming is via the jig pads.
+    # CC1/CC2 sensed by ADC1 (SENSOR_VP/VN) through 10k so firmware can read
+    # the source's Rp advertisement (~0.41V default / 0.92V 1.5A / 1.68V 3A
+    # with Rd=5.1k) and raise the LED brightness cap on high-current supplies.
     ("J1", "mixxtape_parts:TYPE-C-31-M-12", "USB-C-16P", FP + "USB-C_SMD-TYPE-C-31-M-12_1", "C165948", False, (16, 26), {
         "A1B12": "GND", "B1A12": "GND", "A4B9": "VBUS", "B4A9": "VBUS",
         "A5": "CC1", "B5": "CC2",
-        "A6": "USB_DP_C", "B6": "USB_DP_C", "A7": "USB_DN_C", "B7": "USB_DN_C",
+        "A6": "NC", "B6": "NC", "A7": "NC", "B7": "NC",
         "A8": "NC", "B8": "NC", "1": "GND", "2": "GND", "3": "GND", "4": "GND"}),
     ("R1", "mixxtape_parts:0402WGF5101TCE", "5.1k", FP + "R0402", "C25905", False, (13, 40), {"1": "CC1", "2": "GND"}),
     ("R2", "mixxtape_parts:0402WGF5101TCE", "5.1k", FP + "R0402", "C25905", False, (20, 40), {"1": "CC2", "2": "GND"}),
-    ("U7", "mixxtape_parts:USBLC6-2SC6", "USBLC6-2SC6", FP + "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL", "C7519", False, (40, 26), {
-        "1": "USB_DP_C", "6": "USB_DP", "3": "USB_DN_C", "4": "USB_DN",
-        "2": "GND", "5": "VBUS"}),
-    ("U6", "mixxtape_parts:CH340N", "CH340N", FP + "SOP-8_L5.0-W4.0-P1.27-LS6.0-BL", "C506813", False, (64, 26), {
-        "1": "USB_DP", "2": "USB_DN", "3": "GND", "4": "RTS_N",
-        "5": "VBUS", "6": "UART_RX", "7": "UART_TX", "8": "CH340_V3"}),
-    ("C3", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (78, 40), {"1": "CH340_V3", "2": "GND"}),
-    ("C4", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (64, 40), {"1": "VBUS", "2": "GND"}),
+    ("R10", "mixxtape_parts:0603WAF1002T5E", "10k", FP + "R0603", "C25804", False, (40, 22), {"1": "CC1", "2": "CC1_SENSE"}),
+    ("R11", "mixxtape_parts:0603WAF1002T5E", "10k", FP + "R0603", "C25804", False, (40, 28), {"1": "CC2", "2": "CC2_SENSE"}),
+
+    # --- Programming jig interface: 6 bare pogo pads, no connector fitted.
+    # Jig carries the USB-UART bridge and EN/IO0 drivers.
+    ("J5", "mixxtape_local:CONN_6", "PROG-JIG", "", "", False, (64, 26), {
+        "1": "3V3", "2": "GND", "3": "EN", "4": "BTN_REC",
+        "5": "UART_TX", "6": "UART_RX"}),
 
     # --- Power ---
     ("U4", "mixxtape_parts:AMS1117-3.3", "AMS1117-3.3", FP + "SOT-223-3_L6.5-W3.4-P2.30-LS7.0-BR", "C6186", False, (104, 22), {
@@ -142,23 +145,22 @@ COMPONENTS = [
     # --- ESP32 ---
     ("U1", "mixxtape_parts:ESP32-WROOM-32E", "ESP32-WROOM-32E-N4", FP + "WIFI-SMD_ESP32-WROOM-32E", "C701341", False, (64, 90), {
         "1": "GND", "2": "3V3", "3": "EN",
-        "4": "NC", "5": "NC",
+        "4": "CC1_SENSE", "5": "CC2_SENSE",  # ADC1: USB-C source Rp detect
         "6": "NC",   # IO34: battery-sense divider is DNP
         "7": "NC",   # IO35: line-in is DNP
-        "8": "NC",   # IO32 free
+        "8": "SD_DETECT",   # IO32: microSD card-detect (SD is DNP)
         "9": "I2S_SD", "10": "I2S_WS", "11": "I2S_BCLK", "12": "LED_DATA",
-        "13": "GPIO14", "14": "NC",  # IO12 = MTDI strap, keep unused
-        "15": "GND", "16": "GPIO13",
+        "13": "NC", "14": "NC",  # IO14 free; IO12 = MTDI strap, keep unused
+        "15": "GND", "16": "NC",  # IO13 free
         "17": "NC", "18": "NC", "19": "NC", "20": "NC", "21": "NC", "22": "NC",
         "23": "NC", "24": "NC",  # IO15/IO2 free
         "25": "BTN_REC", "26": "BTN_PLAY", "27": "BTN_TRACK", "28": "BTN_MODE",
         "29": "SPI_CS_N", "30": "SPI_CLK", "31": "SPI_MISO",
         "32": "NC", "33": "TAB_SENSE", "34": "UART_RX", "35": "UART_TX",
-        "36": "NC",  # IO22 free
+        "36": "SD_CS_N",  # IO22: microSD chip select (SD is DNP)
         "37": "SPI_MOSI", "38": "GND", "39": "GND"}),
     ("R3", "mixxtape_parts:0603WAF1002T5E", "10k", FP + "R0603", "C25804", False, (24, 66), {"1": "3V3", "2": "EN"}),
     ("C9", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (24, 74), {"1": "EN", "2": "GND"}),
-    ("C10", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (24, 58), {"1": "RTS_N", "2": "EN"}),
     ("C5", "mixxtape_parts:CL05A106MQ5NUNC", "10uF", FP + "C0402", "C15525", False, (70, 66), {"1": "3V3", "2": "GND"}),
     ("C6", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (78, 66), {"1": "3V3", "2": "GND"}),
 
@@ -190,11 +192,21 @@ COMPONENTS = [
         "1": "3V3", "2": "TAB_SENSE"}),
     ("R7", "mixxtape_parts:0603WAF1002T5E", "10k", FP + "R0603", "C25804", False, (84, 113), {"1": "TAB_SENSE", "2": "GND"}),
 
-    # --- Hacker header ---
-    ("J3", "mixxtape_local:CONN_10", "CASTELLATED", "", "", False, (132, 88), {
-        "1": "3V3", "2": "GND", "3": "I2S_BCLK", "4": "I2S_WS", "5": "I2S_SD",
-        "6": "UART_TX", "7": "UART_RX", "8": "EN", "9": "GPIO13", "10": "GPIO14"}),
 ]
+
+# --- MicroSD socket (footprint only, DNP — "studio edition" option) ---
+# Shares VSPI with the audio flash; SPI mode wiring. CS pullup keeps a
+# populated card deselected while the flash is accessed.
+COMPONENTS.append(
+    ("J4", "mixxtape_parts:TF-01A", "microSD (DNP)", FP + "TF-SMD_TF-01A",
+     "C91145", True, (152, 92), {
+         "1": "NC", "8": "NC",              # DAT2/DAT1 unused in SPI mode
+         "2": "SD_CS_N", "3": "SPI_MOSI", "5": "SPI_CLK", "7": "SPI_MISO",
+         "4": "3V3", "6": "GND", "9": "SD_DETECT",
+         "10": "GND", "11": "GND", "12": "GND", "13": "GND"}))
+COMPONENTS.append(
+    ("R9", "mixxtape_parts:0603WAF1002T5E", "10k (DNP)", FP + "R0603",
+     "C25804", True, (152, 82), {"1": "3V3", "2": "SD_CS_N"}))
 
 # --- LED data level shifter: 3V3 LED_DATA -> 5V LED_DATA_5V ---
 COMPONENTS.append(
@@ -226,17 +238,18 @@ for k in range(8):
          "C1525", False, (152, 56 + 3 * k), {"1": "VBUS", "2": "GND"}))
 
 TEXTS = [
-    ((12, 10), "USB-C + ESD + USB-UART"),
+    ((12, 10), "USB-C: POWER ONLY + CC SENSE (no USB data on board)"),
     ((90, 10), "POWER: USB-C only. Battery section DNP."),
-    ((40, 56), "ESP32  (GPIO map: docs/cassette-recorder-agent-brief.md sec.5)"),
+    ((56, 12), "PROG JIG: 6 pogo pads. Jig carries USB-UART + EN/IO0 auto-program drivers."),
+    ((40, 56), "ESP32  (GPIO map: docs/cassette-recorder-agent-brief.md sec.5 + docs/firmware-plan.md)"),
     ((8, 98), "I2S MEMS MIC (mono, L/R=GND)"),
     ((92, 84), "16MB AUDIO FLASH (VSPI)"),
     ((30, 102), "CONTROLS: 4 buttons + write-protect tab"),
-    ((124, 82), "HACKER HEADER: 10 castellated pads"),
-    ((88, 40), "TODO: CH340N has RTS# only, no DTR - BOM's S8050 auto-reset pair needs both signals."),
-    ((88, 42), "  Fitted: cap-coupled RTS reset (C10) + hold-REC(IO0)-at-plug-in to enter bootloader."),
-    ((88, 44), "  Alternative: CH340C/CH343 with DTR. Q1/Q2 omitted until decided."),
-    ((88, 46), "DNP: TP4056+JST battery, IO34 battery-sense divider, IO35 line-in (jack needs Steven)."),
+    ((88, 42), "CC SENSE: firmware reads CC1/CC2 on ADC1 (GPIO36/39) to detect the"),
+    ((88, 44), "  USB source's current advertisement; LED cap stays 500mA-safe by default."),
+    ((88, 46), "DNP: TP4056+JST battery, IO34 battery-sense divider, IO35 line-in (jack needs Steven),"),
+    ((88, 48), "  J4 microSD studio-edition option (CS=IO22, detect=IO32, shares VSPI; CD needs internal pullup)."),
+    ((146, 84), "MICROSD (DNP)"),
     ((62, 52), "U8: 3V3->5V LED data level shift"),
     ((88, 54), "REEL LEDS: D1-D12 left ring, D13-D24 right ring, D25-D27 track, D28 REC, D29 BT"),
 ]
