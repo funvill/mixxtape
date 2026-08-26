@@ -8,6 +8,30 @@ first prototype run.
 
 ## [Unreleased]
 
+### Added (2026-08-25, supply-chain rule and the case-fit test)
+
+- **Supply-chain rule (Steven):** every fitted part must have 5,000+ in
+  stock at JLCPCB, and a common part beats a capable one. Enforced by
+  `gen_bom.py`, which now prints a rule section; `find_common_parts.py`
+  searches for compliant alternatives. Exceptions must be argued in
+  `STOCK_EXCEPTIONS` rather than waved through.
+- **Audit result: every fitted part clears 5,000 except the microphone.**
+  The nearest thing to a problem elsewhere is the ESP32 module at 24k,
+  which is a locked decision anyway (only ESP32 with Classic Bluetooth).
+- **⚠ No digital MEMS microphone at JLCPCB meets the rule.** The whole
+  category is thin — the best-stocked digital part is ~3.5k. The only mic
+  that clears 5,000 (ZTS6216, C481302, 29k) is **analog**: it needs a
+  DC-blocking cap and a gain stage into the ESP32's ADC, which the brief
+  already calls a lo-fi path with ~9 effective bits. Meeting the rule there
+  would wreck the product's only input, so a digital part at ~3.5k is
+  recorded as an accepted exception with three qualified alternates.
+- `docs/case-fit-test-1to1.pdf` — printable board outline at 1:1, with a
+  50 mm calibration bar so a silently scaled print is caught before
+  anything is measured against it.
+- `docs/PRE-PRODUCTION-CHECKLIST.md` — the case-fit procedure, every open
+  decision, what to re-quote, and the three prototype questions that could
+  still change the hardware. Linked from the README.
+
 ### Added (2026-08-25, PCB mechanical layer)
 
 - `hardware/mixxtape.kicad_pcb` — board outline, reel windows, break-off

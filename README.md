@@ -62,6 +62,13 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
 
 ## Documentation
 
+**Before ordering boards:**
+
+- [Pre-production checklist](docs/PRE-PRODUCTION-CHECKLIST.md) — the
+  case-fit test, open decisions, and what to re-quote
+- [Case-fit test sheet](docs/case-fit-test-1to1.pdf) — print at 100%, cut
+  out, put in a real cassette case
+
 **For people using one:**
 
 - [Manual](docs/MANUAL.md) — how to record, play, pair, and what the lights mean

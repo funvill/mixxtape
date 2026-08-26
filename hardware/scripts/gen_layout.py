@@ -201,6 +201,29 @@ def main():
         body.append(seg(lx + 1.0, fy(ry), lx + lw - 1.0, fy(ry),
                         layer="F.SilkS", width=0.12))
 
+    # --- print calibration --------------------------------------------
+    # Printers default to "fit to page" and will happily shrink this by a
+    # few percent without saying so, which would make the whole case-fit
+    # test lie. Measure the bar before trusting anything else on the sheet.
+    cal_x = 112.0          # clear of the board, which ends at 100.33
+    cal_y = 56.0
+    cal_len = 50.0
+    body.append(seg(cal_x, fy(cal_y), cal_x + cal_len, fy(cal_y),
+                    layer="Dwgs.User", width=0.25))
+    for k in range(11):
+        tick = 2.5 if k % 5 == 0 else 1.2
+        body.append(seg(cal_x + k * 5.0, fy(cal_y),
+                        cal_x + k * 5.0, fy(cal_y + tick),
+                        layer="Dwgs.User", width=0.25))
+    body.append(text("50.0 mm", cal_x, fy(cal_y + 5.0), "Dwgs.User", size=1.6))
+    for i, line in enumerate([
+            "MEASURE THIS BAR FIRST.",
+            "If it is not exactly 50.0 mm, the printer scaled the page and",
+            "nothing else on this sheet can be trusted. Reprint at 100% /",
+            "actual size, with any fit-to-page option turned off."]):
+        body.append(text(line, cal_x, fy(cal_y - 3.5 - i * 2.4),
+                         "Dwgs.User", size=1.1))
+
     # --- notes ------------------------------------------------------------
     notes = [
         "MECHANICAL ONLY - no components placed, no routing.",

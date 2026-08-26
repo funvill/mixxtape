@@ -36,21 +36,46 @@ JLC_SEARCH = ("https://jlcpcb.com/api/overseas-pcb-order/v1/"
 # JLCPCB charges a one-off feeder/reel setup fee per extended part per order.
 EXTENDED_PART_FEE = 3.00
 
+# Supply-chain rule (Steven, 2026-08-25): every fitted part must have at
+# least this much stock at JLCPCB, and a common boring part beats a better
+# one that might vanish. A run of 20 boards is not worth a redesign because
+# a clever chip went end-of-life. Exceptions have to be argued for in
+# STOCK_EXCEPTIONS below, not waved through.
+MIN_STOCK = 5000
+
+STOCK_EXCEPTIONS = {
+    "C2840615": (
+        "No digital MEMS microphone at JLCPCB meets the 5,000 rule — the "
+        "whole category is thin, and the best stocked part in it is only "
+        "~3.5k. The one microphone that does clear the bar (ZTS6216, "
+        "C481302, 29k) is **analog**: it needs a DC-blocking cap and a gain "
+        "stage into the ESP32's ADC, which the brief already describes as a "
+        "lo-fi path with ~9 effective bits. Taking it would meet the rule "
+        "and wreck the product's only input. Holding a digital part at ~3.5k "
+        "is the lesser risk: the run needs 20 pieces, so that is 174x "
+        "coverage, and three alternates are qualified below."
+    ),
+}
+
 # Hand-maintained notes keyed by LCSC part number. These are judgements, not
 # data the API can give us, so they live here rather than in the generated
 # document — editing the output directly is what let v3 drift.
 NOTES = {
     "C2840615": (
-        "**Out of stock and needs a decision.** The microphone is the one "
-        "part the product cannot ship without. Same-family alternatives are "
-        "in stock and cheaper — MSM261DHT006 (C51928215, ~3.5k, $0.45), "
-        "MSM261DHP006 (C22390138, ~2.9k, $0.57), MSM261DDB019 (C51928210, "
-        "~1.9k, $0.57) — but the suffix encodes package size and port "
-        "direction, and this design needs a **bottom-ported** part because "
-        "there is an acoustic hole through the board beneath it. Check each "
-        "datasheet for package and port before substituting. A well-"
-        "documented fallback is the TDK ICS-43434 (C5656610, ~3.7k) at "
-        "$3.33, which is expensive but proven in hobby designs."
+        "**BLOCKER — zero stock, and the board cannot be built without a "
+        "microphone.** Not swapped in the schematic yet on purpose: the "
+        "footprint has to be confirmed first. Best candidate is "
+        "MSM261DHT006 (C51928215, ~3.5k, $0.45). Same "
+        "family, a third of the price, best-stocked digital MEMS mic at "
+        "JLCPCB. **Datasheet check required first:** the "
+        "suffix encodes package size and port direction, and this design "
+        "needs a **bottom-ported** part because there is an acoustic hole "
+        "through the board beneath it. If it is top-ported, take one of the "
+        "alternates. Qualified alternates, all digital: MP34DT06JTR "
+        "(C503097, ~3.8k, $1.80, ST, PDM) and ICS-43434 (C5656610, ~3.7k, "
+        "$3.33, TDK, I2S, very well documented). PDM parts are fine — the "
+        "ESP32's I2S peripheral reads PDM directly — but the firmware would "
+        "initialise in PDM RX mode instead of standard I2S."
     ),
     "C97521": (
         "$2.26 here against $1.65 in BOM v3 — the NOR price rise the brief "
@@ -68,7 +93,14 @@ NOTES = {
     ),
     "C701341": (
         "N4 (4 MB). N16 is C701343 — take it if the delta is small, though "
-        "the firmware fits in 4 MB comfortably."
+        "the firmware fits in 4 MB comfortably. Stock is the thinnest of "
+        "any fitted part after the microphone, but this module is a locked "
+        "decision: it is the only ESP32 with Classic Bluetooth, and without "
+        "that there is no A2DP and no product."
+    ),
+    "C7484": (
+        "TI part, 26k stock. UMW second-source C20617903 has 40k and costs "
+        "a third as much if stock ever tightens. Both clear the rule easily."
     ),
 }
 
@@ -328,6 +360,22 @@ def write_markdown(rows, args):
     short = [r for r in rows
              if not r["dnp"] and r["stock"] is not None
              and r["stock"] < r["order_qty"]]
+
+    below = [r for r in rows if not r["dnp"]
+             and r["stock"] is not None and r["stock"] < MIN_STOCK]
+    A("## Supply-chain rule: every fitted part needs "
+      f"{MIN_STOCK:,}+ in stock\n")
+    if not below:
+        A("All fitted parts clear the rule.\n")
+    for r in below:
+        note = STOCK_EXCEPTIONS.get(r["lcsc"])
+        state = "accepted exception" if note else "**VIOLATION**"
+        A(f"- `{r['lcsc']}` {r['value']} — {r['stock']:,} in stock, needs "
+          f"{r['order_qty']} — {state}")
+        if note:
+            A("")
+            A(f"  {note}")
+        A("")
 
     A("## Needs attention before ordering\n")
     if short:
