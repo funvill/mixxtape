@@ -34,7 +34,9 @@ position and lanyard hole are ours and have never touched plastic.
    - Does the **write-protect tab** (top-left) clear the internal ribs? The
      mouse-bite nibs must not sit where a rib presses.
    - Does the **lanyard hole** (bottom-left) clear the hinge?
-   - Does the **mic port** land somewhere a fingertip will not cover?
+   - Does the **microphone** land somewhere a fingertip, a case rib or
+     a written label will not cover? It is top-ported, so its top face
+     is the acoustic path — there is no hole through the board.
 
 ⬜ **Write the measurements down** and update the constants at the top of
    `hardware/scripts/gen_layout.py`, then re-run it. Every value there is
@@ -46,13 +48,20 @@ position and lanyard hole are ours and have never touched plastic.
 
 These are all flagged in the repo but need an actual answer before copper.
 
-⬜ **The microphone.** MSM261S4030H0R (C2840615) is at **zero stock** and
-   the board cannot be built without a mic. Best candidate is MSM261DHT006
-   (C51928215, ~3.5k, $0.45) — but check the datasheet for **package size
-   and port direction** first: the design needs a *bottom-ported* part
-   because there is an acoustic hole through the board beneath it.
-   Alternates: MP34DT06JTR (C503097, PDM) or ICS-43434 (C5656610, I2S).
-   See the BOM's "needs attention" section.
+✅ **The microphone — decided.** Moved to MSM261DHT006 (C51928215), the
+   best-stocked digital MEMS mic at JLC. Acoustically an equal swap; the
+   cost was the interface (PDM instead of I²S, firmware updated) and a
+   completely different pinout, so the schematic changed rather than just
+   the part number. Two things came out of the datasheet review and are
+   worth remembering:
+
+   - It is **top-ported**, and so was the part the brief specified. The
+     acoustic hole the brief called for through the board was a mistake
+     and has been removed. Keep the mic's top face clear instead.
+   - **3,485 in stock is below the 5,000 rule** — a documented exception,
+     because no digital MEMS mic at JLC clears it and the only one that
+     does is analog. Re-check stock before ordering; if it has fallen,
+     alternates are MP34DT06JTR (C503097) and ICS-43434 (C5656610).
 
 ⬜ **Record path: one pass, not two.** The brief's two-pass pipeline needs a
    scratch region that does not fit. Firmware now encodes ADPCM straight to

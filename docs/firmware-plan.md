@@ -30,9 +30,13 @@ arrive.
   few table lookups per sample, hand over PCM. No resampling, no filter
   banks, no transforms. If you find yourself doing real DSP at playback,
   something upstream is wrong.
-- **Encode at record time**, one pass: I²S PCM → ADPCM block → flash.
+- **Encode at record time**, one pass: PDM → PCM → ADPCM block → flash.
   44.1 kHz mono throughout — matches A2DP negotiation, eliminates
-  resampling.
+  resampling. The PDM-to-PCM decimation happens inside the ESP32's I²S
+  peripheral, so it costs no CPU.
+- **PDM downsample ratio must be 64, not 128.** PDM clock = sample rate x
+  ratio, and 44100 x 128 = 5.64 MHz is above the microphone's 4.8 MHz
+  maximum. 64 gives 2.8224 MHz, comfortably inside its window.
 - **Recording must survive a USB yank at any moment.** No battery, no
   graceful-shutdown window. Only the slot being written may be corrupted.
   Sector erases (~40 ms) never happen on the record critical path —
@@ -48,9 +52,8 @@ arrive.
 
 | Signal | GPIO | Notes |
 |---|---|---|
-| I²S BCLK → mic | 26 | MSM261S4030H0R, mono, L/R tied low |
-| I²S WS → mic | 25 | |
-| I²S DIN ← mic | 33 | |
+| PDM CLK → mic | 25 | MSM261DHT006, mono, L/R tied low, top-ported |
+| PDM DATA ← mic | 33 | |
 | VSPI SCK / MISO / MOSI | 18 / 19 / 23 | Shared: audio flash + (DNP) microSD |
 | Audio flash CS | 5 | W25Q128JVSIQ; 10k pullup |
 | microSD CS *(DNP)* | 22 | 10k pullup (DNP); SPI mode |
@@ -66,7 +69,7 @@ arrive.
 | UART0 TX / RX | 1 / 3 | To J5 jig pads only — **no USB-UART on board** |
 | Battery sense *(DNP)* | 34 | Unpopulated divider |
 | Line-in *(DNP)* | 35 | Unpopulated |
-| Free | 12*, 13, 14, 15, 2 | *IO12 is MTDI strap — must be low at boot, avoid |
+| Free | 12*, 13, 14, 15, 2, 26 | *IO12 is MTDI strap — must be low at boot, avoid. IO26 freed by the move from I²S to PDM |
 
 **Changes vs the brief:** CH340N and USB data path deleted (USB-C is power
 only); castellated header deleted; programming is via the 6-pad pogo jig
@@ -91,7 +94,7 @@ now assigned to the DNP microSD.
 
 | Task | Core | Prio | Job |
 |---|---|---|---|
-| `audio_capture` | 1 | high | I²S DMA drain → ring buffer (record only) |
+| `audio_capture` | 1 | high | I²S-PDM DMA drain → ring buffer (record only) |
 | `encoder` | 1 | med | Limiter + ADPCM block encode, straight to the slot |
 | `a2dp_stream` | 0 | high | Decode blocks ahead of the A2DP PCM callback (playback) |
 | `storage` | 1 | med | Slot manager, page programs, background pre-erase queue |
@@ -106,7 +109,7 @@ without a mutex.
 
 Nothing clever happens in real time.
 
-1. REC held → I²S DMA → PCM ring → look-ahead limiter → **ADPCM block**
+1. REC held → I²S-PDM DMA → PCM ring → look-ahead limiter → **ADPCM block**
    encode → block ring → `tape_store_write()`. Page programs only; the
    erase frontier runs one 64 KiB block ahead of the write pointer, so a
    slot erase never sits on the critical path.
@@ -230,7 +233,7 @@ at ~$14/board they are the devkit)**
   Build with `idf.py -DMIXXTAPE_FACTORY_TEST=ON`.
 - **M6 — The risk spikes**, in order: (1) *retired by M3* — we no longer
   encode SBC ourselves, and ADPCM encode is a handful of ops per sample;
-  what remains is confirming I²S capture keeps up with flash writes;
+  what remains is confirming PDM capture keeps up with flash writes;
   (2) A2DP source vs a basket of real sinks
   (AirPods, cheap TWS, a BT speaker) — connect rate, CoD filtering, RSSI
   threshold tuning; (3) reconnect latency, measured. Each answers a

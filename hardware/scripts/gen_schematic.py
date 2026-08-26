@@ -149,7 +149,7 @@ COMPONENTS = [
         "6": "NC",   # IO34: battery-sense divider is DNP
         "7": "NC",   # IO35: line-in is DNP
         "8": "SD_DETECT",   # IO32: microSD card-detect (SD is DNP)
-        "9": "I2S_SD", "10": "I2S_WS", "11": "I2S_BCLK", "12": "LED_DATA",
+        "9": "PDM_DATA", "10": "PDM_CLK", "11": "NC", "12": "LED_DATA",
         "13": "NC", "14": "NC",  # IO14 free; IO12 = MTDI strap, keep unused
         "15": "GND", "16": "NC",  # IO13 free
         "17": "NC", "18": "NC", "19": "NC", "20": "NC", "21": "NC", "22": "NC",
@@ -165,9 +165,11 @@ COMPONENTS = [
     ("C6", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (78, 66), {"1": "3V3", "2": "GND"}),
 
     # --- Mic ---
-    ("U2", "mixxtape_parts:MSM261S4030H0R", "MSM261S4030H0R", FP + "MIC-SMD_8P-L4.0-W3.0-P1.00-BR", "C2840615", False, (12, 104), {
-        "1": "GND", "2": "NC", "3": "I2S_WS", "4": "3V3",
-        "5": "GND", "6": "I2S_BCLK", "7": "I2S_SD", "8": "3V3"}),
+    # PDM, not I2S: two signals instead of three. L/R tied low selects the
+    # left channel, which is the one the ESP32 samples in mono.
+    ("U2", "mixxtape_parts:MSM261DHT006", "MSM261DHT006", FP + "LGA-8_L4.0-W3.0-R_WMM7040DT0", "C51928215", False, (12, 104), {
+        "1": "3V3", "2": "GND", "3": "PDM_CLK", "4": "PDM_DATA",
+        "5": "GND", "6": "GND", "7": "GND", "8": "GND"}),
     ("C7", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (12, 112), {"1": "3V3", "2": "GND"}),
 
     # --- Audio flash ---
@@ -242,7 +244,7 @@ TEXTS = [
     ((90, 10), "POWER: USB-C only. Battery section DNP."),
     ((56, 12), "PROG JIG: 6 pogo pads. Jig carries USB-UART + EN/IO0 auto-program drivers."),
     ((40, 56), "ESP32  (GPIO map: docs/cassette-recorder-agent-brief.md sec.5 + docs/firmware-plan.md)"),
-    ((8, 98), "I2S MEMS MIC (mono, L/R=GND)"),
+    ((8, 98), "PDM MEMS MIC (mono, L/R=GND, top-ported)"),
     ((92, 84), "16MB AUDIO FLASH (VSPI)"),
     ((30, 102), "CONTROLS: 4 buttons + write-protect tab"),
     ((88, 42), "CC SENSE: firmware reads CC1/CC2 on ADC1 (GPIO36/39) to detect the"),

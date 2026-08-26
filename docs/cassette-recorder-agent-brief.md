@@ -119,9 +119,9 @@ boot — leave unused. GPIO 34/35/36/39 are input-only.
 
 | Signal | GPIO | Note |
 |---|---|---|
-| I²S BCLK → mic | 26 | |
-| I²S WS → mic | 25 | |
-| I²S DIN ← mic | 33 | |
+| PDM CLK → mic | 25 | **Changed from I²S.** MSM261DHT006 is PDM |
+| PDM DATA ← mic | 33 | |
+| *(free)* | 26 | Was I²S BCLK; PDM needs only two wires |
 | VSPI SCK → flash | 18 | |
 | VSPI MISO ← flash | 19 | |
 | VSPI MOSI → flash | 23 | |

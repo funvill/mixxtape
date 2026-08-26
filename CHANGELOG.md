@@ -8,6 +8,28 @@ first prototype run.
 
 ## [Unreleased]
 
+### Changed (2026-08-25, microphone: MSM261DHT006, PDM)
+
+- **Microphone changed to MSM261DHT006 (C51928215)** across schematic,
+  layout, firmware and docs, replacing MSM261S4030H0R (C2840615) which is
+  at zero stock. Acoustically an equal swap — identical −26 dBFS
+  sensitivity, same 1.6–3.6 V range, same 4×3 mm LGA-8 outline, 1 dB less
+  SNR and 2 dB *better* acoustic overload — at $0.45 against $1.61.
+- **This was a schematic change, not a part-number swap.** The pinout is
+  completely different: pin 1 is VDD where the old part had GND, L/R moves
+  to pin 2, and pins 5–8 are all GND. Footprint changed to
+  `LGA-8_L4.0-W3.0-R_WMM7040DT0`.
+- **Interface moves from I²S to PDM.** Two wires instead of three, so
+  **GPIO26 is freed**. GPIO25 becomes the PDM clock, GPIO33 the data input.
+  The ESP32's I²S peripheral does PDM receive and decimation in hardware,
+  so nothing downstream of the capture task changes.
+- **PDM downsample ratio must be 64.** PDM clock = sample rate × ratio, and
+  44100 × 128 = 5.64 MHz exceeds the microphone's 4.8 MHz maximum. 64 gives
+  2.8224 MHz, inside its window. Recorded in `board.h` because it is the
+  obvious mistake to make.
+- Board cost drops to **$9.85/board** at 20 boards, from $11.01.
+- ERC 0 errors, DRC 0 violations, 11 host suites still green.
+
 ### Fixed (2026-08-25, microphone datasheet review)
 
 - **The brief's "bottom-ported" microphone is actually top-ported.** The

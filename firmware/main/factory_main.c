@@ -111,10 +111,11 @@ static int probe_mic(void *user, int32_t *measured, char *detail)
 {
     (void)user;
     *measured = 0;
-    /* Capture ~100 ms, compute RMS, and require it to be neither stuck at
-     * zero (dead mic or dead clock) nor pinned at the rail (bad bias).
-     * The pass window has to be set against real boards in a quiet room. */
-    snprintf(detail, FT_DETAIL_LEN, "TODO M4: needs I2S capture");
+    /* Capture ~100 ms via I2S PDM RX at a 2.8224 MHz clock, compute RMS,
+     * and require it to be neither stuck at zero (dead mic or dead clock)
+     * nor pinned at the rail. The pass window has to be set against real
+     * boards in a quiet room. */
+    snprintf(detail, FT_DETAIL_LEN, "TODO M4: needs PDM capture");
     return 1;
 }
 

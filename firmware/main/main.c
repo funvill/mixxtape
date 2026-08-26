@@ -8,7 +8,8 @@
  *
  * Still to come, and all gated on the first prototype boards (M4):
  *   - SPI flash HAL implementing flash_hal.h against the W25Q128
- *   - I2S capture and ADPCM block encoding feeding tape_store
+ *   - PDM capture (I2S peripheral in PDM RX mode) and ADPCM block
+ *     encoding feeding tape_store
  *   - A2DP source, pairing by RSSI, bond storage
  *   - WS2812 output via the RMT peripheral
  *   - CC sensing to raise the LED brightness cap

@@ -13,10 +13,29 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-/* --- I2S microphone (MSM261S4030H0R, mono, L/R tied low) ------------ */
-#define PIN_I2S_BCLK 26
-#define PIN_I2S_WS   25
-#define PIN_I2S_DIN  33
+#include "tape_layout.h" /* TAPE_SAMPLE_RATE */
+
+/* --- PDM microphone (MSM261DHT006, mono, L/R tied low) --------------
+ * PDM rather than I2S: two wires instead of three, so the old bit-clock
+ * pin (GPIO26) is now free. The ESP32's I2S peripheral does PDM receive
+ * in hardware, decimating to PCM on the way in, so nothing downstream
+ * changes.
+ *
+ * Clock rate matters here. PDM clock = sample rate x downsample ratio:
+ *   44100 x 64  = 2.8224 MHz  -> inside the mic's 1.1-4.8 MHz window
+ *   44100 x 128 = 5.6448 MHz  -> ABOVE its 4.8 MHz maximum
+ * so the downsample ratio must be 64. Picking 128 would run the part out
+ * of spec and is the obvious mistake to make here.
+ *
+ * The part is TOP-ported: sound enters from the component side, and there
+ * is deliberately no hole through the board beneath it. Keep its top face
+ * clear of case ribs, labels and fingers.
+ */
+#define PIN_PDM_CLK  25 /* ESP32 -> mic, 2.8224 MHz */
+#define PIN_PDM_DATA 33 /* mic -> ESP32            */
+
+#define PDM_DOWNSAMPLE_RATIO 64
+#define PDM_CLOCK_HZ         (TAPE_SAMPLE_RATE * PDM_DOWNSAMPLE_RATIO)
 
 /* --- VSPI: audio flash (W25Q128) + optional microSD (DNP) ----------- */
 #define PIN_SPI_SCK   18
