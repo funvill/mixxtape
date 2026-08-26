@@ -95,7 +95,7 @@ Authoritative BOM lives in `cassette-recorder-bom-v3.md`. Summary:
 | Ref | Part | LCSC | Note |
 |---|---|---|---|
 | U1 | ESP32-WROOM-32E-N4 | C701341 | **MSL 3, X-ray required.** N16 is C701343 @ $3.5161 |
-| U2 | MSM261S4030H0R | C2840615 | I²S MEMS mic, **bottom-ported** |
+| U2 | MSM261S4030H0R | C2840615 | I²S MEMS mic. **CORRECTION: top-ported, not bottom-ported** — datasheet p.2. Also now zero stock; see BOM v4 |
 | U3 | W25Q128JVSIQ | C97521 | $1.65. Second source: C113767 |
 | U4 | 3.3 V LDO, **1 A** | TBD | See §7 — uprated from 500 mA |
 | U6 | CH340N | C506813 | USB-UART + auto-reset |
@@ -269,9 +269,13 @@ playback, something upstream went wrong.
 - **WROOM antenna keepout:** no copper, no pour, nothing underneath. Overhang
   the module past the board edge or cut a 6 mm clear region. Easy to get wrong
   on a board this dense.
-- **Mic acoustic port:** 0.5–0.8 mm non-plated hole through the board under U2
-  (bottom-ported part), with a mask keepout ring. Keep clear of reel slots so a
-  fingertip can't cover it.
+- **Mic acoustic port: ~~0.5–0.8 mm non-plated hole through the board~~ —
+  WRONG, removed.** The specified MSM261S4030H0R is *top*-ported (its
+  datasheet, p.2: "omnidirectional, Top-ported"), as is every in-stock
+  alternative in that family. Sound enters from the component side, so a
+  hole beneath the part does nothing but weaken the board. What matters
+  instead is that nothing covers the mic's top face — no case rib, no
+  label, no fingertip. Marked as a keep-clear zone in the layout.
 - **Sharpie label block:** upper-left third, where a cassette's paper label sits.
   Faint light-grey ruled lines on silkscreen.
 - **Lanyard hole:** 3 mm, corner, clear of antenna keepout, castellated edge,

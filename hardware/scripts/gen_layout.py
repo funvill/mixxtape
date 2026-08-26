@@ -57,10 +57,18 @@ BITE_COUNT = 5
 LANYARD_DIA = 3.0
 LANYARD_POS = (6.5, 6.5)  # bottom-left; NEEDS CHECK against the case hinge
 
-# Bottom-ported mic needs a hole through the board beneath it. Placed away
-# from both reel windows and from where fingers naturally land.
-MIC_PORT_DIA = 0.7
-MIC_PORT_POS = (86.0, 52.0)  # NEEDS CHECK once U2 placement is fixed
+# Microphone. NOTE: the brief calls for a 0.5-0.8 mm acoustic hole through
+# the board for a "bottom-ported" mic. That is a mistake — the specified
+# MSM261S4030H0R is TOP-ported (its own datasheet, page 2: "omnidirectional,
+# Top-ported, I2S digital output"), and so is every in-stock alternative in
+# that family. Sound enters from the component side, so a hole under the
+# part does nothing; drilling one would only weaken the board and give a
+# false sense that the acoustics were handled.
+#
+# What actually matters is that nothing covers the mic's top face: no case
+# rib, no label, no thumb. Marked as a keep-clear zone, not a hole.
+MIC_KEEPCLEAR_DIA = 4.0
+MIC_POS = (86.0, 52.0)  # NEEDS CHECK once U2 placement is fixed
 
 # The WROOM antenna must have no copper under or beside it.
 ANTENNA_KEEPOUT = (74.0, 44.0, 26.0, 17.0)  # x, y, w, h — proposed
@@ -181,11 +189,11 @@ def main():
 
     # --- lanyard hole and mic port --------------------------------------
     body.append(circle(LANYARD_POS[0], fy(LANYARD_POS[1]), LANYARD_DIA))
-    body.append(circle(MIC_PORT_POS[0], fy(MIC_PORT_POS[1]), MIC_PORT_DIA))
-    body.append(circle(MIC_PORT_POS[0], fy(MIC_PORT_POS[1]), 2.4,
-                       layer="Dwgs.User", width=0.1))
-    body.append(text("mic port — keep clear", MIC_PORT_POS[0] - 10.0,
-                     fy(MIC_PORT_POS[1] - 3.0), "Cmts.User", size=0.9))
+    body.append(circle(MIC_POS[0], fy(MIC_POS[1]), MIC_KEEPCLEAR_DIA,
+                       layer="Dwgs.User", width=0.15))
+    body.append(text("mic faces UP - keep clear, no hole needed",
+                     MIC_POS[0] - 20.0, fy(MIC_POS[1] - 3.5), "Cmts.User",
+                     size=0.9))
 
     # --- antenna keepout -------------------------------------------------
     ax, ay, aw, ah = ANTENNA_KEEPOUT
@@ -237,6 +245,11 @@ def main():
         "  reel window dia vs hub-clamp ridges, tab position vs internal",
         "  ribs, lanyard hole vs the case hinge.",
         "Print at 1:1, cut it out, put it in a case. Brands vary.",
+        "",
+        "CORRECTION: the brief specifies an acoustic hole through the",
+        "board for a bottom-ported mic. The specified part and every",
+        "in-stock alternative are TOP-ported, so no hole is drawn. Keep",
+        "the mic's top face clear of ribs, labels and fingers instead.",
         "",
         "DEFERRED: the five decorative guide holes along the bottom edge.",
         "They never enter a deck, so they are artwork rather than",

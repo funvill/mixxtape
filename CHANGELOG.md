@@ -8,6 +8,34 @@ first prototype run.
 
 ## [Unreleased]
 
+### Fixed (2026-08-25, microphone datasheet review)
+
+- **The brief's "bottom-ported" microphone is actually top-ported.** The
+  specified MSM261S4030H0R datasheet says so on page 2 ("omnidirectional,
+  Top-ported, I²S digital output"), and so does every in-stock alternative
+  in the family. The 0.5–0.8 mm acoustic hole the brief called for through
+  the board would have done nothing except weaken it — sound enters from
+  the component side. Hole removed from the mechanical layout and replaced
+  with a keep-clear annotation; the brief is corrected at source.
+
+### Findings (2026-08-25, microphone replacement)
+
+- **MSM261DHT006 (C51928215) is acoustically an equal swap**, not a
+  downgrade: identical −26 dBFS sensitivity, same 1.6–3.6 V range, same
+  4×3 mm LGA-8 footprint, 1 dB less SNR (60 vs 61 dB) and 2 dB *better*
+  acoustic overload point (122 vs 120 dB SPL) — which matters for a
+  recorder that will meet the occasional door slam. Cheaper too ($0.45 vs
+  $1.61) and lower current.
+- **Its one real cost is the interface: PDM, not I²S.** Firmware would
+  initialise the ESP32's I²S peripheral in PDM RX mode, which the original
+  ESP32 supports in hardware. This is a firmware change, not a hardware
+  one — the pin count and footprint are unchanged.
+- **Alternative if the firmware change is unwelcome:** ICS-43434
+  (C5656610, ~3.7k, $3.33) keeps I²S and gains 5 dB of SNR (65 dB) on the
+  project's riskiest subsystem — but costs 7× more (+$58 across 20 boards)
+  and has a different 3.5×2.65 mm footprint, so symbol and land pattern
+  both change.
+
 ### Added (2026-08-25, supply-chain rule and the case-fit test)
 
 - **Supply-chain rule (Steven):** every fitted part must have 5,000+ in

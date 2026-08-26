@@ -68,7 +68,7 @@ adding more of one you already use is nearly free.
 
 - `C2840615` MSM261S4030H0R — 0 in stock, needs 20 — accepted exception
 
-  No digital MEMS microphone at JLCPCB meets the 5,000 rule — the whole category is thin, and the best stocked part in it is only ~3.5k. The one microphone that does clear the bar (ZTS6216, C481302, 29k) is **analog**: it needs a DC-blocking cap and a gain stage into the ESP32's ADC, which the brief already describes as a lo-fi path with ~9 effective bits. Taking it would meet the rule and wreck the product's only input. Holding a digital part at ~3.5k is the lesser risk: the run needs 20 pieces, so that is 174x coverage, and three alternates are qualified below.
+  No digital MEMS microphone at JLCPCB meets the 5,000 rule - the whole category is thin, and the best-stocked digital part is only ~3.5k. The one microphone that does clear the bar (ZTS6216, C481302, 29k) is ANALOG: it needs a DC-blocking cap and a gain stage into the ESP32's ADC, which the brief already describes as a lo-fi path with ~9 effective bits. Meeting the rule there would wreck the product's only input. A digital part at ~3.5k is the lesser risk: the run needs 20 pieces, so that is 174x coverage, and three alternates are qualified.
 
 ## Needs attention before ordering
 
@@ -90,7 +90,7 @@ N4 (4 MB). N16 is C701343 — take it if the delta is small, though the firmware
 
 **U2 — MSM261S4030H0R (`C2840615`)**
 
-**BLOCKER — zero stock, and the board cannot be built without a microphone.** Not swapped in the schematic yet on purpose: the footprint has to be confirmed first. Best candidate is MSM261DHT006 (C51928215, ~3.5k, $0.45). Same family, a third of the price, best-stocked digital MEMS mic at JLCPCB. **Datasheet check required first:** the suffix encodes package size and port direction, and this design needs a **bottom-ported** part because there is an acoustic hole through the board beneath it. If it is top-ported, take one of the alternates. Qualified alternates, all digital: MP34DT06JTR (C503097, ~3.8k, $1.80, ST, PDM) and ICS-43434 (C5656610, ~3.7k, $3.33, TDK, I2S, very well documented). PDM parts are fine — the ESP32's I2S peripheral reads PDM directly — but the firmware would initialise in PDM RX mode instead of standard I2S.
+**BLOCKER - zero stock, and the board cannot be built without a microphone.** The family datasheets have now been read, and two things came out of it. First, a correction: this part is TOP-ported, not bottom-ported as the brief states - its own datasheet says so on page 2 - so the 0.5-0.8 mm acoustic hole the brief specifies through the board would do nothing, and it has been removed from the mechanical layout. Second, the replacement: MSM261DHT006 (C51928215, ~3.5k, $0.45) is acoustically the same part - identical -26 dBFS sensitivity, same 1.6-3.6 V range, same 4x3 mm LGA-8 footprint, 1 dB less SNR (60 vs 61 dB) and 2 dB better acoustic overload (122 vs 120 dB SPL), which matters for a recorder that will meet the occasional door slam. Its one real cost is the interface: it is PDM rather than I2S, so firmware initialises the ESP32's I2S peripheral in PDM RX mode, which the original ESP32 supports in hardware. If avoiding that firmware change is worth money, ICS-43434 (C5656610, ~3.7k, $3.33) keeps I2S and gains 5 dB of SNR (65 dB) on the project's riskiest subsystem - but it is 7x the price (+$58 across 20 boards) and a different 3.5x2.65 mm footprint, so symbol and land pattern both change.
 
 **U3 — W25Q128JVSIQ (`C97521`)**
 
