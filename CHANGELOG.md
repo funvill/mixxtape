@@ -8,6 +8,32 @@ first prototype run.
 
 ## [Unreleased]
 
+### Fixed (2026-08-27, CI: the `bt` component name collided with ESP-IDF's)
+
+- **`firmware/components/bt` is renamed to `components/btaudio`.** ESP-IDF
+  ships its own component called `bt`, and project components override
+  IDF's by directory name, so ours silently shadowed the real Bluetooth
+  component. `esp_hid` then lost the include paths it inherits through
+  `bt` and the build died on `esp_timer.h: No such file or directory` —
+  an error inside IDF's own source, which is why it read as an IDF problem
+  rather than ours.
+- **The IDF build has been red since 3dcf692** ("pairing policy and
+  persistent bond table"), the commit that created the component. Four
+  consecutive failures, all the same cause. Host tests were green
+  throughout, which is why it went unnoticed.
+- The constraint is now written down in `firmware/README.md`, because the
+  next person to add a component called `console`, `driver` or `log` will
+  hit exactly this.
+
+### Changed (2026-08-27, CI runs on pull requests only)
+
+- The firmware workflow no longer runs on push; it runs on `pull_request`
+  and `workflow_dispatch`. **This repo commits straight to main, and a push
+  to main opens no pull request** — so unless the habit changes to raising
+  PRs, CI now only runs when triggered by hand from the Actions tab.
+- `actions/checkout` bumped v4 → v5, clearing the Node 20 deprecation
+  warning that was annotating every run.
+
 ### Removed (2026-08-27, battery section)
 
 - **The TP4056 charger, its JST battery connector and PROG resistor are

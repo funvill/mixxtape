@@ -16,7 +16,9 @@ components/tape/   slot manager, ADPCM codec, tape-side player (portable C)
 components/ui/     button grammar + device state machine     (portable C)
 components/leds/   reel display rendering                    (portable C)
 components/factory/ factory-test harness                     (portable C)
-components/bt/     pairing policy + persistent bond table    (portable C)
+components/btaudio/ pairing, bonds, A2DP source                (mixed)
+                   NB: must NOT be called `bt` — that is ESP-IDF's own
+                   component name, and ours would shadow it
 components/audio/  record-path look-ahead limiter            (portable C)
 main/              ESP32 entry point and pin map
 test/host/         host unit tests + NOR flash mock

@@ -1,8 +1,10 @@
 name: firmware
 
+# Runs on pull requests only — not on every push to a branch. Note that this
+# repo's habit is to commit straight to main, and a direct push to main opens
+# no pull request, so nothing here will run for that. Either raise a PR, or
+# trigger a run by hand from the Actions tab (workflow_dispatch below).
 on:
-  push:
-    paths: ['firmware/**', '.github/workflows/firmware.yml']
   pull_request:
     paths: ['firmware/**', '.github/workflows/firmware.yml']
   workflow_dispatch:
@@ -14,7 +16,7 @@ jobs:
     # automated proof the logic works until prototype boards exist.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure
         run: cmake -S firmware/test/host -B build -DCMAKE_BUILD_TYPE=Debug
       - name: Build
@@ -26,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     container: espressif/idf:release-v5.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build
         shell: bash
         run: |

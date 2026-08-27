@@ -15,8 +15,8 @@ add_library(tape_core STATIC
     ${CORE_DIR}/tape/src/tape_player.c
     ${CORE_DIR}/leds/src/reels.c
     ${CORE_DIR}/factory/src/factory_test.c
-    ${CORE_DIR}/bt/src/pairing.c
-    ${CORE_DIR}/bt/src/bonds.c
+    ${CORE_DIR}/btaudio/src/pairing.c
+    ${CORE_DIR}/btaudio/src/bonds.c
     ${CORE_DIR}/audio/src/limiter.c
     ${CORE_DIR}/ui/src/ui_state.c
 )
@@ -25,7 +25,7 @@ target_include_directories(tape_core PUBLIC
     ${CORE_DIR}/ui/include
     ${CORE_DIR}/leds/include
     ${CORE_DIR}/factory/include
-    ${CORE_DIR}/bt/include
+    ${CORE_DIR}/btaudio/include
     ${CORE_DIR}/audio/include
 )
 
