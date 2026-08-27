@@ -67,7 +67,6 @@ arrive.
 | CC1 sense | 36 (SENSOR_VP) | ADC1; see §6 power management |
 | CC2 sense | 39 (SENSOR_VN) | ADC1 |
 | UART0 TX / RX | 1 / 3 | To J5 jig pads only — **no USB-UART on board** |
-| Battery sense *(DNP)* | 34 | Unpopulated divider |
 | Line-in *(DNP)* | 35 | Unpopulated |
 | Free | 12*, 13, 14, 15, 2, 26 | *IO12 is MTDI strap — must be low at boot, avoid. IO26 freed by the move from I²S to PDM |
 

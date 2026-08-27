@@ -156,6 +156,13 @@ def read_components(path):
                     comp["footprint"] = val
                 elif name == "LCSC":
                     comp["lcsc"] = val
+        # Power flags and other virtual symbols carry `in_bom no` and a
+        # reference starting with '#'. They are ERC scaffolding, not parts.
+        if comp["ref"].startswith("#"):
+            continue
+        if any(isinstance(x, list) and x and x[0] == "in_bom" and x[1] == "no"
+               for x in node):
+            continue
         if comp["ref"]:
             out.append(comp)
     return out

@@ -14,3 +14,12 @@ fp-info-cache
 __pycache__/
 *.pyc
 .jlc_cache.json
+
+# VS Code Local History extension
+.history/
+
+# KiCad archive exports and generated reports
+hardware/*.zip
+hardware/*-erc.rpt
+hardware/*-drc.rpt
+hardware/scripts/*.net

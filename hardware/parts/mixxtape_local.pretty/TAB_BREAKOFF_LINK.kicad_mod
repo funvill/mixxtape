@@ -1,0 +1,112 @@
+(footprint "TAB_BREAKOFF_LINK"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "Write-protect link for the break-off tab. Two overlapping pads form a net tie between 3V3 and TAB_SENSE; place it on the snap-off tongue so that breaking the tongue severs the link and TAB_SENSE falls to the pull-down. Route both nets up across the perforation, through the gaps between the bite holes.")
+	(tags "net_tie write_protect breakoff")
+	(property "Reference" "TAB**"
+		(at 0 -1.6 0)
+		(layer "F.SilkS")
+		(uuid "30000000-0000-0000-0000-000000000001")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Value" "WRITE-PROTECT"
+		(at 0 1.9 0)
+		(layer "F.Fab")
+		(uuid "30000000-0000-0000-0000-000000000002")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "30000000-0000-0000-0000-000000000003")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Break-off write-protect link (net tie)"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "30000000-0000-0000-0000-000000000004")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd exclude_from_bom exclude_from_pos_files)
+	(net_tie_pad_groups "1, 2")
+	(fp_line
+		(start -2.1 -0.9)
+		(end 2.1 -0.9)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "30000000-0000-0000-0000-000000000010")
+	)
+	(fp_line
+		(start -2.1 0.9)
+		(end 2.1 0.9)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "30000000-0000-0000-0000-000000000011")
+	)
+	(fp_rect
+		(start -2.2 -1.0)
+		(end 2.2 1.0)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "30000000-0000-0000-0000-000000000012")
+	)
+	(fp_rect
+		(start -1.9 -0.6)
+		(end 1.9 0.6)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "30000000-0000-0000-0000-000000000013")
+	)
+	(pad "1" smd rect
+		(at -0.9 0)
+		(size 2 1.2)
+		(layers "F.Cu" "F.Mask")
+		(uuid "30000000-0000-0000-0000-000000000020")
+	)
+	(pad "2" smd rect
+		(at 0.9 0)
+		(size 2 1.2)
+		(layers "F.Cu" "F.Mask")
+		(uuid "30000000-0000-0000-0000-000000000021")
+	)
+)

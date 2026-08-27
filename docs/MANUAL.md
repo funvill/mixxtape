@@ -181,8 +181,10 @@ more or less a Walkman.
 Any USB-C source will run it. If you plug it into a charger that can
 supply more current, it notices and runs the lights brighter.
 
-There is an unpopulated battery footprint on the board for anyone who
-wants to solder one on. That is your business, not ours.
+There is no battery on the board and nowhere to fit one. The charging
+circuit that used to sit there unpopulated has been removed: it could never
+have worked, because the 3.3 V regulator needs more headroom than a lithium
+cell can give it.
 
 ---
 

@@ -18,14 +18,16 @@ piece.
 |---|---|---|---|---|---|---|---|---|---|
 | C1, C2 | 22uF | C45783 | C0805 | 2 | 40 | 4,718,162 | basic | $0.3251 | $13.00 |
 | C5 | 10uF | C15525 | C0402 | 1 | 20 | 10,659,536 | basic | $0.0255 | $0.51 |
-| C6–C27 (13) | 100nF | C1525 | C0402 | 13 | 260 | 37,557,517 | basic | $0.0055 | $1.43 |
+| C6–C27 (12) | 100nF | C1525 | C0402 | 12 | 240 | 37,557,517 | basic | $0.0055 | $1.32 |
+| C9 | 1uF | C29266 | C0402 | 1 | 20 | 3,950,406 | ext | $0.0081 | $0.16 |
 | D1–D29 (29) | WS2812B-2020 | C5349955 | LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020 | 29 | 580 | 180,034 | ext | $0.0603 | $34.97 |
 | J1 | USB-C-16P | C165948 | USB-C_SMD-TYPE-C-31-M-12_1 | 1 | 20 | 390,037 | ext | $0.1855 | $3.71 |
-| J5 | PROG-JIG | — |  | 1 | 20 | — | ? | — | — |
+| J5 | PROG-JIG | — | PROG_JIG_6PAD | 1 | 20 | — | ? | — | — |
 | R1, R2 | 5.1k | C25905 | R0402 | 2 | 40 | 8,910,424 | basic | $0.0043 | $0.17 |
 | R3, R4, R5, R6, R7, R10, R11 | 10k | C25804 | R0603 | 7 | 140 | 26,581,544 | basic | $0.0053 | $0.74 |
-| SW1, SW2, SW3, SW4 | REC / PLAY / TRACK / MODE | C318884 | SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5 | 4 | 80 | 978,596 | basic | $0.0205 | $1.64 |
-| TAB1 | WRITE-PROTECT | — |  | 1 | 20 | — | ? | — | — |
+| R12 | 100R | C25076 | R0402 | 1 | 20 | 4,589,188 | basic | $0.0078 | $0.16 |
+| SW1, SW2, SW3, SW4 | PLAY / TRACK / MODE / REC | C318884 | SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5 | 4 | 80 | 978,596 | basic | $0.0205 | $1.64 |
+| TAB1 | WRITE-PROTECT | — | TAB_BREAKOFF_LINK | 1 | 20 | — | ? | — | — |
 | U1 | ESP32-WROOM-32E-N4 | C701341 | WIFI-SMD_ESP32-WROOM-32E | 1 | 20 | 24,224 | ext | $3.2528 | $65.06 |
 | U2 | MSM261DHT006 | C51928215 | LGA-8_L4.0-W3.0-R_WMM7040DT0 | 1 | 20 | 3,485 | ext | $0.4500 | $9.00 |
 | U3 | W25Q128JVSIQ | C97521 | SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL | 1 | 20 | 70,918 | basic | $2.2557 | $45.11 |
@@ -42,22 +44,19 @@ on the default build and let a variant be built without a respin.
 
 | Ref | Value | LCSC | Package | Purpose |
 |---|---|---|---|---|
-| J2 | JST-PH-2 (DNP) | — |  | LiPo connector |
 | J4 | microSD (DNP) | C91145 | TF-SMD_TF-01A | microSD — the "studio edition" option |
-| R8 | 10k (DNP) | C25804 | R0603 | Charge-current programming resistor |
 | R9 | 10k (DNP) | C25804 | R0603 | microSD chip-select pull-up |
-| U5 | TP4056 (DNP) | C16581 | ESOP-8_L4.9-W3.9-P1.27-LS6.0-BL-EP | Battery charger — USB-C-only is a locked decision |
 
 ## Cost
 
 | | Per board | Run of 20 |
 |---|---|---|
-| Components | $9.10 | $181.92 |
-| Extended-part setup fees (5 × $3.00) | $0.75 | $15.00 |
-| **Parts subtotal** | **$9.85** | **$196.92** |
+| Components | $9.11 | $182.13 |
+| Extended-part setup fees (6 × $3.00) | $0.90 | $18.00 |
+| **Parts subtotal** | **$10.01** | **$200.13** |
 
-66 placements per board across 15 distinct fitted
-parts, 5 of them extended.
+67 placements per board across 17 distinct fitted
+parts, 6 of them extended.
 
 PCB fabrication and assembly labour are quoted separately and are not
 included above — at this quantity the setup fees above dominate the

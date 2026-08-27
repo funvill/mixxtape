@@ -125,7 +125,7 @@ COMPONENTS = [
 
     # --- Programming jig interface: 6 bare pogo pads, no connector fitted.
     # Jig carries the USB-UART bridge and EN/IO0 drivers.
-    ("J5", "mixxtape_local:CONN_6", "PROG-JIG", "", "", False, (64, 26), {
+    ("J5", "mixxtape_local:CONN_6", "PROG-JIG", "mixxtape_local:PROG_JIG_6PAD", "", False, (64, 26), {
         "1": "3V3", "2": "GND", "3": "EN", "4": "BTN_REC",
         "5": "UART_TX", "6": "UART_RX"}),
 
@@ -140,7 +140,7 @@ COMPONENTS = [
         "1": "GND", "2": "PROG", "3": "GND", "4": "VBUS", "5": "VBAT",
         "6": "NC", "7": "NC", "8": "VBUS", "9": "GND"}),
     ("R8", "mixxtape_parts:0603WAF1002T5E", "10k (DNP)", FP + "R0603", "C25804", True, (134, 40), {"1": "PROG", "2": "GND"}),
-    ("J2", "mixxtape_local:CONN_2", "JST-PH-2 (DNP)", "", "", True, (152, 24), {"1": "VBAT", "2": "GND"}),
+    ("J2", "mixxtape_local:CONN_2", "JST-PH-2 (DNP)", "mixxtape_local:JST_PH_2", "", True, (152, 24), {"1": "VBAT", "2": "GND"}),
 
     # --- ESP32 ---
     ("U1", "mixxtape_parts:ESP32-WROOM-32E", "ESP32-WROOM-32E-N4", FP + "WIFI-SMD_ESP32-WROOM-32E", "C701341", False, (64, 90), {

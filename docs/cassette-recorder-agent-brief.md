@@ -75,7 +75,7 @@ functional-first board that happens to be cassette-shaped.
 | **Separate audio flash** | Yes, not module flash | **[LOCKED]** No battery means no graceful-shutdown window. A yank mid-write must not be able to corrupt the bootloader. Also avoids XIP cache stalls during record. |
 | **Audio path** | Mono, encode to SBC **at record time** | **[LOCKED]** Playback must be read-frames-and-transmit. No real-time decode, no resample, no DSP during streaming. |
 | **Sample rate** | 44.1 kHz | **[LOCKED]** Matches A2DP negotiation, eliminates resampling entirely. |
-| **Power** | USB-C only; battery circuit present but **DNP** | **[LOCKED]** A LiPo in a drawer for years is dead and possibly hazardous. The object's premise is that it still works when rediscovered. Also avoids UN38.3 shipping paperwork. |
+| **Power** | USB-C only; no battery or charger on the board | **[LOCKED]** A LiPo in a drawer for years is dead and possibly hazardous. The object's premise is that it still works when rediscovered. Also avoids UN38.3 shipping paperwork. |
 | **Controls** | 4 tactile buttons + 1 break-off write-protect tab | **[LOCKED]** Physical buttons, not cap touch — explicitly reversed after consideration. |
 | **Indicators** | 29 × WS2812B-2020 RGB, single data line | **[LOCKED]** Replaced charlieplexing. Quiescent draw is irrelevant on USB. |
 | **Recording UX** | Hold REC to record; always overwrites current slot from zero | **[LOCKED]** No delete function needed — recording *is* erasing, same as tape. |
@@ -100,7 +100,6 @@ Authoritative BOM lives in `cassette-recorder-bom-v3.md`. Summary:
 | U4 | 3.3 V LDO, **1 A** | TBD | See §7 — uprated from 500 mA |
 | U6 | CH340N | C506813 | USB-UART + auto-reset |
 | U7 | USBLC6-2SC6 | C7519 | USB ESD |
-| U5 | TP4056 | C16581 | **DNP** |
 | D1–D29 | WS2812B-2020 | TBD | 12 + 12 reel rings, 3 track, REC, BT |
 | SW1–4 | Tactile SMD 3×4 | C318884 | |
 | J1 | USB-C 16P | C165948 | + 2 × 5.1 kΩ CC pulldowns — mandatory |
@@ -133,7 +132,6 @@ boot — leave unused. GPIO 34/35/36/39 are input-only.
 | SW4 MODE | 17 | |
 | Write-protect tab | 21 | Pull-down; tab intact = high |
 | Line-in ADC *(DNP)* | 35 | ADC1 |
-| Battery sense *(DNP)* | 34 | ADC1, 2:1 divider |
 | UART0 TX / RX | 1, 3 | To CH340N |
 
 Free for expansion: 13, 14, 22, 32.

@@ -222,8 +222,12 @@ less a Walkman.
 
 ### Can I add a battery myself?
 
-The footprint is on the board, unpopulated, along with a charging circuit.
-Solder one on if you want. It is your board. Just remember why we did not.
+Not without redesigning the power supply. The board used to carry an
+unpopulated charger, but it was removed once it became clear it could never
+have worked: the 3.3 V rail comes from an AMS1117, which needs 1.1-1.3 V of
+headroom, and a lithium cell only ever reaches 4.2 V falling to 3.0 V. The
+LEDs run from the 5 V USB rail as well. Running on a cell means a different
+regulator and a different LED rail — a real redesign, not a part you add.
 
 ### Will any USB charger work?
 

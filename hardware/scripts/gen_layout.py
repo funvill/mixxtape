@@ -57,6 +57,12 @@ BITE_COUNT = 5
 LANYARD_DIA = 3.0
 LANYARD_POS = (6.5, 6.5)  # bottom-left; NEEDS CHECK against the case hinge
 
+# Mounting holes, M2 clearance. Two is the minimum that stops a board
+# pivoting on a single screw, and they go on a diagonal because the
+# bottom-right is entirely ESP32 and the top-left is the tab.
+MOUNT_DIA = 2.2
+MOUNT_HOLES = [(6.5, 14.0), (95.0, 47.0)]  # NEEDS CHECK vs case ribs
+
 # Microphone. NOTE: the brief calls for a 0.5-0.8 mm acoustic hole through
 # the board for a "bottom-ported" mic. That is a mistake — the specified
 # MSM261S4030H0R is TOP-ported (its own datasheet, page 2: "omnidirectional,
@@ -70,8 +76,13 @@ LANYARD_POS = (6.5, 6.5)  # bottom-left; NEEDS CHECK against the case hinge
 MIC_KEEPCLEAR_DIA = 4.0
 MIC_POS = (86.0, 52.0)  # NEEDS CHECK once U2 placement is fixed
 
-# The WROOM antenna must have no copper under or beside it.
-ANTENNA_KEEPOUT = (74.0, 44.0, 26.0, 17.0)  # x, y, w, h — proposed
+# The WROOM antenna must have no copper under or beside it. U1 sits along
+# the bottom edge rotated 180 (its antenna is at the footprint's left end),
+# so the antenna fires at the right-hand edge. Its own antenna area runs to
+# U1 is pushed hard right so its antenna sits at the board edge and the
+# keepout costs no usable board: the module's last pad is at x 92.3, and
+# everything past 92.5 out to the edge stays copper-free.
+ANTENNA_KEEPOUT = (92.5, 0.6, 7.8, 22.0)  # x, y, w, h
 
 # Sharpie label block, where a cassette's paper label sits.
 LABEL_BOX = (7.0, 45.0, 55.0, 14.0)
@@ -189,6 +200,10 @@ def main():
 
     # --- lanyard hole and mic port --------------------------------------
     body.append(circle(LANYARD_POS[0], fy(LANYARD_POS[1]), LANYARD_DIA))
+    for mx, my in MOUNT_HOLES:
+        body.append(circle(mx, fy(my), MOUNT_DIA))
+        body.append(circle(mx, fy(my), MOUNT_DIA + 2.0,
+                           layer="Dwgs.User", width=0.1))
     body.append(circle(MIC_POS[0], fy(MIC_POS[1]), MIC_KEEPCLEAR_DIA,
                        layer="Dwgs.User", width=0.15))
     body.append(text("mic faces UP - keep clear, no hole needed",

@@ -1,0 +1,8 @@
+(version 1)
+
+# The TYPE-C-31-M-12 receptacle's own pads sit 0.10 mm apart. That is the
+# connector's geometry, not our routing, and every fab builds this part every
+# day. Scope the exception to J1 so the 0.20 mm rule still governs the board.
+(rule "USB-C receptacle internal pad clearance"
+	(constraint clearance (min 0.1mm))
+	(condition "A.Reference == 'J1' && B.Reference == 'J1'"))

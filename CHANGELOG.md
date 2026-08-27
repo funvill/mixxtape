@@ -8,6 +8,74 @@ first prototype run.
 
 ## [Unreleased]
 
+### Removed (2026-08-27, battery section)
+
+- **The TP4056 charger, its JST battery connector and PROG resistor are
+  gone** (U5, J2, R8, plus the VBAT and PROG nets). They were always DNP,
+  and they could never have worked: VBAT dead-ended at the connector and
+  the charger, and even wired through, a lithium cell at 3.0–4.2 V cannot
+  feed an AMS1117 that needs 1.1–1.3 V of headroom to make 3.3 V. The LEDs
+  and the level shifter sit on the 5 V USB rail besides. Running from a
+  cell means a different regulator and a different LED rail — a redesign,
+  not a populated footprint. Removing it frees about 40 mm² on a board
+  that is about to be routed.
+- Docs no longer promise a battery footprint you can solder to. "USB-C
+  only" was already the locked decision; now the board matches it.
+
+### Fixed (2026-08-27, schematic review before routing)
+
+- **The board outline was self-intersecting and would have failed CAM.**
+  The write-protect tab's two slots were drawn as closed rectangles lying
+  *on top of* the top edge instead of cut into it, so the edge ran straight
+  through both — four real crossings. Split the top edge into three spans
+  and removed the slot mouths. The outline is now a single closed loop with
+  no crossings and no dangling endpoints, and the stale zone fills that
+  came with it are refilled.
+- **Every symbol pin now has a real electrical type.** easyeda2kicad types
+  every pin `unspecified`, which silently disables the checks that matter.
+  109 pins retyped from the datasheets, in the schematic *and* in
+  `mixxtape_parts.kicad_sym` so a library update cannot undo it. Turning
+  the checks on immediately found three genuine faults: U4's two VOUT pins
+  and J1's paired VBUS and GND pins each read as two power outputs fighting
+  over one rail. They are duplicate pins of one physical node, so one of
+  each pair now carries the `power_out` and its twin is `passive`.
+  **ERC: 191 warnings → 0 violations.**
+- **TAB1 had no footprint at all**, so TAB_SENSE would have read
+  permanently low. Added `mixxtape_local:TAB_BREAKOFF_LINK`, a two-pad net
+  tie placed on the break-off tongue: snap the tongue and the link goes
+  with it. Note for routing — both nets must cross the perforation through
+  the gaps between the bite holes, and freerouting does not understand net
+  ties, so hand-route those two first.
+- **C9 was 100 nF on EN; the ESP32-WROOM-32E datasheet asks for 1 µF**
+  (§ "it is advised to add an RC delay circuit at the EN pin… R = 10 kΩ and
+  C = 1 µF"). Changed to C29266.
+- **Added R12, 100 Ω (C25076), in the microphone's supply**, per figure 1
+  of the MSM261DHT006 datasheet. C7 moves onto the new MIC_VDD net so the
+  two form an RC filter — left on 3V3 it would just be another rail cap.
+  A PWR_FLAG marks MIC_VDD as driven, and `gen_bom.py` now skips
+  `in_bom no` symbols so the flag is not a phantom BOM line.
+- **Four through-hole pads had zero annular ring** (J1 ×2, J4 ×2) — the
+  connectors' moulded locating pegs, where pad size equalled drill size.
+  Now `np_thru_hole`, fixed in the board and in the library footprints.
+- **Datasheet links corrected.** D1–D29 pointed at Worldsemi C965555 while
+  the fitted part is XINGLIGHT C5349955; the two symbols cloned for R12 and
+  C9 had inherited their donors' links.
+
+### Added (2026-08-27, mounting holes)
+
+- **Three Ø2.2 mm mounting holes** at the top-left (32.75, 32.75),
+  bottom-left (32.75, 90.75) and top-right (122.50, 32.75), each with the
+  Ø4.2 mm annotation ring the existing holes use. The top-right one sits
+  8.3 mm inboard rather than in the corner because the microphone is there
+  — there is no room between it and the board edge. Moving the mic ~3 mm
+  left would free (127.58, 32.75) for a symmetric pattern.
+- **`mixxtape.kicad_dru`**, scoping a 0.1 mm clearance exception to J1. The
+  USB-C receptacle's own pads sit 0.10 mm apart against the board's 0.20 mm
+  rule; that is the connector's geometry, not our routing.
+- Verified: **ERC 0, DRC clean apart from the 130 unrouted nets, every
+  footprint's pads reconcile with its symbol's pins, and every board pad
+  agrees with the schematic netlist.**
+
 ### Changed (2026-08-25, microphone: MSM261DHT006, PDM)
 
 - **Microphone changed to MSM261DHT006 (C51928215)** across schematic,

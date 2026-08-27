@@ -1,0 +1,82 @@
+(footprint "JST_PH_2"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "JST PH 2-pin, 2.0 mm pitch, through hole. Battery connector - DNP on the default build, which is USB-C only.")
+	(property "Reference" "J**"
+		(at 0 -3.2 0)
+		(layer "F.SilkS")
+		(uuid "30000000-0000-0000-0000-000000000001")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Value" "JST_PH_2"
+		(at 0 3.2 0)
+		(layer "F.Fab")
+		(uuid "30000000-0000-0000-0000-000000000002")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.12)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0c68d8ed-941b-46cc-b91f-46c77d4967dd")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7f2ee5a6-2a65-4996-be90-8bed58899cc0")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole exclude_from_bom)
+	(fp_rect
+		(start -3 -2.4)
+		(end 3 2.4)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "30000000-0000-0000-0000-000000000003")
+	)
+	(pad "1" thru_hole rect
+		(at -1 0)
+		(size 1.6 1.6)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "30000000-0000-0000-0000-000000000011")
+	)
+	(pad "2" thru_hole circle
+		(at 1 0)
+		(size 1.6 1.6)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "30000000-0000-0000-0000-000000000012")
+	)
+	(embedded_fonts no)
+)

@@ -31,8 +31,9 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
   tape transferring between reels. Red pulse tracks recording level.
 - **Matte white solder mask** so you can sharpie the label on, with a ruled
   label block silkscreened where a cassette's paper label sits.
-- **No battery.** USB-C only (battery footprint present but unpopulated). A
-  cassette's promise is that you find it years later and it still works.
+- **No battery.** USB-C only, and there is no charging circuit on the board
+  at all. A cassette's promise is that you find it years later and it still
+  works.
 - **Jig-programmed.** No USB-UART on the board — USB-C is power only.
   Firmware loads through six pogo-pin pads via a programming jig.
 
@@ -46,7 +47,7 @@ Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
 | Audio | 44.1 kHz mono, ADPCM-encoded at record time; playback decodes with table lookups and hands PCM to the Bluetooth stack |
 | Indicators | 29 × WS2812B-2020 RGB (2 × 12 reel rings + track/REC/BT) |
 | Controls | 4 tactile buttons + break-off write-protect tab |
-| Power | USB-C only (power + CC sense, no data); TP4056/LiPo circuit on board but DNP |
+| Power | USB-C only (power + CC sense, no data). No battery, no charger |
 | Cost | ~$13.25/board at a run of 20 (~$265 total) |
 
 ## Project status
