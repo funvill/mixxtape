@@ -23,3 +23,6 @@ hardware/*.zip
 hardware/*-erc.rpt
 hardware/*-drc.rpt
 hardware/scripts/*.net
+
+# the full-resolution turntable render, kept locally but too heavy to commit
+artwork/mixxtape-original.gif

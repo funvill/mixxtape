@@ -1,5 +1,5 @@
 (module easyeda2kicad:USB-C_SMD-TYPE-C-31-M-12_1 (layer F.Cu) (tedit 5DC5F6A4)
-	(attr smd)
+	(attr through_hole)
 	(fp_text reference REF** (at 0.000 -6.474) (layer F.SilkS)
 		(effects (font (size 1 1) (thickness 0.15)))
 	)

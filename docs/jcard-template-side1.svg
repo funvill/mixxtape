@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="210.0mm" height="297.0mm" viewBox="0 0 210.0 297.0">
+<title>Mixxtape J-card template — side 1</title>
+<rect width="210.0" height="297.0" fill="#ffffff"/>
+<text x="54.200" y="22.000" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="4.2" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0.08">MIXXTAPE — CASSETTE INSERT (J-CARD)</text>
+<text x="54.200" y="27.500" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.4" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">1:1. Print at 100% / actual size, fit-to-page OFF.</text>
+<text x="54.200" y="34.500" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="3.6" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0.16">SIDE 1 — OUTSIDE</text>
+<text x="155.800" y="34.500" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.4" font-weight="400" fill="#7A8288" text-anchor="end" letter-spacing="0">101.6 × 104.775 mm</text>
+<text x="54.200" y="39.500" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">Page 1 and 2 sit in the same place. Duplex, flip on the LONG edge.</text>
+<rect x="51.200" y="59.000" width="107.600" height="110.775" fill="none" stroke="#7A8288" stroke-width="0.2" stroke-dasharray="2 1.5"/>
+<rect x="54.200" y="62.000" width="101.600" height="104.775" fill="none" stroke="#111111" stroke-width="0.45"/>
+<rect x="57.200" y="65.000" width="95.600" height="98.775" fill="none" stroke="#C0392B" stroke-width="0.2" stroke-dasharray="1.2 1.2"/>
+<text x="153.300" y="68.000" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.1" font-weight="600" fill="#7A8288" text-anchor="end" letter-spacing="0.06">FRONT PANEL  65.09 mm</text>
+<line x1="51.200" y1="127.088" x2="158.800" y2="127.088" stroke="#0F6FA8" stroke-width="0.4" stroke-dasharray="3 2"/>
+<text x="153.300" y="131.688" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.1" font-weight="600" fill="#7A8288" text-anchor="end" letter-spacing="0.06">SPINE  12.7 mm</text>
+<line x1="51.200" y1="139.787" x2="158.800" y2="139.787" stroke="#0F6FA8" stroke-width="0.4" stroke-dasharray="3 2"/>
+<text x="153.300" y="145.787" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.1" font-weight="600" fill="#7A8288" text-anchor="end" letter-spacing="0.06">TRACKLIST FLAP  26.99 mm</text>
+<text x="105.000" y="78.000" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="7.0" font-weight="600" fill="#111111" text-anchor="middle" letter-spacing="0.35">ARTWORK</text>
+<text x="105.000" y="84.500" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.4" font-weight="400" fill="#7A8288" text-anchor="middle" letter-spacing="0">the face seen through the case front</text>
+<text x="105.000" y="102.000" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.6" font-weight="400" fill="#7A8288" text-anchor="middle" letter-spacing="0">name  ·  cover art</text>
+<text x="58.200" y="134.438" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.6" font-weight="600" fill="#7A8288" text-anchor="start" letter-spacing="0.1">NAME  ·  REV</text>
+<text x="151.800" y="134.438" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="end" letter-spacing="0">seen on the shelf edge</text>
+<text x="59.200" y="144.787" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="3.2" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0.2">TRACKS</text>
+<text x="59.200" y="148.787" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="1.9" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">leave blank — the owner records these by hand</text>
+<text x="59.200" y="153.588" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">1</text>
+<line x1="62.700" y1="154.287" x2="131.800" y2="154.287" stroke="#7A8288" stroke-width="0.3"/>
+<line x1="133.800" y1="154.287" x2="150.800" y2="154.287" stroke="#7A8288" stroke-width="0.3"/>
+<text x="142.300" y="153.188" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="1.5" font-weight="400" fill="#7A8288" text-anchor="middle" letter-spacing="0">min:sec</text>
+<text x="59.200" y="158.088" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">2</text>
+<line x1="62.700" y1="158.787" x2="131.800" y2="158.787" stroke="#7A8288" stroke-width="0.3"/>
+<line x1="133.800" y1="158.787" x2="150.800" y2="158.787" stroke="#7A8288" stroke-width="0.3"/>
+<text x="142.300" y="157.688" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="1.5" font-weight="400" fill="#7A8288" text-anchor="middle" letter-spacing="0">min:sec</text>
+<text x="59.200" y="162.588" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">3</text>
+<line x1="62.700" y1="163.287" x2="131.800" y2="163.287" stroke="#7A8288" stroke-width="0.3"/>
+<line x1="133.800" y1="163.287" x2="150.800" y2="163.287" stroke="#7A8288" stroke-width="0.3"/>
+<text x="142.300" y="162.188" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="1.5" font-weight="400" fill="#7A8288" text-anchor="middle" letter-spacing="0">min:sec</text>
+<line x1="54.200" y1="186.775" x2="104.200" y2="186.775" stroke="#111111" stroke-width="0.6"/>
+<line x1="54.200" y1="184.775" x2="54.200" y2="188.775" stroke="#111111" stroke-width="0.6"/>
+<line x1="104.200" y1="184.775" x2="104.200" y2="188.775" stroke="#111111" stroke-width="0.6"/>
+<text x="107.200" y="187.775" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.8" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0">50.0 mm — MEASURE THIS FIRST</text>
+<text x="54.200" y="192.775" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">If this bar is not exactly 50.0 mm the printer scaled the page,</text>
+<text x="54.200" y="196.375" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.2" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">and nothing else here can be trusted.</text>
+<rect x="54.200" y="202.575" width="6" height="2.6" fill="#111111" fill-opacity="0.85"/>
+<text x="62.700" y="204.775" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">solid black — cut line — the finished card</text>
+<rect x="54.200" y="206.975" width="6" height="2.6" fill="#0F6FA8" fill-opacity="0.85"/>
+<text x="62.700" y="209.175" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">dashed blue — fold — score, do not cut</text>
+<rect x="54.200" y="211.375" width="6" height="2.6" fill="#C0392B" fill-opacity="0.85"/>
+<text x="62.700" y="213.575" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">dotted red — safe area — keep type inside</text>
+<rect x="54.200" y="215.775" width="6" height="2.6" fill="#7A8288" fill-opacity="0.85"/>
+<text x="62.700" y="217.975" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="400" fill="#7A8288" text-anchor="start" letter-spacing="0">dashed grey — bleed — run art out to here (3 mm)</text>
+<text x="54.200" y="226.375" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0">Norelco cases vary by brand. Cut one, fold it, try it in a real case</text>
+<text x="54.200" y="230.375" font-family="'IBM Plex Mono','DejaVu Sans Mono',monospace" font-size="2.3" font-weight="600" fill="#111111" text-anchor="start" letter-spacing="0">before printing a batch.</text>
+</svg>

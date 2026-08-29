@@ -8,6 +8,63 @@ first prototype run.
 
 ## [Unreleased]
 
+### Fixed (2026-08-29, manufacturability audit against JLCPCB)
+
+- **The microphone was tagged `through_hole` while carrying eight SMD pads.**
+  A footprint's attribute decides whether JLCPCB's pick-and-place file lists
+  the part, so U2 could have been dropped from the CPL and left unassembled on
+  every board. J1 had the mirror of the same fault, tagged `smd` with four real
+  plated through-hole pads. Both corrected in the board and the libraries.
+- **Eleven DRC rules were set to `ignore`**, hiding 145 findings — every
+  silkscreen check, every courtyard check, footprint type mismatch and mirrored
+  text among them. The mic's wrong attribute is exactly what
+  `footprint_type_mismatch` exists to catch, and it had been switched off. The
+  eight that matter are back on as warnings.
+- **80 silkscreen strokes were below JLCPCB's 0.15 mm minimum**, some as thin as
+  0.06 mm, inherited from the easyeda2kicad footprints; the board default was
+  0.10 mm. Raised to 0.15 mm in the board and the libraries. Filled artwork
+  polygons were left alone — their stroke is cosmetic, the fill is what prints.
+
+### Checked (2026-08-29, against JLCPCB 2-layer capabilities)
+
+- Narrowest track 0.150 mm against a 0.10 mm limit; vias 0.60/0.30 mm against
+  0.25/0.15 mm; copper-to-edge held at 0.40 mm against 0.20 mm. All comfortable.
+- **Two figures sit close to the line.** The smallest plated annular ring is
+  0.200 mm on J1, under JLCPCB's recommended 0.25 mm though above the 0.18 mm
+  floor. Closest hole-to-hole is 0.500 mm against a 0.45 mm limit, inside the
+  DNP microSD footprint.
+- **White solder mask is confirmed available**, adds about two days, and pairs
+  with **black silkscreen as a fixed choice** — that settles an open question in
+  the B-side brief.
+- **The B-side artwork carries 32 shapes thinner than 0.15 mm** in one dimension
+  and 52 more between 0.15 and 0.25 mm. The first group will not survive the
+  screen. Recorded in the brief for the designer.
+
+### Added (2026-08-29, README artwork)
+
+- The 3D turntable render and the case artwork mockup now open the README, with
+  a note that the render's green mask is the viewer's default rather than the
+  matte white the board ships in.
+- `artwork/exec-31918c24-…png` renamed to `artwork/case-mockup.png`.
+
+### Added (2026-08-28, cassette insert template)
+
+- **Double-sided J-card template for the case insert**, 1:1, as two SVGs and a
+  two-page PDF. Panels follow the stepped standard — front 65.0875 mm, spine
+  12.7 mm, tracklist flap 26.9875 mm, card 101.6 mm across — where each folded
+  panel is 1/16 inch narrower than the one before so the card nests inside its
+  own folds instead of binding.
+- The 101.6 mm runs horizontally, matching the board's 100.33 mm, so the front
+  panel reads upright at 101.6 x 65.09 and the folds are horizontal.
+- **Two pages, card in the same position on each**, because that is what duplex
+  printing needs. Long-edge flip; the card is centred, so every panel backs
+  itself.
+- The tracklist is **ruled and deliberately blank**. The owner records the
+  tracks, so printing a fixed listing would be wrong — it is a write-on field,
+  the same reasoning as the matte white mask on the board.
+- Carries the same 50 mm calibration bar as the case-fit sheet, plus cut, fold,
+  safe-area and bleed marks.
+
 ### Fixed (2026-08-27, CI: the `bt` component name collided with ESP-IDF's)
 
 - **`firmware/components/bt` is renamed to `components/btaudio`.** ESP-IDF

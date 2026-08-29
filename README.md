@@ -10,6 +10,21 @@ release to stop. Pair it to any Bluetooth earbuds or speaker and press PLAY.
 Cassette-shaped Bluetooth *players* exist. Nobody ships a cassette-shaped
 **recorder** — and recording is the part that made a mixtape a mixtape.
 
+![The Mixxtape board turning, front and back. The front carries the ESP32, two
+rings of RGB LEDs around the routed-out reel windows, four buttons and a USB-C
+port; the back is covered edge to edge in a peony line-art silkscreen.](artwork/mixxtape.gif)
+
+<sub>3D render from KiCad. The mask reads green here because that is the
+viewer's default — the board ships **matte white**, which is what makes the
+sharpie label work.</sub>
+
+![A cassette and its paper insert, both carrying the same black peony line-art
+on an off-white ground, the insert showing a blank ruled label
+box.](artwork/case-mockup.png)
+
+<sub>Artwork mockup of the B-side design and the J-card insert. The board is
+the object; this shows where the artwork is going.</sub>
+
 ## How you use it
 
 - **Hold REC** — records. Release stops. Recording always overwrites the current
@@ -72,6 +87,11 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
 
 **For people using one:**
 
+- [Cassette insert template](docs/jcard-template-1to1.pdf) — double-sided
+  J-card for the case, 1:1, print at 100% ([side 1](docs/jcard-template-side1.svg), [side 2](docs/jcard-template-side2.svg))
+- [B-side silkscreen brief](docs/b-side-silkscreen-brief.html) — the design
+  brief for the blank back face, with dimensioned keepouts and a 1:1
+  [template](hardware/mixxtape-back-silkscreen-template.svg)
 - [Manual](docs/MANUAL.md) — how to record, play, pair, and what the lights mean
 - [FAQ](docs/FAQ.md) — including the honest limitations
 

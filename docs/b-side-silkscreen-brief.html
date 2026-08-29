@@ -1,0 +1,565 @@
+<title>Mixxtape B-Side</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+  :root {
+    --ground:   #F1F2F3;
+    --surface:  #FFFFFF;
+    --sunk:     #E7E9EA;
+    --ink:      #15181B;
+    --muted:    #5C666B;
+    --hair:     #D2D6D8;
+    --accent:   #2F5D62;
+    --accent-s: #E3EDED;
+    --oxide:    #9C5230;
+    --danger:   #A8322B;
+    --danger-s: #F7E7E5;
+
+    --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:   #121517;
+      --surface:  #191D20;
+      --sunk:     #22272A;
+      --ink:      #E7EAEB;
+      --muted:    #9AA5AA;
+      --hair:     #2E3438;
+      --accent:   #7FBABF;
+      --accent-s: #1B2C2E;
+      --oxide:    #D08C63;
+      --danger:   #E28078;
+      --danger-s: #2E1E1C;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:   #121517;
+    --surface:  #191D20;
+    --sunk:     #22272A;
+    --ink:      #E7EAEB;
+    --muted:    #9AA5AA;
+    --hair:     #2E3438;
+    --accent:   #7FBABF;
+    --accent-s: #1B2C2E;
+    --oxide:    #D08C63;
+    --danger:   #E28078;
+    --danger-s: #2E1E1C;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 3rem) 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3.25rem;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead { display: flex; flex-direction: column; gap: 1.1rem; }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--oxide);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.022em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    font-size: clamp(1.1rem, 2.2vw, 1.32rem);
+    line-height: 1.5;
+    color: var(--muted);
+    max-width: 34em;
+    margin: 0;
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 2.25rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .facts b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  section { display: flex; flex-direction: column; gap: 1.1rem; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-bottom: 0.55rem;
+    border-bottom: 2px solid var(--accent);
+    align-self: flex-start;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3.2vw, 1.95rem);
+    line-height: 1.15;
+    letter-spacing: -0.014em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    letter-spacing: 0.002em;
+    margin: 0.6rem 0 0;
+  }
+
+  p { margin: 0; max-width: 66ch; }
+  p + p { margin-top: 0.85rem; }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible, .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  strong { font-weight: 600; }
+  .num { font-family: var(--mono); font-size: 0.94em; font-variant-numeric: tabular-nums; }
+
+  /* ---------- drawing ---------- */
+  figure { margin: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+
+  .plate {
+    background: var(--surface);
+    border: 1px solid var(--hair);
+    border-radius: 3px;
+    padding: clamp(0.9rem, 3vw, 1.9rem);
+    overflow-x: auto;
+  }
+  .plate svg { display: block; width: 100%; min-width: 30rem; height: auto; }
+
+  figcaption {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+
+  /* ---------- tables ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 3px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.9rem; }
+  th, td { text-align: left; padding: 0.62rem 0.9rem; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--sunk);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: 0; }
+  td.mono, th.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 0.16rem 0.42rem;
+    border-radius: 2px;
+    background: var(--danger-s);
+    color: var(--danger);
+    white-space: nowrap;
+  }
+  .tag.soft { background: var(--accent-s); color: var(--accent); }
+
+  /* ---------- callout ---------- */
+  .note {
+    background: var(--surface);
+    border: 1px solid var(--hair);
+    border-left: 3px solid var(--danger);
+    border-radius: 0 3px 3px 0;
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .note.calm { border-left-color: var(--accent); }
+  .note .lbl {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--danger);
+  }
+  .note.calm .lbl { color: var(--accent); }
+  .note p { font-size: 0.97rem; }
+
+  /* ---------- lists ---------- */
+  ul.clean { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+  ul.clean li {
+    display: grid;
+    grid-template-columns: 0.9rem 1fr;
+    gap: 0.7rem;
+    max-width: 66ch;
+  }
+  ul.clean li::before {
+    content: "";
+    width: 5px; height: 5px;
+    margin-top: 0.62em;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  ol.steps { margin: 0; padding-left: 1.35rem; display: flex; flex-direction: column; gap: 0.6rem; max-width: 66ch; }
+  ol.steps li::marker { font-family: var(--mono); font-size: 0.85em; color: var(--muted); }
+
+  /* ---------- question cards ---------- */
+  .qgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); gap: 0.9rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hair);
+    border-radius: 3px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .card .q { font-family: var(--display); font-weight: 600; font-size: 0.99rem; line-height: 1.3; }
+  .card .a { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+  footer {
+    border-top: 1px solid var(--hair);
+    padding-top: 1.4rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    a { transition: color 120ms ease; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="kicker">Silkscreen brief &middot; back face</div>
+    <h1>Mixxtape B-Side</h1>
+    <p class="standfirst">The back of the board is blank. It is the only surface on this
+      object with no job to do, which makes it the one place the thing gets to say what it is.</p>
+    <div class="facts">
+      <span><b>Canvas</b> 100.33 &times; 63.50 mm</span>
+      <span><b>Process</b> 1-colour silkscreen</span>
+      <span><b>Ground</b> matte white solder mask</span>
+      <span><b>Existing art</b> none</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="eyebrow">The object</div>
+    <h2>A cassette you can actually record on</h2>
+    <p>Mixxtape is a bare circuit board cut to the exact outline of a compact
+      cassette &mdash; 100 &times; 63.5 mm &mdash; that slides into a real Norelco case.
+      There is no enclosure and no bezel. <strong>The board is the product</strong>, so
+      the artwork is not packaging for the object; it is the object's only finish.</p>
+    <p>A microphone on the front records three four-minute tracks. You hold REC to
+      record and release to stop. It pairs to ordinary Bluetooth earbuds and plays
+      back. Cassette-shaped Bluetooth players already exist; nobody ships a
+      cassette-shaped <em>recorder</em>, and recording is the part that made a mixtape
+      a mixtape.</p>
+    <p>The solder mask is matte white for a specific reason: glossy board finishes
+      reject permanent marker, and this one is meant to be labelled by hand, the way
+      you'd label a tape. Whatever goes on the back has to survive sharing the object
+      with somebody's handwriting.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">The canvas</div>
+    <h2>What you are drawing on</h2>
+    <p>The front face is fully committed &mdash; LEDs, four buttons, USB-C, the
+      microphone, the radio module, and functional labels. The back has a solid
+      copper ground plane under the mask and, right now, not a single mark on it.</p>
+    <p>Two things shape the composition before you draw anything. Two
+      <span class="num">&Oslash;14 mm</span> holes pass clean through the board where a
+      cassette's reel hubs would be, and a small tongue in one corner snaps off by
+      hand &mdash; the write-protect tab, exactly like the one you'd break out of a
+      real cassette to stop it being taped over.</p>
+
+    <figure>
+      <div class="plate">
+        <svg viewBox="-6 -6 112.33 75.5" role="img"
+             aria-label="Scale drawing of the board's back face showing the outline, two reel windows, four mounting holes, the snap-off tab and the microSD keepout.">
+          <g fill="none" stroke="currentColor" stroke-width="0.35" opacity="0.9">
+            <path d="M3,0 H97.33 A3,3 0 0 1 100.33,3 V60.5 A3,3 0 0 1 97.33,63.5
+                     H3 A3,3 0 0 1 0,60.5 V3 A3,3 0 0 1 3,0 Z"/>
+            <path d="M81.43,0 V5.5 H79.83 V0 M88.83,0 V5.5 H90.43 V0"/>
+          </g>
+          <g fill="none" stroke="currentColor" stroke-width="0.3" opacity="0.9">
+            <circle cx="29.16" cy="29.2" r="7"/>
+            <circle cx="71.17" cy="29.2" r="7"/>
+            <circle cx="97.58" cy="2.75" r="1.1"/>
+            <circle cx="3.08" cy="3" r="1.1"/>
+            <circle cx="97.58" cy="60.75" r="1.1"/>
+            <circle cx="2.73" cy="60.75" r="1.1"/>
+          </g>
+          <g fill="#A8322B" fill-opacity="0.12" stroke="#A8322B" stroke-width="0.3"
+             stroke-dasharray="1.2 0.9">
+            <rect x="4.93" y="21.7" width="14.9" height="15.6"/>
+          </g>
+          <g fill="#9C5230" fill-opacity="0.16" stroke="#9C5230" stroke-width="0.3">
+            <rect x="81.43" y="0" width="7.4" height="5.5"/>
+          </g>
+          <g font-family="IBM Plex Mono, monospace" font-size="2.1" fill="currentColor" opacity="0.75">
+            <text x="29.16" y="30" text-anchor="middle">reel window</text>
+            <text x="71.17" y="30" text-anchor="middle">reel window</text>
+            <text x="12.38" y="30" text-anchor="middle" fill="#A8322B">microSD</text>
+            <text x="12.38" y="32.6" text-anchor="middle" fill="#A8322B">pads</text>
+            <text x="85.13" y="-1.4" text-anchor="middle" fill="#9C5230">snaps off</text>
+            <text x="50.16" y="68.6" text-anchor="middle">100.33 mm</text>
+            <text x="-1.6" y="31.75" text-anchor="middle" transform="rotate(-90 -1.6 31.75)">63.50 mm</text>
+          </g>
+        </svg>
+      </div>
+      <figcaption>The back face, 1:1, seen the way you will hold it. Everything drawn
+        here is a hole through the board except the two shaded zones.</figcaption>
+    </figure>
+
+    <div class="note calm">
+      <span class="lbl">Orientation</span>
+      <p>Draw it as you see it above &mdash; the view looking <em>at</em> the back of the
+        board. Back-face artwork gets mirrored on its way into the manufacturing files,
+        and that flip is handled on our side. If you design from the front-face
+        coordinates instead, every asymmetric feature lands on the wrong side.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Hard constraints</div>
+    <h2>Where the art cannot go</h2>
+    <p>Positions below are measured from the top-left corner of the drawing above,
+      in millimetres, at 1:1. The template file carries all of it as real geometry, so
+      you should not need to key any of these in by hand.</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="mono">Position</th>
+            <th class="mono">Size</th>
+            <th>Why it matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reel windows &times;2</td>
+            <td class="mono">29.16, 29.20<br>71.17, 29.20</td>
+            <td class="mono">&Oslash;14.00</td>
+            <td>Holes through the board. Art crossing them is simply absent.</td>
+          </tr>
+          <tr>
+            <td>Mounting holes &times;4</td>
+            <td class="mono">3.08, 3.00<br>97.58, 2.75<br>2.73, 60.75<br>97.58, 60.75</td>
+            <td class="mono">&Oslash;2.20</td>
+            <td>Holes. Leave <span class="num">1 mm</span> of clear space around each.</td>
+          </tr>
+          <tr>
+            <td>Write-protect tab <span class="tag">snaps off</span></td>
+            <td class="mono">81.43&ndash;88.83, 0&ndash;5.50</td>
+            <td class="mono">7.4 &times; 5.5</td>
+            <td>This piece is meant to be broken away. Anything drawn on it is gone
+              the moment a user locks the tape &mdash; and the break edge is ragged.</td>
+          </tr>
+          <tr>
+            <td>microSD pads <span class="tag">keepout</span></td>
+            <td class="mono">4.93&ndash;19.83, 21.70&ndash;37.30</td>
+            <td class="mono">14.9 &times; 15.6</td>
+            <td>An unfitted socket footprint. Bare copper, no mask. Silkscreen will
+              not print here.</td>
+          </tr>
+          <tr>
+            <td>Board edge</td>
+            <td class="mono">&mdash;</td>
+            <td class="mono">0.20 min</td>
+            <td>Routing tolerance. Keep ink back from the outline and from every
+              hole above.</td>
+          </tr>
+          <tr>
+            <td>Vias &times;98 <span class="tag soft">cosmetic</span></td>
+            <td class="mono">scattered</td>
+            <td class="mono">&Oslash;0.60</td>
+            <td>Small dimples visible through the mask. They will freckle any large
+              flat area &mdash; worth designing with rather than against.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>What the process can hold</h3>
+    <p>Silkscreen is a stencil, not a print. There is <strong>one ink, fully opaque,
+      with no tints and no halftones</strong>. Think in solid shapes and negative space;
+      anything you would normally solve with a 40&nbsp;% grey has to become a
+      hatch, a stipple, or nothing.</p>
+
+    <ul class="clean">
+      <li><strong>Minimum line weight <span class="num">0.15 mm</span>.</strong> Thinner
+        strokes break up or vanish. Assume <span class="num">0.20 mm</span> to be safe.</li>
+      <li><strong>Minimum gap between marks <span class="num">0.15 mm</span>.</strong> Ink
+        spreads; anything tighter fills in and reads as a blob.</li>
+      <li><strong>Minimum text height <span class="num">0.8 mm</span>,</strong> and that is
+        the floor, not a target. Below about <span class="num">1.2 mm</span> small type
+        gets mushy on a matte surface.</li>
+      <li><strong>Large solid fills are allowed</strong> and print well, but they show
+        every via dimple and every fingerprint. A big black field is a real option,
+        just an opinionated one.</li>
+    </ul>
+
+    <div class="note">
+      <span class="lbl">Measured against the current artwork</span>
+      <p>The peony design now on the board has <strong>32 shapes thinner than
+        0.15&nbsp;mm</strong> in one dimension, and 52 more between 0.15 and
+        0.25&nbsp;mm. The 32 will not survive the screen &mdash; they will fill in
+        or drop out. The marginal 52 are a coin toss on a matte surface. Thickening
+        the finest stems and closing the smallest gaps is the one change that will
+        most improve how the printed board actually looks.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Existing language</div>
+    <h2>What the front already says</h2>
+    <p>The front is purely functional and set in plain uppercase at
+      <span class="num">2 mm</span>: <span class="num">WRITE</span>,
+      <span class="num">REC</span>, <span class="num">PLAY</span>,
+      <span class="num">TRACK</span>, <span class="num">MODE</span>,
+      <span class="num">MIC</span>, <span class="num">CPU</span>,
+      <span class="num">FLASH</span>, <span class="num">POWER</span>. It reads like
+      test equipment, because that is what it is.</p>
+    <p>The back is not obliged to match that. Treating the two faces as a deliberate
+      pair &mdash; instrument on the front, object on the back &mdash; is a legitimate
+      and probably better answer than continuity for its own sake. That is your call
+      to make and argue.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">The ask</div>
+    <h2>What the artwork has to carry</h2>
+    <p>Only two things are genuinely required. Everything else is yours.</p>
+    <ol class="steps">
+      <li><strong>The name and a revision.</strong> Board revisions get spun often and
+        a board you cannot identify in a drawer is a nuisance. Design the lockup so the
+        revision can change without redrawing anything.</li>
+      <li><strong>A project URL,</strong> so someone who finds one of these in eight
+        years can work out what it is.</li>
+    </ol>
+    <p>Beyond that, the open ground is the cassette metaphor itself &mdash; the hub
+      teeth, the tape path, the A-side/B-side conceit, the ruled write-on label, the
+      typography of a 1980s tape shell. The two reel windows are already the strongest
+      shapes on the face; a composition that ignores them will fight them.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Open questions</div>
+    <h2>Decide these before you start</h2>
+    <div class="qgrid">
+      <div class="card" tabindex="0">
+        <span class="q">What is it called?</span>
+        <span class="a">&ldquo;Mixxtape&rdquo; is a working title and is expected to change.
+          Do not build a lockup that only works with this exact word.</span>
+      </div>
+      <div class="card" tabindex="0">
+        <span class="q">What colour is the ink? <em>&mdash; settled</em></span>
+        <span class="a">Black, and there is no choice in it. JLCPCB prints black
+          silkscreen on white solder mask as a fixed pairing. White mask also adds
+          about two days to the lead time.</span>
+      </div>
+      <div class="card" tabindex="0">
+        <span class="q">Does the back get a write-on area too?</span>
+        <span class="a">The front carries a ruled label block for a sharpie. A real
+          cassette labels both sides. Worth deciding rather than defaulting.</span>
+      </div>
+      <div class="card" tabindex="0">
+        <span class="q">Under what licence?</span>
+        <span class="a">The repository has no licence file yet. If the artwork ships
+          with an open-hardware project, its terms need settling up front.</span>
+      </div>
+      <div class="card" tabindex="0">
+        <span class="q">Any marks required?</span>
+        <span class="a">The radio is a pre-certified module, but the finished product
+          may still need identifiers on it. Leave a small reserved area until this is
+          confirmed.</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Delivery</div>
+    <h2>How to hand it back</h2>
+    <ul class="clean">
+      <li><strong>Vector, 1:1, in millimetres.</strong> SVG or DXF. The canvas must be
+        exactly <span class="num">100.33 &times; 63.50 mm</span> so it drops straight
+        onto the board.</li>
+      <li><strong>Monochrome, single layer.</strong> One colour, pure black on
+        transparent. No groups relying on opacity, blend modes, or clipping to look
+        right &mdash; those do not survive the conversion.</li>
+      <li><strong>All type converted to outlines,</strong> and all strokes expanded to
+        filled shapes. What the fab receives is a region, not a path with a weight.</li>
+      <li><strong>Drawn in the back-view orientation</strong> shown above, matching the
+        template.</li>
+    </ul>
+    <div class="note">
+      <span class="lbl">One thing to check before you draw</span>
+      <p>Open the template and confirm your tool reads the board as
+        <span class="num">100.33 mm</span> wide. Illustrator and Figma both have
+        opinions about SVG units, and a file that comes back at 96 DPI instead of
+        millimetres is the single most common way this goes wrong.</p>
+    </div>
+  </section>
+
+  <footer>
+    Template: <b>hardware/mixxtape-back-silkscreen-template.svg</b> &mdash; board
+    outline, all cutouts and both keepouts as live geometry, 1:1, already mirrored
+    for the back view. Send it with this brief.<br>
+    It is generated from the board, so it cannot drift &mdash; rebuild it with
+    <b>python hardware/scripts/gen_silk_template.py</b> after any change to the
+    outline. Positions are millimetres from the top-left corner of the back view.
+  </footer>
+
+</div>
