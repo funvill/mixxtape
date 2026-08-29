@@ -11,7 +11,10 @@ marked **[LOCKED]** there have rationale behind them and must not be changed —
 if a change looks compelling, raise it with Steven rather than acting.
 
 The BOM of record is
-[docs/cassette-recorder-bom-v3.md](docs/cassette-recorder-bom-v3.md).
+[docs/cassette-recorder-bom-v4.md](docs/cassette-recorder-bom-v4.md), and it is
+**generated** — rebuild it with `python hardware/scripts/gen_bom.py` rather than
+editing it by hand. The hand-maintained version it replaced had drifted from the
+board in seven places before anyone noticed.
 
 ## The five traps
 

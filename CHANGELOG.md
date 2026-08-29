@@ -8,6 +8,42 @@ first prototype run.
 
 ## [Unreleased]
 
+### Changed (2026-08-29, documentation consolidated)
+
+- **The README's hardware summary now carries JLCPCB part numbers, each linked
+  to the part page**, plus per-part quantities. Rewriting it turned up three
+  errors that had been sitting there: the microphone was still listed as
+  MSM261S4030H0R, as I²S, and as bottom-ported. All three were corrected
+  elsewhere months ago and never here. The cost was also stale at $13.25/board
+  against the generated BOM's $10.01.
+- **The agent brief was the worst of the drift.** It still specified the CH340N
+  USB-UART and USBLC6 ESD diode (both deleted when USB-C went power-only), SBC
+  encoding at record time (now ADPCM), a castellated header and a lanyard hole
+  (neither exists), UART routed to the CH340N, and the superseded BOM as
+  authoritative. All corrected.
+- **`cassette-recorder-bom-v3.md` deleted.** Its one lasting value — the list of
+  seven ways a hand-maintained BOM drifted from the board — now sits at the top
+  of the generated BOM, where someone tempted to hand-edit will see it.
+- **Added `docs/README.md`**, an index grouping the documents by what they are
+  for, and naming which files are generated and by which script. Every relative
+  link across the repository's markdown now resolves.
+- The pre-production checklist gained a manufacturability section from the
+  JLCPCB audit, and lost its references to the lanyard hole, which the board no
+  longer has.
+
+### Checked (2026-08-29, USB-C receptacle)
+
+- **No board notch is needed.** The TYPE-C-31-M-12 is a top-mount right-angle
+  receptacle; its only board penetrations are four plated shell legs and two
+  non-plated locating pegs, all already in the footprint. Notches are for
+  *mid-mount* receptacles, which sit partly through the board. This is not one.
+- Its mouth sits **0.76 mm inboard of the board edge**, with the strip in front
+  clear of copper and components, and the edge there is a straight run from
+  y 2.54 to 60.96. The plug's shell passes over that lip because the mouth is
+  raised above the board surface.
+- Open question for the checklist: a closed Norelco case has a wall on that
+  edge, so decide whether the board comes out to charge or the case is modified.
+
 ### Fixed (2026-08-29, manufacturability audit against JLCPCB)
 
 - **The microphone was tagged `through_hole` while carrying eight SMD pads.**

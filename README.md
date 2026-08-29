@@ -54,16 +54,44 @@ the object; this shows where the artwork is going.</sub>
 
 ## Hardware summary
 
+Every fitted part is stocked at JLCPCB. The project rule is a minimum of 5,000
+in stock, so a run never stalls on one line item — with a single documented
+exception: **the microphone sits at ~3,500**, because no digital MEMS
+microphone at JLCPCB clears the bar, and the one that does is analogue and
+would wreck the audio path.
+
+| Block | Part | JLCPCB | Qty | Notes |
+|---|---|---|---|---|
+| MCU | ESP32-WROOM-32E-N4 | [C701341](https://jlcpcb.com/partdetail/C701341) | 1 | The original Xtensa ESP32 — the only one with Classic Bluetooth, so the only one that can be an A2DP *source* |
+| Microphone | MSM261DHT006 | [C51928215](https://jlcpcb.com/partdetail/C51928215) | 1 | **PDM** digital MEMS, mono, **top-ported** — sound enters from the component side, so there is no hole through the board |
+| Storage | W25Q128JVSIQ | [C97521](https://jlcpcb.com/partdetail/C97521) | 1 | 16 MB NOR flash, separate from the module's own flash. Three fixed slots, ~4 min each |
+| Indicators | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 29 | WS2812-compatible RGB. Two 12-LED reel rings, three track lamps, REC, BT |
+| LED data buffer | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 1 | Lifts the ESP32's 3.3 V data line to the LEDs' 5 V rail |
+| Regulator | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | 1 | 5 V USB down to 3.3 V |
+| USB-C | TYPE-C-31-M-12 | [C165948](https://jlcpcb.com/partdetail/C165948) | 1 | Power and CC sensing only — no data lines |
+| Buttons | TS-1187A-B-A-B | [C318884](https://jlcpcb.com/partdetail/C318884) | 4 | REC, PLAY, TRACK, MODE |
+| Write-protect tab | — | — | 1 | Not a part. A mouse-bitten PCB tongue carrying a net tie; snap it and recording is disabled for good |
+| Programming pads | — | — | 1 | Six bare pogo targets. No USB-UART on the board |
+
+Passives are all JLCPCB basic-library parts:
+[22 µF](https://jlcpcb.com/partdetail/C45783) ×2,
+[10 µF](https://jlcpcb.com/partdetail/C15525),
+[1 µF](https://jlcpcb.com/partdetail/C29266) (the ESP32's EN delay),
+[100 nF](https://jlcpcb.com/partdetail/C1525) ×12,
+[10 k](https://jlcpcb.com/partdetail/C25804) ×7,
+[5.1 k](https://jlcpcb.com/partdetail/C25905) ×2 (the USB-C CC pull-downs) and
+[100 Ω](https://jlcpcb.com/partdetail/C25076) (microphone supply isolation).
+
 | | |
 |---|---|
-| MCU | ESP32-WROOM-32E (original Xtensa ESP32 — the only ESP32 with Classic Bluetooth / A2DP) |
-| Mic | MSM261S4030H0R I²S MEMS, mono, bottom-ported |
-| Storage | W25Q128 16 MB external NOR flash, separate from module flash; 3 fixed slots, ~4 min each |
 | Audio | 44.1 kHz mono, ADPCM-encoded at record time; playback decodes with table lookups and hands PCM to the Bluetooth stack |
-| Indicators | 29 × WS2812B-2020 RGB (2 × 12 reel rings + track/REC/BT) |
-| Controls | 4 tactile buttons + break-off write-protect tab |
-| Power | USB-C only (power + CC sense, no data). No battery, no charger |
-| Cost | ~$13.25/board at a run of 20 (~$265 total) |
+| Power | USB-C only, power and CC sense. No battery, no charger |
+| Board | 2-layer, 100.33 × 63.50 mm, matte white solder mask with black silkscreen |
+| Cost | **$10.01/board** at a run of 20 — $182.13 in parts plus $18.00 of setup fees for six extended-library parts |
+
+Full detail, with live stock and pricing, is in the
+[generated BOM](docs/cassette-recorder-bom-v4.md) — it is derived from the
+schematic, so it cannot drift out of step with it.
 
 ## Project status
 
@@ -92,6 +120,7 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
 - [B-side silkscreen brief](docs/b-side-silkscreen-brief.html) — the design
   brief for the blank back face, with dimensioned keepouts and a 1:1
   [template](hardware/mixxtape-back-silkscreen-template.svg)
+- [Documentation index](docs/README.md) — everything below, organised
 - [Manual](docs/MANUAL.md) — how to record, play, pair, and what the lights mean
 - [FAQ](docs/FAQ.md) — including the honest limitations
 
@@ -101,9 +130,8 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
   rationale, and open questions
 - [Agent handoff brief](docs/cassette-recorder-agent-brief.md) — the
   authoritative spec: locked decisions, GPIO map, behaviour spec, phase order
-- [BOM v4](docs/cassette-recorder-bom-v4.md) — generated from the schematic
-  with live JLCPCB prices and stock ([v3](docs/cassette-recorder-bom-v3.md)
-  is superseded)
+- [Bill of materials](docs/cassette-recorder-bom-v4.md) — generated from the
+  schematic with live JLCPCB prices and stock, so it cannot drift
 - [Prior art](docs/prior-art.md) — research on cassette-form-factor projects
 - [Firmware plan](docs/firmware-plan.md) — architecture, milestones, and
   hardware interface for the firmware agent

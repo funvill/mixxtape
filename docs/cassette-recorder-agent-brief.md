@@ -73,7 +73,7 @@ functional-first board that happens to be cassette-shaped.
 | **MCU** | ESP32-WROOM-32E, module not bare chip | **[LOCKED]** Classic BT for A2DP source. Module carries FCC/IC/CE modular approval; a bare chip would put full intentional-radiator testing on us. |
 | **Flash size** | 16 MB external | **[LOCKED]** 3 × 4 min mono SBC ≈ 11.5 MB. |
 | **Separate audio flash** | Yes, not module flash | **[LOCKED]** No battery means no graceful-shutdown window. A yank mid-write must not be able to corrupt the bootloader. Also avoids XIP cache stalls during record. |
-| **Audio path** | Mono, encode to SBC **at record time** | **[LOCKED]** Playback must be read-frames-and-transmit. No real-time decode, no resample, no DSP during streaming. |
+| **Audio path** | Mono, encode to **block-framed IMA ADPCM** at record time | **[LOCKED]** Playback must be read-frames-and-transmit. No real-time decode, no resample, no DSP during streaming. |
 | **Sample rate** | 44.1 kHz | **[LOCKED]** Matches A2DP negotiation, eliminates resampling entirely. |
 | **Power** | USB-C only; no battery or charger on the board | **[LOCKED]** A LiPo in a drawer for years is dead and possibly hazardous. The object's premise is that it still works when rediscovered. Also avoids UN38.3 shipping paperwork. |
 | **Controls** | 4 tactile buttons + 1 break-off write-protect tab | **[LOCKED]** Physical buttons, not cap touch — explicitly reversed after consideration. |
@@ -90,24 +90,29 @@ functional-first board that happens to be cassette-shaped.
 
 ## 4. Bill of materials
 
-Authoritative BOM lives in `cassette-recorder-bom-v3.md`. Summary:
+The authoritative BOM is **generated from the schematic** — see
+[`cassette-recorder-bom-v4.md`](cassette-recorder-bom-v4.md), rebuilt with
+`hardware/scripts/gen_bom.py`. It carries live JLCPCB stock and pricing and
+cannot drift away from the design. Summary:
 
-| Ref | Part | LCSC | Note |
+| Ref | Part | JLCPCB | Note |
 |---|---|---|---|
-| U1 | ESP32-WROOM-32E-N4 | C701341 | **MSL 3, X-ray required.** N16 is C701343 @ $3.5161 |
-| U2 | MSM261S4030H0R | C2840615 | I²S MEMS mic. **CORRECTION: top-ported, not bottom-ported** — datasheet p.2. Also now zero stock; see BOM v4 |
-| U3 | W25Q128JVSIQ | C97521 | $1.65. Second source: C113767 |
-| U4 | 3.3 V LDO, **1 A** | TBD | See §7 — uprated from 500 mA |
-| U6 | CH340N | C506813 | USB-UART + auto-reset |
-| U7 | USBLC6-2SC6 | C7519 | USB ESD |
-| D1–D29 | WS2812B-2020 | TBD | 12 + 12 reel rings, 3 track, REC, BT |
-| SW1–4 | Tactile SMD 3×4 | C318884 | |
-| J1 | USB-C 16P | C165948 | + 2 × 5.1 kΩ CC pulldowns — mandatory |
+| U1 | ESP32-WROOM-32E-N4 | [C701341](https://jlcpcb.com/partdetail/C701341) | **MSL 3, X-ray required.** N16 is C701343 |
+| U2 | MSM261DHT006 | [C51928215](https://jlcpcb.com/partdetail/C51928215) | **PDM** MEMS mic, top-ported. Replaced MSM261S4030H0R (C2840615) at zero stock — completely different pinout, so a schematic change rather than a swap |
+| U3 | W25Q128JVSIQ | [C97521](https://jlcpcb.com/partdetail/C97521) | Second source: C113767 |
+| U4 | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | SOT-223. 22 µF on the output for stability, per its datasheet |
+| U8 | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 3.3 V → 5 V buffer for the LED data line |
+| D1–D29 | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 12 + 12 reel rings, 3 track, REC, BT |
+| SW1–4 | TS-1187A-B-A-B | [C318884](https://jlcpcb.com/partdetail/C318884) | |
+| J1 | USB-C 16P | [C165948](https://jlcpcb.com/partdetail/C165948) | + 2 × 5.1 kΩ CC pulldowns — mandatory |
+| R12 | 100 Ω | [C25076](https://jlcpcb.com/partdetail/C25076) | Microphone supply isolation, per the MSM261DHT006 datasheet |
+| C9 | 1 µF | [C29266](https://jlcpcb.com/partdetail/C29266) | The ESP32's EN delay. The datasheet asks for 1 µF, not 100 nF |
 
-~$13.25/board at qty 20, ~$265 for the run.
+**$10.01/board at qty 20** — $182.13 in parts plus $18.00 of setup fees for six
+extended-library parts.
 
-Prices came from search-index snippets, not a live quote. **Re-quote in the JLC
-BOM tool before ordering** — NOR pricing is moving fast.
+**U6 (CH340N) and U7 (USBLC6-2SC6) are gone.** USB-C is power only; programming
+is via the six-pad pogo jig, so there is no USB data path to protect.
 
 ---
 
@@ -132,7 +137,7 @@ boot — leave unused. GPIO 34/35/36/39 are input-only.
 | SW4 MODE | 17 | |
 | Write-protect tab | 21 | Pull-down; tab intact = high |
 | Line-in ADC *(DNP)* | 35 | ADC1 |
-| UART0 TX / RX | 1, 3 | To CH340N |
+| UART0 TX / RX | 1, 3 | To the J5 pogo pads only — there is no USB-UART on the board |
 
 Free for expansion: 13, 14, 22, 32.
 
@@ -242,7 +247,8 @@ playback, something upstream went wrong.
 
 - [ ] ESP32-WROOM-32E-N4 live price vs N16
 - [ ] W25Q128JVSIQ live price and stock on both C97521 and C113767
-- [ ] JLCPCB surcharge for castellated / half-hole edges
+- [ ] JLCPCB surcharge for matte **white** solder mask (adds ~2 days; the
+  silkscreen is then black, which is fixed rather than a choice)
 - [ ] Matte white solder mask availability and any surcharge
 - [ ] Extended-part reel fees — ~7 extended parts × ~$3, dominates cost at qty 20
 - [ ] Norelco case internal dimensions **against a physical case in hand** — rib
@@ -276,9 +282,10 @@ playback, something upstream went wrong.
   label, no fingertip. Marked as a keep-clear zone in the layout.
 - **Sharpie label block:** upper-left third, where a cassette's paper label sits.
   Faint light-grey ruled lines on silkscreen.
-- **Lanyard hole:** 3 mm, corner, clear of antenna keepout, castellated edge,
-  and case hinge.
-- **Castellated header:** 10 half-holes, bottom edge, silkscreened pin names.
+- **Mounting holes:** four Ø2.2 mm, one near each corner.
+- **No lanyard hole and no castellated header.** Both were dropped; the
+  programming pads replaced the header, and the lanyard hole was removed when
+  the mounting holes went in.
 - All components top-side. Single-sided SMT is a hard constraint.
 
 ---
@@ -288,12 +295,12 @@ playback, something upstream went wrong.
 1. **Verification pass** — clear the §7 checklist. Cheap, and it gates BOM
    decisions.
 2. **Outline + mechanical** — pull the Mixtape Alpha board file, adapt the
-   outline, place reel slots, tab, lanyard hole, castellated edge. Check against
+   outline, place reel windows, the break-off tab and four mounting holes. Check against
    a physical case.
 3. **Schematic** — power, MCU, mic, flash, LED chain, buttons, tab, USB, DNP
    sections clearly marked.
 4. **Firmware bring-up on a devkit** — before layout is final. Prove A2DP source
-   connects to real earbuds, prove I²S mic capture, prove SBC encode timing.
+   connects to real earbuds, prove PDM mic capture, prove ADPCM encode timing.
    These are the risky parts and they don't need the real board.
 5. **Layout** — aesthetics are a design requirement here, not an afterthought.
 6. **Prototype run of 3–5** before committing all 20.

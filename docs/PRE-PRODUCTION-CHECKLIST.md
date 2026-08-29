@@ -12,7 +12,7 @@ prototypes, and the prototypes gate the run of 20.
 
 **Everything mechanical is an assumption until this is done.** The outline
 is borrowed from a board that fits *some* case; the reel windows, tab
-position and lanyard hole are ours and have never touched plastic.
+position and mounting holes are ours and have never touched plastic.
 
 ⬜ **Buy several cassette cases, from different brands.** The brief is
    emphatic: internal ribs and hub-clamp ridges vary, and thrifted cases are
@@ -33,7 +33,7 @@ position and lanyard hole are ours and have never touched plastic.
      land on board material where LEDs will be?
    - Does the **write-protect tab** (top-left) clear the internal ribs? The
      mouse-bite nibs must not sit where a rib presses.
-   - Does the **lanyard hole** (bottom-left) clear the hinge?
+   - Do the four **mounting holes** clear the case's internal ribs?
    - Does the **microphone** land somewhere a fingertip, a case rib or
      a written label will not cover? It is top-ported, so its top face
      is the acoustic path — there is no hole through the board.
@@ -86,6 +86,37 @@ These are all flagged in the repo but need an actual answer before copper.
 ⬜ **Silkscreen artwork.** On a bare-PCB product the art *is* the industrial
    design. Nobody should generate this but you. The five decorative guide
    holes along the bottom edge are deferred until this happens.
+
+---
+
+## 2b. Manufacturability, audited 2026-08-29 ⬜
+
+Checked against JLCPCB's published 2-layer limits. Everything below either
+passed or was fixed, but three items want a human eye before the order goes in.
+
+- [ ] **Smallest plated annular ring is 0.200 mm on J1** — above JLCPCB's
+  0.18 mm floor but under their 0.25 mm recommendation. Fine in all likelihood;
+  worth a glance at the fab's DFM report rather than a surprise.
+- [ ] **Closest hole-to-hole is 0.500 mm against a 0.45 mm limit**, inside the
+  DNP microSD footprint. Only bites if J4 is ever fitted.
+- [ ] **The B-side artwork has 32 shapes thinner than 0.15 mm** and 52 more
+  between 0.15 and 0.25 mm. The first group will not print. Get the artwork
+  thickened before committing to a run, or accept that the fine detail vanishes.
+- [x] Footprint attributes corrected — the microphone was tagged `through_hole`
+  with eight SMD pads, which can drop it from the pick-and-place file entirely.
+- [x] Silkscreen line widths raised to JLCPCB's 0.15 mm minimum.
+- [x] Eleven DRC rules had been set to `ignore`, hiding 145 findings including
+  the one that would have caught the microphone. The eight that matter are back
+  on as warnings.
+- [x] **USB-C needs no board notch.** The TYPE-C-31-M-12 is a top-mount
+  right-angle receptacle; its only board penetrations are four plated shell legs
+  and two non-plated locating pegs, all already in the footprint. Its mouth sits
+  0.76 mm inboard of the board edge, and the strip in front of it is clear of
+  copper and parts. A notch is only needed for *mid-mount* receptacles, which
+  this is not.
+- [ ] **Confirm the case does not block the USB-C.** The port is on the right
+  edge; a closed Norelco case has a wall there. Decide whether the board is
+  meant to come out of the case to charge, or whether the case gets modified.
 
 ---
 

@@ -1,4 +1,12 @@
 # Bill of materials — v4
+> **Why this file is generated.** The hand-maintained v3 BOM drifted from the
+> board in seven places before it was caught: it still listed the CH340N
+> USB-UART, the USBLC6 ESD diode and the S8050 auto-reset pair (all deleted
+> when USB-C became power-only) and the ME6211 LDO (replaced by the AMS1117),
+> and it was missing the WS2812 substitute actually fitted, the SN74AHCT1G125
+> level shifter and the DNP microSD footprint. Rebuild this file with
+> `python hardware/scripts/gen_bom.py` rather than editing it.
+
 
 > Generated from `hardware/mixxtape.kicad_sch` by
 > `hardware/scripts/gen_bom.py`, with prices and stock read live from
