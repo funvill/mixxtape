@@ -4,7 +4,7 @@ EasyEDA's API rejects plain urllib/curl clients (TLS fingerprinting), so this
 driver monkeypatches urllib.request.urlopen with a curl_cffi Chrome
 impersonation shim before invoking easyeda2kicad's CLI.
 
-Usage:  python fetch_parts.py C701341 [C97521 ...]
+Usage:  python fetch_parts.py C701341 [C2758105 ...]
         python fetch_parts.py --all      # fetch the full BOM list below
 """
 
@@ -21,7 +21,7 @@ LIB_BASE = str(Path(__file__).parent / "mixxtape_parts")
 BOM_PARTS = [
     "C701341",   # U1  ESP32-WROOM-32E-N4
     "C2840615",  # U2  MSM261S4030H0R I2S MEMS mic
-    "C97521",    # U3  W25Q128JVSIQ 16MB NOR flash
+    "C2758105",  # U3  GD25Q128ESIG 16MB NOR flash (was C97521, Winbond)
     "C6186",     # U4  AMS1117-3.3 1A LDO (uprated per BOM note)
     "C506813",   # U6  CH340N USB-UART
     "C7519",     # U7  USBLC6-2SC6 USB ESD

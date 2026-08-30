@@ -34,7 +34,21 @@ static const char *TAG = "flash";
 #define STATUS_BUSY 0x01u
 #define STATUS_WEL  0x02u
 
-#define EXPECT_JEDEC_ID 0xEF4018u
+/* Either 128 Mbit part may be fitted; they differ only in the manufacturer
+ * byte of the JEDEC id. Every command this driver uses - 0x06, 0x05, 0x03,
+ * 0x02, 0x20, 0xD8, 0x9F - and the 256 B page / 4 KiB sector / 64 KiB block
+ * geometry are identical between them. */
+#define JEDEC_WINBOND_W25Q128     0xEF4018u
+#define JEDEC_GIGADEVICE_GD25Q128 0xC84018u
+
+static const char *jedec_name(uint32_t id)
+{
+    switch (id) {
+    case JEDEC_WINBOND_W25Q128:     return "W25Q128 (Winbond)";
+    case JEDEC_GIGADEVICE_GD25Q128: return "GD25Q128 (GigaDevice)";
+    default:                        return NULL;
+    }
+}
 
 /* Erases are slow: a 64 KiB block is 150 ms typical but up to 1 s on a
  * tired part, and a chip erase far longer. The record path never waits on
@@ -303,13 +317,15 @@ int spi_flash_hal_init(flash_hal_t *out)
         s_ready = false;
         return err;
     }
-    if (id != EXPECT_JEDEC_ID) {
-        ESP_LOGE(TAG, "unexpected JEDEC id 0x%06X (expected 0x%06X)",
-                 (unsigned)id, (unsigned)EXPECT_JEDEC_ID);
+    const char *part = jedec_name(id);
+    if (!part) {
+        ESP_LOGE(TAG, "unexpected JEDEC id 0x%06X (expected 0x%06X or 0x%06X)",
+                 (unsigned)id, (unsigned)JEDEC_WINBOND_W25Q128,
+                 (unsigned)JEDEC_GIGADEVICE_GD25Q128);
         s_ready = false;
         return ESP_ERR_NOT_FOUND;
     }
-    ESP_LOGI(TAG, "W25Q128 found, id 0x%06X", (unsigned)id);
+    ESP_LOGI(TAG, "%s found, id 0x%06X", part, (unsigned)id);
 
     memset(out, 0, sizeof(*out));
     out->size = TAPE_FLASH_SIZE;

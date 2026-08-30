@@ -37,8 +37,10 @@
 
 static const char *TAG = "factory";
 
-/* W25Q128JV: manufacturer 0xEF (Winbond), type 0x40, capacity 0x18 (16 MiB). */
-#define EXPECT_JEDEC_ID 0xEF4018
+/* Either 128 Mbit part may be fitted. Type 0x40 and capacity 0x18 (16 MiB)
+ * are common to both; only the manufacturer byte differs. */
+#define JEDEC_WINBOND_W25Q128     0xEF4018 /* Winbond */
+#define JEDEC_GIGADEVICE_GD25Q128 0xC84018 /* GigaDevice */
 
 typedef struct {
     spi_device_handle_t flash;
@@ -87,9 +89,9 @@ static int probe_flash_id(void *user, int32_t *measured, char *detail)
         snprintf(detail, FT_DETAIL_LEN, "no flash responding");
         return -1;
     }
-    if (id != EXPECT_JEDEC_ID) {
-        snprintf(detail, FT_DETAIL_LEN, "wrong part, expected 0x%X",
-                 EXPECT_JEDEC_ID);
+    if (id != JEDEC_WINBOND_W25Q128 && id != JEDEC_GIGADEVICE_GD25Q128) {
+        snprintf(detail, FT_DETAIL_LEN, "wrong part, expected 0x%X or 0x%X",
+                 JEDEC_WINBOND_W25Q128, JEDEC_GIGADEVICE_GD25Q128);
         return -1;
     }
     return 0;

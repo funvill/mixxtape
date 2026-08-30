@@ -173,7 +173,7 @@ COMPONENTS = [
     ("C7", "mixxtape_parts:CL05B104KO5NNNC", "100nF", FP + "C0402", "C1525", False, (12, 112), {"1": "3V3", "2": "GND"}),
 
     # --- Audio flash ---
-    ("U3", "mixxtape_parts:W25Q128JVSIQTR", "W25Q128JVSIQ", FP + "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL", "C97521", False, (104, 96), {
+    ("U3", "mixxtape_parts:GD25Q128ESIG", "GD25Q128ESIG", FP + "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL", "C2758105", False, (104, 96), {
         "1": "SPI_CS_N", "2": "SPI_MISO", "3": "FLASH_WP_N", "4": "GND",
         "5": "SPI_MOSI", "6": "SPI_CLK", "7": "FLASH_HOLD_N", "8": "3V3"}),
     ("R4", "mixxtape_parts:0603WAF1002T5E", "10k", FP + "R0603", "C25804", False, (94, 88), {"1": "3V3", "2": "SPI_CS_N"}),

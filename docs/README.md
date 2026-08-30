@@ -15,6 +15,7 @@ holds the working documents behind it.
 | | |
 |---|---|
 | [Manual](MANUAL.md) | How to record, play, pair, and what the lights mean. |
+| [Quick-start pictograms](quick-start-pictograms.html) | Wordless, IKEA-style instructions for pairing, playing, recording and changing track. Drawn to the board's real proportions. Prints on one sheet. |
 | [FAQ](FAQ.md) | Including the honest limitations. |
 
 ## Build and manufacture
@@ -38,6 +39,7 @@ holds the working documents behind it.
 |---|---|
 | [Firmware plan](firmware-plan.md) | Architecture, milestones, and what is deliberately out of scope. |
 | [Storage budget](storage-budget.md) | Why the tape stores ADPCM rather than SBC, and how the numbers work out. |
+| [Line-out option](line-out-option.md) | **Rejected.** Kept as a decision record: what a 3.5 mm jack would have cost, with verified parts and pricing, should it ever come back. |
 | [Prior art](prior-art.md) | Cassette-form-factor projects, and what nobody has shipped. |
 | [Project write-up](cassette-project-writeup.md) | The pitch and the design reasoning, long form. |
 

@@ -15,10 +15,22 @@ from sexp import parse, kids, one   # hardware/scripts/sexp.py
 HERE = os.path.dirname(os.path.abspath(__file__))
 PCB = os.path.join(HERE, "..", "mixxtape.kicad_pcb")
 OUT = os.path.join(HERE, "..", "mixxtape-back-silkscreen-template.svg")
-OX = OY = 30.0
-W, H = 100.33, 63.50
-
 root = parse(open(PCB, encoding="utf-8").read())
+
+# Derive the board size from Edge.Cuts rather than hardcoding it. The outline
+# has changed once already - the left edge was trimmed to bring the width to
+# 99.5 mm - and a hardcoded figure here would have silently produced a
+# template that no longer matched the board.
+_xs, _ys = [], []
+for _n in kids(root, "gr_line"):
+    if one(_n, "layer") != "Edge.Cuts":
+        continue
+    for _t in ("start", "end"):
+        _k = kids(_n, _t)[0]
+        _xs.append(float(_k[1]))
+        _ys.append(float(_k[2]))
+OX, OY = min(_xs), min(_ys)
+W, H = round(max(_xs) - OX, 3), round(max(_ys) - OY, 3)
 
 
 def mx(x):

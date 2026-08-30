@@ -722,4 +722,48 @@
 		)
 	)
 
+	(symbol "TOUCH_PAD"
+		(pin_numbers hide)
+		(pin_names (offset 0.254) hide)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(property "Reference" "TP"
+			(at 0 3.81 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "TOUCH_PAD"
+			(at 0 -3.81 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "mixxtape_local:TOUCH_PAD_12"
+			(at 0 0 0)
+			(hide yes)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Datasheet" "" (at 0 0 0) (hide yes) (effects (font (size 1.27 1.27))))
+		(property "Description" "Capacitive touch pad on the back of the board"
+			(at 0 0 0) (hide yes) (effects (font (size 1.27 1.27))))
+		(symbol "TOUCH_PAD_0_1"
+			(circle
+				(center 0 0) (radius 1.905)
+				(stroke (width 0.254) (type default))
+				(fill (type outline))
+			)
+			(polyline
+				(pts (xy 0 2.54) (xy 0 1.905))
+				(stroke (width 0) (type default))
+				(fill (type none))
+			)
+		)
+		(symbol "TOUCH_PAD_1_1"
+			(pin passive line
+				(at 0 5.08 270)
+				(length 2.54)
+				(name "~" (effects (font (size 1.27 1.27))))
+				(number "1" (effects (font (size 1.27 1.27))))
+			)
+		)
+	)
+
 )

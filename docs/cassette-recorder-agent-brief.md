@@ -99,7 +99,7 @@ cannot drift away from the design. Summary:
 |---|---|---|---|
 | U1 | ESP32-WROOM-32E-N4 | [C701341](https://jlcpcb.com/partdetail/C701341) | **MSL 3, X-ray required.** N16 is C701343 |
 | U2 | MSM261DHT006 | [C51928215](https://jlcpcb.com/partdetail/C51928215) | **PDM** MEMS mic, top-ported. Replaced MSM261S4030H0R (C2840615) at zero stock — completely different pinout, so a schematic change rather than a swap |
-| U3 | W25Q128JVSIQ | [C97521](https://jlcpcb.com/partdetail/C97521) | Second source: C113767 |
+| U3 | GD25Q128ESIG | [C2758105](https://jlcpcb.com/partdetail/C2758105) | Second sources: C97521 (Winbond W25Q128JVSIQ), C113767 |
 | U4 | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | SOT-223. 22 µF on the output for stability, per its datasheet |
 | U8 | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 3.3 V → 5 V buffer for the LED data line |
 | D1–D29 | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 12 + 12 reel rings, 3 track, REC, BT |
@@ -246,7 +246,7 @@ playback, something upstream went wrong.
 ### Must verify before ordering
 
 - [ ] ESP32-WROOM-32E-N4 live price vs N16
-- [ ] W25Q128JVSIQ live price and stock on both C97521 and C113767
+- [ ] GD25Q128ESIG live price and stock, and on the second sources C97521 and C113767
 - [ ] JLCPCB surcharge for matte **white** solder mask (adds ~2 days; the
   silkscreen is then black, which is fixed rather than a choice)
 - [ ] Matte white solder mask availability and any surcharge

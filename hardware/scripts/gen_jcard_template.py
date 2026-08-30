@@ -10,7 +10,7 @@ of binding against them.
     tracklist flap   1 1/16"   26.9875 mm   wraps behind the cassette
     card width       4"        101.6   mm
 
-The 101.6 mm runs horizontally, the same way the board's 100.33 mm does, so
+The 101.6 mm runs horizontally, the same way the board's 99.5 mm does, so
 the front panel is 101.6 x 65.09 and reads upright. Panels are horizontal
 bands; the folds are horizontal too.
 

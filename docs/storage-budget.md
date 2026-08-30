@@ -32,7 +32,7 @@ alongside three 5 MiB slots in a 16 MiB flash.
 > preserves that decision's substance (three fixed slots, no dynamic
 > allocation) and the 4-minute promise the flash size was chosen around.
 
-All sizes are **binary** (MiB = 1,048,576 B). Flash is a W25Q128JV:
+All sizes are **binary** (MiB = 1,048,576 B). Flash is a GD25Q128E (or the pin- and command-compatible W25Q128JV):
 16,777,216 B, 256 B program page, 4 KiB sector erase, 64 KiB block erase.
 
 ---

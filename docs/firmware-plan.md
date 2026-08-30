@@ -55,7 +55,7 @@ arrive.
 | PDM CLK → mic | 25 | MSM261DHT006, mono, L/R tied low, top-ported |
 | PDM DATA ← mic | 33 | |
 | VSPI SCK / MISO / MOSI | 18 / 19 / 23 | Shared: audio flash + (DNP) microSD |
-| Audio flash CS | 5 | W25Q128JVSIQ; 10k pullup |
+| Audio flash CS | 5 | GD25Q128ESIG; 10k pullup |
 | microSD CS *(DNP)* | 22 | 10k pullup (DNP); SPI mode |
 | microSD card-detect *(DNP)* | 32 | Switch to GND; **enable internal pullup** |
 | WS2812 data | 27 | Via SN74AHCT1G125 to 5 V; drive with **RMT peripheral** |

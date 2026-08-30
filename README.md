@@ -1,6 +1,6 @@
 # Mixxtape — a cassette you can actually record on
 
-A 2-layer PCB in the exact form factor of a compact cassette (100.0 × 63.5 mm)
+A 2-layer PCB in the form factor of a compact cassette (99.5 × 63.5 mm)
 that slides into a real Norelco cassette case. The bare board **is** the object —
 no enclosure, no bezel.
 
@@ -64,7 +64,7 @@ would wreck the audio path.
 |---|---|---|---|---|
 | MCU | ESP32-WROOM-32E-N4 | [C701341](https://jlcpcb.com/partdetail/C701341) | 1 | The original Xtensa ESP32 — the only one with Classic Bluetooth, so the only one that can be an A2DP *source* |
 | Microphone | MSM261DHT006 | [C51928215](https://jlcpcb.com/partdetail/C51928215) | 1 | **PDM** digital MEMS, mono, **top-ported** — sound enters from the component side, so there is no hole through the board |
-| Storage | W25Q128JVSIQ | [C97521](https://jlcpcb.com/partdetail/C97521) | 1 | 16 MB NOR flash, separate from the module's own flash. Three fixed slots, ~4 min each |
+| Storage | GD25Q128ESIG | [C2758105](https://jlcpcb.com/partdetail/C2758105) | 1 | 16 MB NOR flash, separate from the module's own flash. Three fixed slots, ~4 min each. Winbond W25Q128JVSIQ ([C97521](https://jlcpcb.com/partdetail/C97521)) is a drop-in second source |
 | Indicators | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 29 | WS2812-compatible RGB. Two 12-LED reel rings, three track lamps, REC, BT |
 | LED data buffer | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 1 | Lifts the ESP32's 3.3 V data line to the LEDs' 5 V rail |
 | Regulator | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | 1 | 5 V USB down to 3.3 V |
@@ -74,9 +74,9 @@ would wreck the audio path.
 | Programming pads | — | — | 1 | Six bare pogo targets. No USB-UART on the board |
 
 Passives are all JLCPCB basic-library parts:
-[22 µF](https://jlcpcb.com/partdetail/C45783) ×2,
-[10 µF](https://jlcpcb.com/partdetail/C15525),
-[1 µF](https://jlcpcb.com/partdetail/C29266) (the ESP32's EN delay),
+[10 µF 0805](https://jlcpcb.com/partdetail/C15850) ×2 (rail bulk),
+[10 µF 0402](https://jlcpcb.com/partdetail/C15525),
+[1 µF](https://jlcpcb.com/partdetail/C52923) (the ESP32's EN delay),
 [100 nF](https://jlcpcb.com/partdetail/C1525) ×12,
 [10 k](https://jlcpcb.com/partdetail/C25804) ×7,
 [5.1 k](https://jlcpcb.com/partdetail/C25905) ×2 (the USB-C CC pull-downs) and
@@ -86,8 +86,8 @@ Passives are all JLCPCB basic-library parts:
 |---|---|
 | Audio | 44.1 kHz mono, ADPCM-encoded at record time; playback decodes with table lookups and hands PCM to the Bluetooth stack |
 | Power | USB-C only, power and CC sense. No battery, no charger |
-| Board | 2-layer, 100.33 × 63.50 mm, matte white solder mask with black silkscreen |
-| Cost | **$10.01/board** at a run of 20 — $182.13 in parts plus $18.00 of setup fees for six extended-library parts |
+| Board | 2-layer, 99.50 × 63.50 mm, matte white solder mask with black silkscreen |
+| Cost | **$9.41/board** at a run of 20 — $173.14 in parts plus $15.00 of setup fees for five extended-library parts |
 
 Full detail, with live stock and pricing, is in the
 [generated BOM](docs/cassette-recorder-bom-v4.md) — it is derived from the
@@ -121,6 +121,8 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
   brief for the blank back face, with dimensioned keepouts and a 1:1
   [template](hardware/mixxtape-back-silkscreen-template.svg)
 - [Documentation index](docs/README.md) — everything below, organised
+- [Quick-start pictograms](docs/quick-start-pictograms.html) — wordless
+  instructions, one printable sheet
 - [Manual](docs/MANUAL.md) — how to record, play, pair, and what the lights mean
 - [FAQ](docs/FAQ.md) — including the honest limitations
 
@@ -132,6 +134,8 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
   authoritative spec: locked decisions, GPIO map, behaviour spec, phase order
 - [Bill of materials](docs/cassette-recorder-bom-v4.md) — generated from the
   schematic with live JLCPCB prices and stock, so it cannot drift
+- [Line-out option](docs/line-out-option.md) — rejected; kept for the reasoning
+  and the verified part numbers
 - [Prior art](docs/prior-art.md) — research on cassette-form-factor projects
 - [Firmware plan](docs/firmware-plan.md) — architecture, milestones, and
   hardware interface for the firmware agent

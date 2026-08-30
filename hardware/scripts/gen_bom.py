@@ -77,9 +77,20 @@ NOTES = {
         "5 dB of SNR, at 7x the price and a different 3.5x2.65 mm "
         "footprint."
     ),
-    "C97521": (
-        "$2.26 here against $1.65 in BOM v3 — the NOR price rise the brief "
-        "warned about is real. Second source C113767."
+    "C2758105": (
+        "Swapped from the Winbond W25Q128JVSIQ (C97521), which had risen to "
+        "$2.26 from BOM v3's $1.65 — the NOR price rise the brief warned "
+        "about was real. The GigaDevice part is about half that. The land "
+        "pattern matches to within 0.02 mm, and the command set (0x06, 0x05, "
+        "0x03, 0x02, 0x20, 0xD8, 0x9F) and 256 B / 4 KiB / 64 KiB geometry "
+        "are identical, so nothing in the layout or the storage design "
+        "changes. The ONE difference is the JEDEC manufacturer byte: "
+        "0xC84018 rather than 0xEF4018. The driver and the factory test both "
+        "accept either id, so a board built with the Winbond part still "
+        "works — but do not narrow that check back to one value. This part "
+        "is EXTENDED, so it carries a one-off setup fee that the Winbond "
+        "part did not; it still wins by a wide margin at 20 boards. Second "
+        "sources: C97521 (Winbond) and C113767."
     ),
     "C45783": (
         "Basic part, so no setup fee, but $0.33 each is dear for a 22 uF "
@@ -401,7 +412,7 @@ def write_markdown(rows, args):
     A("## Second sources\n")
     A("| Part | Primary | Alternate | Note |")
     A("|---|---|---|---|")
-    A("| Audio flash | C97521 | C113767 | Same W25Q128JV, different vendor |")
+    A("| Audio flash | C2758105 | C97521, C113767 | Winbond W25Q128JV; JEDEC id differs, firmware accepts both |")
     A("| ESP32 module | C701341 (N4) | C701343 (N16) | 16 MB module if the "
       "delta is small; firmware fits in 4 MB |")
     A("| Reel LEDs | C5349955 | C5349956 (SK6812 protocol) | Genuine "

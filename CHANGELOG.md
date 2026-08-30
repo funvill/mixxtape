@@ -8,6 +8,267 @@ first prototype run.
 
 ## [Unreleased]
 
+### Changed (2026-08-30, NOR flash second-sourced and halved in price)
+
+- **U3: Winbond W25Q128JVSIQ (C97521) → GigaDevice GD25Q128ESIG (C2758105)**,
+  $2.2557 → $1.3348 at a run of 20. Net **$15.41 saved** after the one-off
+  Extended-part setup fee the Winbond Basic part did not carry.
+- The land patterns agree to within **0.02 mm**, so nothing in the layout
+  moved. Command set (0x06, 0x05, 0x03, 0x02, 0x20, 0xD8, 0x9F) and the
+  256 B page / 4 KiB sector / 64 KiB block geometry are identical, so the
+  storage design is untouched.
+- The **only** difference is the JEDEC manufacturer byte: 0xC84018 rather than
+  0xEF4018. Rather than move the hard-coded constant, **both the driver
+  (`spi_flash_hal.c`) and the factory test (`factory_main.c`) now accept
+  either id** and log which part was found. C97521 therefore stays a real
+  drop-in second source: if GigaDevice stock moves before the order goes in,
+  a Winbond-populated board still boots with no firmware change. Do not
+  narrow that check back to one value.
+- Host tests: 11/11 pass.
+- Board cost **$9.41 → $8.62**.
+
+### Changed (2026-08-30, passives standardised on 0402)
+
+- **The eight 10 k resistors moved R0603 → R0402** (C25804 → C25744). Cheaper
+  as well as smaller — $0.0031 against $0.0053, Basic, 33 M stock. Every trace
+  still reached its pad; DRC stayed clean with nothing to re-route.
+- **C1 and C2 stay 0805.** The only Basic 10 µF in 0402 is 6.3 V, and C1 sits
+  on the 5 V USB rail — 79 % of rating, where DC-bias derating would leave
+  roughly 2 µF of the nominal 10, for 29 LEDs. Saving $0.07 a board is not
+  worth three quarters of the bulk capacitance. Two passive sizes, not three.
+
+### Fixed (2026-08-30, ERC was not actually clean)
+
+- **Three dangling-wire errors** — 1.27 mm stubs at y=67.31 — left behind when
+  the capacitive touch pads were removed. The removal script deleted the TP
+  symbols and their global labels but not the wires between them.
+- These had been reported as "ERC 0" because the report being read was a stale
+  `mixxtape-erc.rpt` from 26 August. **`kicad-cli` writes its report relative
+  to the working directory, not next to the board**, so running it from the
+  repo root silently leaves the old file in `hardware/` untouched and
+  believable. Both locations are now gitignored, and the checked-in copy is
+  deleted — a generated report should never have been tracked.
+- ERC is now genuinely 0 errors, 0 warnings.
+
+### Fixed (2026-08-30, gen_layout.py would undo the board)
+
+- The pre-production checklist told the reader to record case-fit measurements
+  by editing `hardware/scripts/gen_layout.py` and re-running it. That script
+  rebuilds the **original 100.33 mm outline** and would discard the trim to
+  99.50 mm along with every placement and route since. The instruction now
+  says to edit the board directly and re-run `export_fab.py`.
+
+### Verified (2026-08-30, the board fits a real cassette case)
+
+- Steven printed `case-fit-test-1to1.pdf` at 1:1 and checked it against a real
+  plastic case: **it fits.** This retires the largest mechanical unknown in
+  the project — the outline was borrowed from a board that fits *some* case,
+  and the reel windows, tab position and mounting holes are ours and had never
+  touched plastic.
+- Still open: the same test against cases from **other brands**. One case
+  proves the design is not wrong; it does not prove it is right, and internal
+  ribs and hub-clamp ridges vary between manufacturers.
+
+### Added (2026-08-30, fabrication package committed)
+
+- `fab/` now holds the actual JLCPCB upload — gerbers zip, BOM and CPL — plus
+  a README covering order settings and what to check in their previewer.
+  Regenerate with `hardware/scripts/export_fab.py`, which refuses to run on a
+  board that is not DRC clean and cross-checks the BOM against the placement
+  file. Intermediate gerbers stay gitignored; the zip is the artefact.
+
+
+### Changed (2026-08-30, bulk capacitors right-sized)
+
+- **C1 and C2: 22 µF 25 V (C45783) → 10 µF 25 V (C15850)**, both Basic, same
+  0805 footprint. Nothing on this board exceeds 5 V — C1 sits on USB VBUS and
+  C2 on the regulated 3.3 V rail — so 25 V was 5× and 7.5× margin respectively.
+- **JLCPCB's Basic library has no 10 V or 16 V part in these sizes**, only 25 V,
+  so dropping the voltage rating would have meant leaving Basic and paying a
+  setup fee. Dropping the *capacitance* instead keeps it Basic and costs less.
+- Counter-intuitively this loses almost no real capacitance. Ceramics derate
+  under DC bias: a 22 µF 6.3 V part at 3.3 V delivers perhaps 8–10 µF, while a
+  25 V part barely derates. **A 10 µF 25 V cap gives more capacitance in
+  circuit than a 22 µF 6.3 V one**, at a fraction of the price.
+- **C9: 1 µF Extended (C29266) → Basic (C52923)**, 25 V rather than 16 V. The
+  other five Extended parts — LED, USB-C, ESP32, microphone, level shifter —
+  have no Basic equivalent at all.
+- Board cost **$10.01 → $9.41**, setup fees $18 → $15.
+
+### Fixed (2026-08-30, part numbers scrambled twice by careless patching)
+
+- Two attempts at these swaps split the schematic on `(symbol "` and applied a
+  replacement to every resulting chunk. The final chunk runs to end-of-file and
+  therefore contains **every component instance**, so one symbol's part number
+  was written onto all 66 parts. Both times the generated BOM caught it
+  immediately — every line collapsed onto a single part and the cost fell to
+  something absurd.
+- Now fixed properly: the `lib_symbols` block is located by matching
+  parentheses, and library edits are confined to it by construction, with an
+  assertion that no instance can appear inside.
+- The repair also surfaced a **second, redundant `LCSC Part` property** that
+  easyeda2kicad writes alongside `LCSC`. Nothing had ever maintained it, so it
+  was stale on several symbols — including WS2812B-2020, which was carrying the
+  Worldsemi part number the project stopped using months ago. Both properties
+  now agree on every symbol.
+- Verified: ERC 0 · DRC 0 · board and schematic agree on all 287 pads · every
+  instance's part number checked against the expected design, count by count.
+
+### Changed (2026-08-29, board narrowed to 99.50 mm)
+
+- **The outline is now 99.50 × 63.50 mm**, trimmed 0.83 mm off the left edge
+  where there are no components. The left edge and both left corners moved
+  right; everything else — copper, silkscreen, every part — stayed exactly
+  where it was.
+- **The two left mounting holes moved with the edge.** Left in place they would
+  have finished 0.82 mm from the new edge instead of 1.65 mm, which is not
+  enough rim for a mounting hole.
+- **A bug in the first attempt was caught by measuring, not by DRC.** The shift
+  was applied per coordinate, so for the two left mounting holes the centre
+  moved but the radius-defining end point did not — turning them from Ø2.20
+  into Ø0.54. A 0.54 mm hole is perfectly legal, so DRC passed it without
+  comment. Circles are now moved as whole objects.
+- **`gen_silk_template.py` now reads the board size from Edge.Cuts** instead of
+  hardcoding it, so the artwork template cannot drift from the outline again.
+  `gen_layout.py` carries a warning: re-running it would rebuild the original
+  100.33 mm outline.
+- Propagated to the README, the pictogram sheet, the fabrication README, the
+  B-side designer brief — including its dimensioned keepout table and its scale
+  drawing — and the bounds constants in `add_zones.py` and `gen_placement.py`.
+- Verified: DRC 0 errors, 0 unconnected; outline closed with no dangling
+  endpoints; every other cutout unchanged in position and diameter.
+
+**Note for the artwork:** the peony design was drawn full-bleed to 100.33 mm.
+It still covers the board, but 0.83 mm now falls off the left edge and the
+composition sits fractionally off-centre. Worth a look before the run.
+
+### Added (2026-08-29, JLCPCB fabrication export)
+
+- **`hardware/scripts/export_fab.py`** builds the whole package: gerbers, drill
+  files, the placement file remapped to JLCPCB's column names, the BOM, and the
+  zip. Settings follow JLCPCB's own KiCad guide — Protel extensions, soldermask
+  subtracted from silkscreen, zone fills checked, Excellon in millimetres with
+  a decimal zeros format and absolute origin. X2 is off for the widest CAM
+  compatibility.
+- **It refuses to export a board that is not DRC clean**, and it cross-checks
+  the BOM against the placement file: a designator in one and not the other
+  stops the run. Both files agree on all 66 designators.
+- Drill map gerbers are generated but deliberately kept out of the zip — they
+  are documentation, and a stray `.gbr` can be mistaken for a copper layer by
+  an auto-detector.
+
+### Fixed (2026-08-29, two parts would have been assembled wrongly)
+
+- **DNP is stored per footprint on the board, not only in the schematic.** J4
+  and R9 were marked Do Not Populate in the schematic but carried no DNP
+  attribute on the board, so `--exclude-dnp` had nothing to act on and both
+  landed in the placement file. An order placed from that export would have had
+  **a microSD socket fitted to every board**.
+- **J5, the programming jig pads, was in the placement file too.** Its
+  footprint had `exclude_from_bom` but not `exclude_from_pos_files` — an
+  omission from when it was first drawn. It is bare copper, not a part.
+
+### Changed (2026-08-29, R9 is fitted)
+
+- **R9 is now populated**; only J4 stays DNP. R9 is the pull-up that keeps the
+  SD chip-select pin defined with the socket unfitted. Its value drops the
+  "(DNP)" suffix and it folds into the 10 k line, which becomes ×8.
+
+### Removed (2026-08-29, capacitive touch pads)
+
+- **The touch pads are out.** TP2/TP3/TP4, their footprints, all 29 track and
+  via segments on the TOUCH nets, the symbols, the labels, and the pin block in
+  `board.h`. GPIO 2, 13, 14 and 15 are unallocated again, with their no-connect
+  markers restored so ERC knows they are unused on purpose.
+- **The footprint and symbol stay in the libraries.**
+  `mixxtape_local:TOUCH_PAD_12` and its schematic symbol cost nothing sitting
+  there, and they carry the working geometry — a 12 mm pad under the solder
+  mask with a no-pour rule area on both layers — if the idea returns.
+- The line-out document's rejection reasoning was corrected: it had said its
+  pins were taken by touch pads, which is no longer true. It is still rejected,
+  on scope rather than feasibility, and IO26/IO13/IO14 are free again.
+- Verified after removal: **ERC 0, DRC 0, board and schematic agree on all 287
+  pads**, and no `TOUCH` reference survives in the board, the schematic or the
+  firmware.
+
+### Added (2026-08-29, capacitive touch pads on the back)
+
+- **Four Ø12 mm touch pads on B.Cu**, TP1-TP4, on the ESP32's touch channels
+  **T2/T3/T4/T6 (GPIO 2, 15, 13, 14)**. Copper under the solder mask — mask is
+  a good dielectric for sensing and it keeps the copper from tarnishing, so
+  nothing is exposed. **No BOM cost at all**: a touch pad is a shape in the
+  copper.
+- **T5 (GPIO12) was available and was deliberately skipped.** It is the MTDI
+  strap that selects flash voltage, and a floating copper plane is the last
+  thing to hang on it — read high at boot and the module does not start. T2 and
+  T3 are also strapping pins but only for boot mode and log suppression, and a
+  pad adds capacitance rather than a DC level.
+- The footprint **carries its own no-pour rule area on both layers**, so the
+  ring that isolates the pad from the ground pour, and the cut-out that keeps a
+  plane from sitting directly behind the sensor, travel with the pad wherever
+  it is dragged.
+- **Left unrouted on purpose.** The pads are meant to be moved to suit the
+  artwork, and routing now would only have to be undone.
+- Pin definitions added to `board.h`, including the note that touch v1 on the
+  original ESP32 drifts with temperature and humidity, so the firmware wants a
+  slow baseline rather than a fixed threshold.
+
+### Removed (2026-08-29, line-out option closed)
+
+- **The 3.5 mm jack is not being built.** `docs/line-out-option.md` is marked
+  rejected rather than deleted — the part numbers, stock figures and costs in it
+  were all verified and stay useful, and it records why IO13 and IO14 went to
+  touch pads instead.
+
+### Fixed (2026-08-29, placement caught by DRC)
+
+- The first touch-pad placement dropped **TP3 straight on top of the button
+  signals and their vias** on the back copper — ten shorts and four hole
+  clearance errors. The space scan behind it only checked footprint courtyards,
+  not tracks and vias. Rescanned properly against the back copper, which turned
+  out to be far denser than the footprint map suggested, and re-placed.
+
+### Added (2026-08-29, wordless quick-start pictograms)
+
+- **`docs/quick-start-pictograms.html`** — IKEA-style instructions for the four
+  things people actually do: pair, play, record, next track. No prose in the
+  panels; a printable single sheet.
+- **The device is drawn to its real proportions** — 100.33 × 63.50 mm, with the
+  reel windows, the five status lights, the four buttons, the write-protect
+  tongue, the microphone and the USB-C port all in their true positions. The
+  picture matches the object in your hand rather than a generic cassette.
+- Gestures were taken from `ui_state.c` rather than from the prose, which
+  turned up that **MODE has three hold tiers** — 2 s pair, 5 s dub, 10 s
+  dev-wifi — and that under 2 s it deliberately does nothing.
+- Three things a picture cannot carry are stated in words at the foot:
+  holding PLAY for a second sleeps the device, recording overwrites the
+  selected track from the beginning, and MODE ignores short presses on purpose.
+
+### Added (2026-08-29, line-out option assessed)
+
+- **`docs/line-out-option.md`** — the write-up for adding a 3.5 mm jack, for
+  line-out to a powered amp or wired headphones. Proposed only; nothing is on
+  the board.
+- It comes out cheap because four things happen to already be true: IO26, IO13
+  and IO14 are free and unstrapped (IO26 was freed by the microphone's move to
+  PDM); the mic sits on `I2S_NUM_0` so **I2S1 has never been touched**;
+  playback is already pull-shaped, so an I²S output task calls the same
+  `tape_player_read` the A2DP path does; and `bt_audio.c` already duplicates
+  mono into interleaved stereo, which is exactly what a stereo DAC needs.
+- **~$1/board and about two days of work**, most of it layout — the board is
+  fully routed at zero DRC errors, so three new signals crossing 40 mm means
+  re-routing, re-pouring and re-checking the placed B-side artwork.
+- **Surface-mount jacks are plentiful.** PJ-320D ([C431535](https://jlcpcb.com/partdetail/C431535))
+  has 79,274 in stock at $0.037. Confirmed surface-mount by reading footprint
+  pad data rather than trusting JLCPCB's category field, which is unreliable
+  for connectors.
+- **Records the trap:** the MAX98357A is the usual ESP32 audio answer and is
+  wrong for a jack — its bridged output has no ground reference, so a plug's
+  sleeve shorts half the bridge. It is for a soldered speaker.
+- The document separates what was verified from what was not, including the
+  claim that a PCM5102A cannot drive 32 Ω headphones — that follows from its
+  datasheet role, not from measurement.
+
 ### Changed (2026-08-29, documentation consolidated)
 
 - **The README's hardware summary now carries JLCPCB part numbers, each linked

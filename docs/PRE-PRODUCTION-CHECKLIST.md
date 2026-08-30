@@ -8,25 +8,35 @@ prototypes, and the prototypes gate the run of 20.
 
 ---
 
-## 1. The case-fit test — do this first ⬜
+## 1. The case-fit test — mostly done ✅
 
-**Everything mechanical is an assumption until this is done.** The outline
-is borrowed from a board that fits *some* case; the reel windows, tab
-position and mounting holes are ours and have never touched plastic.
+**Steven ran the 1:1 printout against a real plastic case on 2026-08-30 and
+it fits.** That retires the single largest mechanical unknown: the outline
+had been borrowed from a board that fits *some* case, and the reel windows,
+tab position and mounting holes are ours and had never touched plastic.
+
+One item below is still open, and it is the one that decides whether the fit
+generalises or was luck.
 
 ⬜ **Buy several cassette cases, from different brands.** The brief is
    emphatic: internal ribs and hub-clamp ridges vary, and thrifted cases are
-   not dimensionally consistent. One case proves nothing.
+   not dimensionally consistent. **One case proves the design is not wrong;
+   it does not prove it is right.** Still worth doing before a 20-board run,
+   because the failure it catches is one that scraps every board at once.
 
-⬜ **Print [`case-fit-test-1to1.pdf`](case-fit-test-1to1.pdf) at 100%.**
-   Turn off "fit to page" / "scale to fit". Printers shrink pages by a few
-   percent without telling you.
+✅ **Print [`case-fit-test-1to1.pdf`](case-fit-test-1to1.pdf) at 100%.**
+   Done 2026-08-30. Turn off "fit to page" / "scale to fit" if reprinting —
+   printers shrink pages by a few percent without telling you.
 
-⬜ **Measure the calibration bar on the printout.** It must read exactly
-   50.0 mm. If it does not, the print is scaled and nothing else on the
-   sheet means anything — reprint before going further.
+✅ **Measure the calibration bar on the printout.** Must read exactly
+   50.0 mm. Treated as satisfied by the successful fit — a scaled print
+   would not have seated correctly — but measure it explicitly on any
+   reprint, because a print scaled by a percent or two can still *feel*
+   right in the hand.
 
-⬜ **Cut it out and put it in a case.** Then check, in order:
+✅ **Cut it out and put it in a case.** Done 2026-08-30 — it fits. The
+   points that were checked, kept here as the record of what "it fits"
+   covered:
 
    - Does the outline sit in the case without forcing?
    - Do the **reel windows** clear the hub-clamp ridges, or do the ridges
@@ -38,9 +48,12 @@ position and mounting holes are ours and have never touched plastic.
      a written label will not cover? It is top-ported, so its top face
      is the acoustic path — there is no hole through the board.
 
-⬜ **Write the measurements down** and update the constants at the top of
-   `hardware/scripts/gen_layout.py`, then re-run it. Every value there is
-   named and commented for exactly this.
+⬜ **Write the measurements down.** Record them in this file rather than
+   re-running `hardware/scripts/gen_layout.py`. **Do not re-run that
+   script** — it rebuilds the original 100.33 mm outline and would undo the
+   trim to 99.50 mm, along with every placement and route since. It carries
+   a warning header saying so. If a measurement forces a mechanical change,
+   edit the board directly and re-run `hardware/scripts/export_fab.py`.
 
 ---
 

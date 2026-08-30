@@ -50,7 +50,7 @@ PRETTY = {
 
 # Must match gen_layout.py.
 ORIGIN_X, ORIGIN_Y = 30.0, 30.0
-BOARD_W, BOARD_H = 100.33, 63.5
+BOARD_W, BOARD_H = 99.5, 63.5
 HUB_SPACING, HUB_Y = 42.0, 34.3
 LED_RING_DIA = 18.0
 EDGE_KEEPOUT = 0.6      # copper to board edge

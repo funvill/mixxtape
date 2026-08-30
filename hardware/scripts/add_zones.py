@@ -24,7 +24,7 @@ HERE = Path(__file__).resolve().parent
 BOARD = HERE.parent / "mixxtape.kicad_pcb"
 
 ORIGIN_X, ORIGIN_Y = 30.0, 30.0
-BOARD_W, BOARD_H = 100.33, 63.5
+BOARD_W, BOARD_H = 99.5, 63.5
 
 # Must match gen_layout.py's ANTENNA_KEEPOUT (x, y, w, h in board coords).
 ANTENNA_KEEPOUT = (92.5, 0.6, 7.8, 22.0)

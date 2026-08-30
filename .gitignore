@@ -18,11 +18,17 @@ __pycache__/
 # VS Code Local History extension
 .history/
 
-# KiCad archive exports and generated reports
+# KiCad archive exports and generated reports.
+# kicad-cli writes its report next to the CWD, not next to the board, so the
+# repo root needs the same patterns as hardware/.
 hardware/*.zip
-hardware/*-erc.rpt
-hardware/*-drc.rpt
+mixxtape_*.zip
+*-erc.rpt
+*-drc.rpt
 hardware/scripts/*.net
 
 # the full-resolution turntable render, kept locally but too heavy to commit
 artwork/mixxtape-original.gif
+
+# JLCPCB export working files (regenerate with hardware/scripts/export_fab.py)
+fab/jlcpcb/gerbers/

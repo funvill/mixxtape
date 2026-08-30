@@ -1,4 +1,4 @@
-/* flash_hal_t implemented against the W25Q128 on VSPI.
+/* flash_hal_t implemented against the 16 MiB NOR flash on VSPI.
  *
  * This is the one piece that turns the host-tested slot manager into
  * something that runs on the board. Everything above flash_hal.h has been
@@ -17,7 +17,8 @@
  * or answers with the wrong ID. */
 int spi_flash_hal_init(flash_hal_t *out);
 
-/* Reads the JEDEC ID (0xEF4018 for a W25Q128JV). Useful on its own for the
+/* Reads the JEDEC ID (0xC84018 for the fitted GD25Q128E, 0xEF4018 for a
+ * W25Q128JV - both are accepted). Useful on its own for the
  * factory test, which wants the number even when it does not match. */
 int spi_flash_hal_read_id(uint32_t *id_out);
 
