@@ -172,10 +172,14 @@ you agree.
   once — a placement change too large to make unattended.
 - **U4 is at ~67 mm² of attached copper**, up from 29. Fine at a realistic
   150–250 mA load; marginal at a sustained 500 mA.
-- **J1's CC pad mapping is unverified.** If A5/B5 do not land on the physical CC
-  contacts, the 5.1 k pull-downs are on the wrong pins and the board takes no
-  power from a C-to-C charger — while still working on a legacy A-to-C cable,
-  which is exactly how it would hide during bring-up.
+- ~~J1's CC pad mapping is unverified.~~ **RESOLVED 2026-08-30.** Read in
+  physical order along the signal row, J1's pads come out as `B1A12, B4A9, B5,
+  A8, B6, A7, A6, B7, A5, B8, A4B9, A1B12` — exactly the USB Type-C standard
+  12-pin sequence, reversed by the connector's 90° rotation. **B5 lands on CC2
+  and A5 on CC1**, both in their standard positions, each with its own 5.1 k
+  pull-down (R2, R1). VBUS is on both A4B9 and B4A9, GND on both A1B12 and
+  B1A12, and SBU1/SBU2/D+/D− are correctly left open. Cross-checked against
+  LCSC's own library data for C165948 (TYPE-C-31-M-12).
 - **The board draws more than a default USB port guarantees.** 29 LEDs plus an
   ESP32 TX burst exceeds 500 mA. R10/R11 correctly route CC to GPIO36/39 so
   firmware *can* read the source's advertised current — **it must**, and must
