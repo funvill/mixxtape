@@ -70,12 +70,13 @@ static int probe_flash_id(void *user, int32_t *measured, char *detail)
         .rxlength = 8 * 4,
         .flags = 0,
     };
-    /* DMA is enabled on this bus (SPI_DMA_CH_AUTO below), and ESP-IDF
-     * requires DMA buffers to be word-aligned. A bare uint8_t[4] on the
-     * stack carries no such guarantee, and the driver rejects the
-     * transaction with ESP_ERR_INVALID_ARG - which this probe would then
-     * report as "spi transfer failed" on a perfectly good board, as the
-     * very first check of the very first board. */
+    /* Word-aligned because DMA is enabled on this bus (SPI_DMA_CH_AUTO
+     * below). ESP-IDF does not REJECT a misaligned buffer - it silently
+     * allocates an aligned bounce buffer and memcpys, so the unaligned
+     * version worked. (An earlier comment here claimed it would fail; that
+     * was wrong.) Aligning simply saves two heap allocations per call on
+     * the first thing that runs on a new board, which is a good place not
+     * to depend on the heap. */
     static WORD_ALIGNED_ATTR uint8_t tx[4];
     static WORD_ALIGNED_ATTR uint8_t buf[4];
     tx[0] = 0x9Fu; tx[1] = tx[2] = tx[3] = 0; /* Read JEDEC ID */
@@ -198,8 +199,21 @@ static int probe_buttons(void *user, int32_t *measured, char *detail)
     const char *names[4] = {"REC", "PLAY", "TRACK", "MODE"};
     uint32_t seen = 0;
     const uint32_t deadline_ms = 20000u;
-    uint32_t start = now_ms();
+    uint32_t start;
 
+    /* REC is GPIO0, which the programming jig also drives to enter download
+     * mode. If the jig is still holding it low when this probe runs, REC
+     * would "pass" the instant the loop starts and nobody would have
+     * touched the button - a green result on an untested switch. Refuse to
+     * start rather than report a pass nobody earned. */
+    if (gpio_get_level(PIN_BTN_REC) == 0) {
+        snprintf(detail, FT_DETAIL_LEN,
+                 "IO0 already low - jig still driving it? release and retry");
+        *measured = 0;
+        return -1;
+    }
+
+    start = now_ms();
     printf("  press each button: REC, PLAY, TRACK, MODE\n");
 
     while (seen != 0x0Fu && (now_ms() - start) < deadline_ms) {

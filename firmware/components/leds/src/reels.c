@@ -2,7 +2,18 @@
 
 #include <string.h>
 
-#define MA_PER_CHANNEL 20u /* WS2812 channel at full, per the BOM's 1.7 A */
+/* The fitted XL-1615RGBC-2812B is a PRESET 5 mA/CHANNEL CONSTANT-CURRENT
+ * part - LCSC's own listing says "Optimized preset 5mA/channel
+ * constant-current mode", and every optical figure in its datasheet is
+ * tested at IF = 5 mA. This was 20u, carried over from the 1.7 A figure in
+ * the brief, which was itself derived from the 5050-size WS2812B. All 29
+ * at full white is therefore about 435 mA, not 1.7 A.
+ *
+ * Getting this wrong is safe in the current direction but wrong in the
+ * useful one: the brightness caps derived from it ran the reels at roughly
+ * a quarter of what the power budget actually allows, on a product whose
+ * whole premise is a legible reel display. */
+#define MA_PER_CHANNEL 5u
 
 static uint8_t scale(uint32_t value, uint32_t k)
 {

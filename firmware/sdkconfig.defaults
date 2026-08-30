@@ -42,4 +42,13 @@ CONFIG_ESP_CONSOLE_UART_BAUDRATE=115200
 # --- back up in UART download mode, dark and unresponsive, which is
 # --- indistinguishable from a dead board. A clean reset beats both.
 CONFIG_ESP_BROWNOUT_DET=y
-CONFIG_ESP_BROWNOUT_DET_LVL_SEL_7=y
+# --- Level 4 = 2.67 V. NOTE the ESP32's numbering runs UPWARD in volts:
+# --- level 0 is 2.43 V and level 7 is 2.80 V, so 7 is the MOST aggressive
+# --- trip point available, not the safest. This was briefly set to 7.
+# --- 2.80 V is still below the WROOM-32E's 3.0 V minimum, so it would not
+# --- fire while the part is in spec - but U4's 22 uF output capacitor
+# --- never reached the schematic, leaving perhaps 5-6 uF, and an AMS1117
+# --- that lightly decoupled will dip on a Bluetooth TX burst. 2.67 V
+# --- keeps the protection while leaving room for that transient.
+# --- Revisit once the first boards can be measured on a scope.
+CONFIG_ESP_BROWNOUT_DET_LVL_SEL_4=y

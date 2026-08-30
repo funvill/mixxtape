@@ -15,12 +15,15 @@
  *   - CC sensing to raise the LED brightness cap
  */
 
+#include <string.h>
+
 #include "board.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "ui_state.h"
+#include "ws2812.h"
 
 static const char *TAG = "mixxtape";
 
@@ -121,5 +124,30 @@ void app_main(void)
              (unsigned)TAPE_SAMPLE_RATE);
 
     configure_inputs();
+
+    /* Boot heartbeat: one green flash on the Bluetooth LED, then dark.
+     *
+     * This exists because without it a working board and a dead board are
+     * VISUALLY IDENTICAL - 29 unlit LEDs and a UART line only the jig can
+     * see. With 20 boards, no prototype and no test equipment, one flash
+     * answers "is it alive?" from across the bench, and it exercises the
+     * whole output path in doing so: GPIO27, the SN74AHCT1G125 level
+     * shifter, the VBUS cut-link, and at least the first LED in the chain.
+     *
+     * Kept dim (24/255) so it costs a few mA and cannot brown out a board
+     * on a marginal supply during the one moment we most need it to boot. */
+    if (ws2812_init() == 0) {
+        rgb_t boot[LED_COUNT];
+        memset(boot, 0, sizeof(boot));
+        boot[LED_BT].g = 24u;
+        if (ws2812_show(boot, LED_COUNT) != 0) {
+            ESP_LOGE(TAG, "ws2812_show failed - LED chain or level shifter?");
+        }
+        vTaskDelay(pdMS_TO_TICKS(250));
+        ws2812_clear();
+    } else {
+        ESP_LOGE(TAG, "ws2812_init failed - RMT did not start");
+    }
+
     xTaskCreate(ui_task, "ui", 4096, NULL, 5, NULL);
 }

@@ -170,7 +170,16 @@ static int hal_read(const flash_hal_t *f, uint32_t addr, void *dst,
     while (len) {
         uint32_t chunk = len > 2048u ? 2048u : len;
         spi_transaction_t t = {0};
-        /* rx_buffer must cover the whole transaction, command bytes
+        /* NOT THREAD SAFE: these buffers are shared by every caller.
+         * Safe today because only ui_task runs, but docs/firmware-plan.md
+         * specifies separate record and playback tasks in M4, and there is
+         * no mutex anywhere in this codebase. Two tasks reading the flash
+         * concurrently will interleave into the same scratch and return
+         * each other's audio - which will look like a codec bug. Put a
+         * mutex around flash_hal_t, or funnel all access through one task,
+         * BEFORE that split lands.
+         *
+         * rx_buffer must cover the whole transaction, command bytes
          * included, so read into a scratch and copy past the header.
          *
          * tx_buffer must ALSO cover the whole transaction: t.length governs
@@ -219,7 +228,7 @@ static int hal_program(const flash_hal_t *f, uint32_t addr, const void *src,
     }
 
     spi_transaction_t t = {0};
-    static uint8_t buf[4 + 256];
+    static WORD_ALIGNED_ATTR uint8_t buf[4 + 256];
     buf[0] = CMD_PAGE_PROGRAM;
     buf[1] = (uint8_t)(addr >> 16);
     buf[2] = (uint8_t)(addr >> 8);
@@ -304,17 +313,25 @@ int spi_flash_hal_init(flash_hal_t *out)
     }
 
     spi_device_interface_config_t dev = {
-        /* 20 MHz, and NOT the 40 MHz the flash itself allows for plain
-         * read (0x03). Every transaction here is FULL DUPLEX - hal_read
-         * sets both tx_buffer and rx_buffer - and ESP-IDF cannot insert
-         * the dummy bits that compensate for MISO input delay in full
-         * duplex, which caps the bus at SPI_MASTER_FREQ_26M. At 40 MHz the
-         * sample point lands past the valid window and the JEDEC ID reads
-         * back as garbage, so init fails and the tape never mounts.
+        /* 20 MHz - a deliberate margin, not a limit.
          *
-         * 20 MHz leaves margin over that 26 MHz ceiling for a slow part or
-         * a warm board. The record path needs ~22 KB/s; this is four
-         * orders of magnitude more than that, so the margin is free. */
+         * The often-quoted "full duplex is capped at 26 MHz" applies when
+         * the SPI pins go through the GPIO matrix, which adds 25 ns and
+         * forces dummy bits that full duplex cannot carry. THIS BOARD DOES
+         * NOT: GPIO 18/19/23/5 are VSPI's native IO_MUX pins, so ESP-IDF
+         * sets SPICOMMON_BUSFLAG_IOMUX_PINS, no dummy bits are required at
+         * any frequency, and the ceiling is 80 MHz. 40 MHz would have been
+         * accepted. (An earlier comment here claimed otherwise; it was
+         * wrong, and had the limit actually applied, spi_bus_add_device
+         * would have returned ESP_ERR_NOT_SUPPORTED cleanly rather than
+         * producing a garbage JEDEC ID.)
+         *
+         * 20 MHz is chosen anyway because it is exact (80/4), well inside
+         * both flash parts' rating for a plain 0x03 read, and still ~2.5
+         * MB/s against a record path that needs 22 KB/s. On a run of 20
+         * boards with no prototype, four orders of magnitude of headroom
+         * costs nothing and removes signal integrity from the list of
+         * things that can go wrong. */
         .clock_speed_hz = 20 * 1000 * 1000,
         .mode = 0,
         .spics_io_num = PIN_FLASH_CS,

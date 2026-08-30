@@ -59,8 +59,21 @@
 
 /* Global brightness ceiling. All 29 LEDs at full white is ~1.7 A; the
  * default USB-C budget is 500 mA until CC sensing says otherwise. */
-#define LED_BRIGHTNESS_USB_DEFAULT 40 /* /255, ~15%  */
-#define LED_BRIGHTNESS_USB_HIGH    76 /* /255, ~30%  */
+/* Re-derived 2026-08-30 against the real part. At 5 mA/channel all 29 LEDs
+ * at full white draw about 435 mA, not the 1.7 A the old caps assumed.
+ *
+ *   Default USB (500 mA guaranteed): an ESP32 Bluetooth TX burst takes
+ *   ~250 mA through the linear regulator, leaving ~250 mA for the array.
+ *   130/255 gives 435 * 130/255 = 222 mA, for ~472 mA total.
+ *
+ *   A 1.5 A source can supply the whole array at full, so the cap there is
+ *   the part's own limit rather than the supply's.
+ *
+ * Firmware MUST read CC1_SENSE/CC2_SENSE before using the HIGH cap - the
+ * board advertises itself as a plain sink (5.1k Rd), so a host is only
+ * obliged to give 500 mA. */
+#define LED_BRIGHTNESS_USB_DEFAULT 130 /* /255, ~51%, ~222 mA of array */
+#define LED_BRIGHTNESS_USB_HIGH    255 /* /255, full, ~435 mA of array  */
 
 /* --- Buttons: active low, internal pull-ups -------------------------- */
 #define PIN_BTN_REC   0  /* also the BOOT strap — safe as active-low     */

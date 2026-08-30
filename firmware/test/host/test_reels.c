@@ -5,13 +5,24 @@
 #include "reels.h"
 #include "test_util.h"
 
-/* Brightness caps from board.h. */
-#define CAP_USB_DEFAULT 40u /* 500 mA source */
-#define CAP_USB_HIGH    76u /* 1.5 A / 3 A source */
+/* Brightness caps from board.h. KEEP THESE IN STEP WITH board.h - they were
+ * left at 40/76 after board.h moved to 130/255, so this file rendered at the
+ * old cap and then checked against the old cap: self-consistent, and testing
+ * nothing. The caps changed because the fitted LED is a preset 5 mA/channel
+ * part, not the 20 mA/channel the budget had assumed. */
+#define CAP_USB_DEFAULT 130u /* 500 mA source */
+#define CAP_USB_HIGH    255u /* 1.5 A / 3 A source */
 
 /* The LEDs get a slice of a 500 mA budget: the ESP32 alone bursts to
- * ~240 mA on Bluetooth transmit, and the LDO needs headroom. */
-#define LED_BUDGET_MA 200u
+ * ~250 mA on Bluetooth transmit through a linear regulator, and the LDO
+ * needs headroom. At 5 mA/channel all 29 LEDs at full white is ~435 mA,
+ * so the default cap must hold the array under this. */
+#define LED_BUDGET_MA 250u
+
+/* Pins the current model itself, so that swapping the LED for a part with a
+ * different drive current fails HERE rather than in the field. All 29 at
+ * full white, 5 mA per channel: 29 * 3 * 5 = 435 mA. */
+#define LED_FULL_WHITE_MA 435u
 
 static rgb_t g_frame[REEL_LED_COUNT];
 
@@ -98,6 +109,36 @@ static void test_progress_advances_monotonically(void)
         CHECK(right >= last);
         last = right;
     }
+}
+
+static void test_current_model_matches_the_fitted_part(void)
+{
+    /* The fitted XL-1615RGBC-2812B is a preset 5 mA/channel constant-current
+     * part. If someone swaps the LED again, this is the assertion that should
+     * stop them: the previous part number lived only in a comment, and
+     * nothing checked it. All 29 at full white, 3 channels, 5 mA each. */
+    rgb_t full[REEL_LED_COUNT];
+    uint32_t i;
+    uint32_t ma;
+
+    for (i = 0; i < REEL_LED_COUNT; i++) {
+        full[i].r = 255u;
+        full[i].g = 255u;
+        full[i].b = 255u;
+    }
+    ma = reels_estimated_ma(full, REEL_LED_COUNT);
+    CHECK_EQ(ma, LED_FULL_WHITE_MA);
+
+    /* And the default cap must keep the whole array inside the slice of a
+     * 500 mA source that is left once the ESP32 has taken its Bluetooth
+     * transmit burst. */
+    for (i = 0; i < REEL_LED_COUNT; i++) {
+        full[i].r = CAP_USB_DEFAULT;
+        full[i].g = CAP_USB_DEFAULT;
+        full[i].b = CAP_USB_DEFAULT;
+    }
+    ma = reels_estimated_ma(full, REEL_LED_COUNT);
+    CHECK(ma <= LED_BUDGET_MA);
 }
 
 static void test_brightness_cap_is_absolute(void)
@@ -290,6 +331,7 @@ TEST_MAIN_BEGIN()
 RUN(test_tape_transfers_between_reels);
 RUN(test_total_lit_is_conserved);
 RUN(test_progress_advances_monotonically);
+RUN(test_current_model_matches_the_fitted_part);
 RUN(test_brightness_cap_is_absolute);
 RUN(test_power_budget_holds_in_every_mode);
 RUN(test_never_all_white);
