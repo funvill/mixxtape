@@ -163,9 +163,18 @@ you agree.
   from 1.85 mm. Reaching 15 mm means rerouting 3V3/TAB_SENSE and EN/SPI_MOSI,
   or notching the outline so the antenna overhangs — which would invalidate
   the case fit you just verified against real plastic.
-- **The write-protect tab is ~51 % solid FR4** across its 7.4 mm break line,
-  because a 2.3 mm unperforated centre carries the 3V3 and TAB_SENSE traces. It
-  is now genuinely drilled (it was not before), but it will be stiff to snap.
+- **The write-protect tab is ~51 % solid FR4** across its 7.4 mm break line.
+  It is now genuinely drilled (it was milled, at a size JLC could not cut), and
+  the pitch was widened to 1.05 mm so the 0.45 mm hole-to-hole floor is met -
+  but widening the pitch adds web as fast as it adds gap, so the solid fraction
+  did not improve. The central unperforated span went from 2.30 mm to 1.60 mm.
+  **It will need pliers or a score-and-snap, not a thumb.**
+  The limit is geometric: 3V3 crosses at x = 45.150 and TAB_SENSE at 45.550,
+  forcing a hole-free zone through the middle, and with a mandatory 0.45 mm
+  between holes there is no arrangement that gets below ~45 %. Making it
+  properly snappable means rerouting those two traces to cross at the edge of
+  the tab rather than its centre. That is a real routing change and was not
+  attempted unattended.
 - **PDM_DATA runs 0.61 mm from SPI_CLK** for 4.8 mm on B.Cu, and the flash is
   written while the mic is recording. Expect flash-write-correlated clicks in
   recordings. Moving U2 next to U1 would fix this and the 67 mm PDM route at
