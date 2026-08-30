@@ -33,6 +33,13 @@ CONFIG_ESP_MAIN_TASK_STACK_SIZE=8192
 CONFIG_ESP_CONSOLE_UART_DEFAULT=y
 CONFIG_ESP_CONSOLE_UART_BAUDRATE=115200
 
-# --- No brownout reset: USB power is what it is, and a reset mid-record
-# --- would be worse than riding out the dip. Recovery is by design.
-CONFIG_ESP_BROWNOUT_DET=n
+# --- Brownout detection ON. It was off, on the reasoning that a reset
+# --- mid-record is worse than riding out a dip. That reasoning assumes
+# --- graceful degradation, and it is not what happens: below spec the
+# --- ESP32 executes undefined, and if it is mid-write to its own internal
+# --- flash the app partition corrupts and the board needs the jig to
+# --- recover. Worse, REC is GPIO0 - a messy reset while REC is held comes
+# --- back up in UART download mode, dark and unresponsive, which is
+# --- indistinguishable from a dead board. A clean reset beats both.
+CONFIG_ESP_BROWNOUT_DET=y
+CONFIG_ESP_BROWNOUT_DET_LVL_SEL_7=y

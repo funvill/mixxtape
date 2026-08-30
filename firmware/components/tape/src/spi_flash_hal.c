@@ -14,6 +14,7 @@
 
 #include "board.h"
 #include "driver/spi_master.h"
+#include "esp_attr.h"   /* WORD_ALIGNED_ATTR */
 #include "esp_err.h"
 #include "esp_log.h"
 #include "freertos/FreeRTOS.h"
@@ -169,17 +170,24 @@ static int hal_read(const flash_hal_t *f, uint32_t addr, void *dst,
     while (len) {
         uint32_t chunk = len > 2048u ? 2048u : len;
         spi_transaction_t t = {0};
-        uint8_t tx[4] = {CMD_READ_DATA,
-                         (uint8_t)(addr >> 16),
-                         (uint8_t)(addr >> 8),
-                         (uint8_t)addr};
+        /* rx_buffer must cover the whole transaction, command bytes
+         * included, so read into a scratch and copy past the header.
+         *
+         * tx_buffer must ALSO cover the whole transaction: t.length governs
+         * how much the driver clocks out, and with DMA enabled it builds a
+         * descriptor over tx_buffer for that full length. A 4-byte stack
+         * array here meant a 2048-byte DMA read off the end of the stack.
+         * Both buffers are word-aligned and static, as the DMA path
+         * requires. */
+        static WORD_ALIGNED_ATTR uint8_t scratch[4 + 2048];
+        static WORD_ALIGNED_ATTR uint8_t txbuf[4 + 2048];
+        txbuf[0] = CMD_READ_DATA;
+        txbuf[1] = (uint8_t)(addr >> 16);
+        txbuf[2] = (uint8_t)(addr >> 8);
+        txbuf[3] = (uint8_t)addr;
         t.length = 8 * (4 + chunk);
         t.rxlength = t.length;
-        t.tx_buffer = tx;   /* only the first 4 bytes matter */
-
-        /* rx_buffer must cover the whole transaction, command bytes
-         * included, so read into a scratch and copy past the header. */
-        static uint8_t scratch[4 + 2048];
+        t.tx_buffer = txbuf;
         memset(scratch, 0xFF, 4);
         t.rx_buffer = scratch;
 
@@ -296,10 +304,18 @@ int spi_flash_hal_init(flash_hal_t *out)
     }
 
     spi_device_interface_config_t dev = {
-        /* 40 MHz is the part's limit for plain read (0x03). Start slower
-         * during bring-up if the first boards are flaky: this is exactly
-         * the knob to turn when the JEDEC ID reads back as garbage. */
-        .clock_speed_hz = 40 * 1000 * 1000,
+        /* 20 MHz, and NOT the 40 MHz the flash itself allows for plain
+         * read (0x03). Every transaction here is FULL DUPLEX - hal_read
+         * sets both tx_buffer and rx_buffer - and ESP-IDF cannot insert
+         * the dummy bits that compensate for MISO input delay in full
+         * duplex, which caps the bus at SPI_MASTER_FREQ_26M. At 40 MHz the
+         * sample point lands past the valid window and the JEDEC ID reads
+         * back as garbage, so init fails and the tape never mounts.
+         *
+         * 20 MHz leaves margin over that 26 MHz ceiling for a slow part or
+         * a warm board. The record path needs ~22 KB/s; this is four
+         * orders of magnitude more than that, so the margin is free. */
+        .clock_speed_hz = 20 * 1000 * 1000,
         .mode = 0,
         .spics_io_num = PIN_FLASH_CS,
         .queue_size = 2,

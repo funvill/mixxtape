@@ -28,6 +28,7 @@
 #include "board.h"
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
+#include "esp_attr.h"   /* WORD_ALIGNED_ATTR */
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "factory_test.h"
@@ -69,8 +70,16 @@ static int probe_flash_id(void *user, int32_t *measured, char *detail)
         .rxlength = 8 * 4,
         .flags = 0,
     };
-    uint8_t tx[4] = {0x9Fu, 0, 0, 0}; /* Read JEDEC ID */
-    uint8_t buf[4] = {0};
+    /* DMA is enabled on this bus (SPI_DMA_CH_AUTO below), and ESP-IDF
+     * requires DMA buffers to be word-aligned. A bare uint8_t[4] on the
+     * stack carries no such guarantee, and the driver rejects the
+     * transaction with ESP_ERR_INVALID_ARG - which this probe would then
+     * report as "spi transfer failed" on a perfectly good board, as the
+     * very first check of the very first board. */
+    static WORD_ALIGNED_ATTR uint8_t tx[4];
+    static WORD_ALIGNED_ATTR uint8_t buf[4];
+    tx[0] = 0x9Fu; tx[1] = tx[2] = tx[3] = 0; /* Read JEDEC ID */
+    buf[0] = buf[1] = buf[2] = buf[3] = 0;
     t.tx_buffer = tx;
     t.rx_buffer = buf;
 
