@@ -8,6 +8,145 @@ first prototype run.
 
 ## [Unreleased]
 
+### Fixed (2026-08-30, a latent fatal fault in the LED footprint)
+
+- **All 29 LEDs would have been reverse-powered.** The footprint
+  `LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020` was drawn for the **genuine Worldsemi
+  C965555** and still carried that part number in its `LCSC Part` property,
+  while the BOM shipped the **XINGLIGHT clone C5349955**, whose pad 1 is on the
+  diagonally opposite corner. Verified against LCSC's own library data: the
+  Worldsemi land has pad 1 at (-0.915, -0.550); the XINGLIGHT part has it at
+  (+0.675, +0.650). VDD would have landed on the GND net and GND on VBUS.
+- **Nothing could have caught it.** ERC, DRC, the netlist and the BOM/CPL
+  cross-check all passed, because every one of them trusts the footprint. There
+  is no bodge for 29 parts on 0.225 mm of exposed copper with 0.64 mm between
+  neighbours - it would have been a respin of the whole run.
+- **The pitch was wrong too**, independently of the rotation: the board's pads
+  sat at +/-0.92 mm in X against the real part's +/-0.675 mm, so a CPL rotation
+  fix alone would not have saved it.
+- Now **XL-1615RGBC-2812B (C5349954)**, which Steven has used before. Half the
+  price ($0.040 against $0.060), double the stock, and its pin *functions* land
+  in the same corners the board already routes to - **the swap needed no
+  re-routing at all**, 0 unconnected. Its pad *numbering* is the manufacturer's
+  (1=GND 2=DIN 3=VDD 4=DOUT), so the symbol's pins were renumbered to match
+  while leaving their positions and names untouched, which kept every wire
+  attached where it was.
+- **The lesson, now written into `AGENTS.md`:** a footprint whose `LCSC Part`
+  differs from its BOM line is a defect in itself. "Same protocol" says nothing
+  about pad 1 - and that exact phrase, in `AGENTS.md` and in `gen_bom.py`, is
+  what propagated this.
+
+### Fixed (2026-08-30, eleven DRC rules were hiding 144 findings)
+
+- Promoted 19 severities to error and fixed everything they surfaced: two
+  dangling track stubs, two missing courtyards, a starved thermal relief on
+  D24, eight hairline silk strokes at 0.06 mm that would not have printed at
+  all, and text below JLC's 1.0 mm height and 0.15 mm thickness floors.
+- `min_via_annular_width` raised 0.10 -> 0.13 mm, JLCPCB's real floor.
+- `subtractmaskfromsilk` set to **yes** in the board. The export script already
+  passed `--subtract-soldermask`, so the shipped Gerbers were safe - but anyone
+  re-plotting from the KiCad GUI would have got unclipped silk on 54 pads.
+- `silk_edge_clearance` deliberately left at **warning**: the B-side artwork is
+  a full bleed and the fab clips it. Visible, not silenced.
+
+### Fixed (2026-08-30, the programming interface had solder paste on it)
+
+- **J5's six bare pogo pads carried `F.Paste`.** JLC would have stencilled
+  1.5 mm of paste onto each with no part to absorb it, leaving six uneven blobs
+  on the *only* way firmware can reach a bare board - USB-C is power-only, so
+  J5 is a single point of failure for the entire project. Removed, on the board
+  and in the library. `TAB1`, the other bare-copper feature, was already
+  correct; J5 was simply inconsistent with it.
+- Its silkscreen read `BNT`. Now `IO0`.
+
+### Fixed (2026-08-30, the write-protect tab might not have been perforated)
+
+- The six mouse bites existed only as **0.6 mm circles on Edge.Cuts** - milled
+  features. JLCPCB's minimum internal routing feature is 1.0 mm, so a 0.6 mm
+  milled circle is below what their router can cut: a DFM query, a silent
+  omission, or a broken bit. Omitted, the tab is a solid 7.4 mm slab and the
+  write-protect feature is dead on every board.
+- Now NPTH pads in a `MOUSEBITE_6` footprint, verified present in
+  `mixxtape-NPTH.drl`. **Still open:** 51 % of the break line remains solid
+  FR4, because a 2.3 mm unperforated centre carries the 3V3 and TAB_SENSE
+  traces. It will be stiff to snap.
+
+### Changed (2026-08-30, Bluetooth range: the antenna keep-out was too narrow)
+
+- The keep-out existed and was honoured - it was 22 mm wide, so **GND pour came
+  within 1.85 mm of the module on the right and 2.10 mm on the left**, in the
+  antenna's own plane, where it detunes it and absorbs near-field energy. This
+  is the arrangement Espressif's guidelines name explicitly as the one to
+  avoid: module inland, antenna ringed by ground with a small hollow.
+- Widened to 35.5 mm. **Measured clearance is now 8.47 mm left, 8.97 mm
+  right.** Nothing but pour was in the way, so this cost one polygon edit and a
+  re-pour with zero re-routing.
+- **The residual is stated rather than hidden:** Espressif recommend 15 mm. The
+  left edge stops at 62.5 mm because the 3V3 and TAB_SENSE diagonals to the
+  write-protect tab pass through; the right at 98.0 mm because EN and SPI_MOSI
+  do. Reaching 15 mm means rerouting those, or notching the outline so the
+  antenna overhangs - which would invalidate the case fit just verified against
+  real plastic. 8.5 mm is a 4x improvement taken at zero risk.
+
+### Added (2026-08-30, the board can now be diagnosed and repaired)
+
+- **44 probe points.** All 110 vias were tented on both sides, so there was not
+  one probe target that was not an accidental component-pad overhang. Untented
+  55 on the diagnostic nets, then **re-tented the 11 that sit under a component
+  body** - bare copper under an LGA microphone or the module is a short, not a
+  test point. PDM_CLK and PDM_DATA now have four each; their only previous
+  access was at the ESP32, 36 mm from the microphone.
+- **Three cut-links**, so a board that arrives wrong can still be salvaged.
+  Each is a narrowed neck in an existing trace with a solder-mask opening
+  either side: cut to isolate, bridge to restore or re-route. On **VBUS**
+  (0.6 mm neck) it isolates all 29 LEDs from the 5 V rail - every mA of array
+  current passes through it, so it doubles as the ammeter point. On
+  **LED_DATA_5V** it isolates the chain or injects a known signal. On
+  **MIC_VDD** it isolates the microphone. Built from copper and mask apertures
+  rather than footprints, so there is nothing for a future "update PCB from
+  schematic" to delete.
+- **Real pin-1 markers** for U1, U2 and U8. U8's was an `fp_poly` with two
+  coincident vertices and zero width - a zero-area shape that plots as
+  *nothing*, on a 5-pin SOT-23 whose silk outline is symmetric, so there was no
+  orientation cue at all.
+- **Seven GND stitching vias** on the F.Cu ground islands that hung off the
+  plane by a single via, including U8's return path.
+
+### Changed (2026-08-30, the AMS1117 had no heatsink)
+
+- U4's tab is 8.4 mm2, there was **no 3V3 zone anywhere on the board** and no
+  thermal vias - about 29 mm2 attached, the bare-pad end of the SOT-223 curve
+  at roughly 135 C/W. Added a 3V3 pour on F.Cu around the tab; 37.7 mm2 fills,
+  so about 67 mm2 attached.
+- **Deliberately not mirrored on B.Cu.** That layer is the board's only solid
+  ground plane and the reason the LED IR drop and the PDM return paths work at
+  all. A larger pour was tried and rejected: it split the F.Cu ground pour and
+  cost an unconnected item.
+
+### Fixed (2026-08-30, firmware that would have shipped broken)
+
+- **The SPI flash ran at 40 MHz full duplex.** ESP-IDF caps full duplex at
+  26 MHz, because the dummy bits that compensate for MISO input delay cannot be
+  inserted in that mode. The JEDEC ID would have read back garbage, init would
+  have failed and **the tape would never have mounted** - no recording, no
+  playback. Now 20 MHz.
+- **And the factory test would have hidden it.** The jig uses 10 MHz, "gentle
+  for bring-up", so it would have reported `flash_id PASS` on a board whose
+  production firmware could not read the flash at all. The reassuring path is
+  the one you run first.
+- **`hal_read` handed the DMA engine a 4-byte stack array** and told it to send
+  up to 2052 bytes. Both buffers are now static and word-aligned.
+- **`probe_flash_id` used unaligned stack buffers as DMA targets**, which
+  ESP-IDF rejects - it would have reported `flash_id FAIL` on a good board, on
+  the first check of the first board.
+- **Brownout detection re-enabled.** It was off on the reasoning that a reset
+  mid-record beats riding out a dip. That assumes graceful degradation, and it
+  is not what happens: below spec the ESP32 executes undefined, and if it is
+  mid-write to its own internal flash the app partition corrupts. Worse, REC is
+  GPIO0 - a messy reset while REC is held comes back up in **UART download
+  mode**, dark and unresponsive, indistinguishable from a dead board.
+
+
 ### Changed (2026-08-30, NOR flash second-sourced and halved in price)
 
 - **U3: Winbond W25Q128JVSIQ (C97521) → GigaDevice GD25Q128ESIG (C2758105)**,
