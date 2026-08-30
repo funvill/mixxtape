@@ -102,7 +102,7 @@ cannot drift away from the design. Summary:
 | U3 | GD25Q128ESIG | [C2758105](https://jlcpcb.com/partdetail/C2758105) | Second sources: C97521 (Winbond W25Q128JVSIQ), C113767 |
 | U4 | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | SOT-223. 22 µF on the output for stability, per its datasheet |
 | U8 | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 3.3 V → 5 V buffer for the LED data line |
-| D1–D29 | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 12 + 12 reel rings, 3 track, REC, BT |
+| D1–D29 | XL-1615RGBC-2812B | [C5349954](https://jlcpcb.com/partdetail/C5349954) | 12 + 12 reel rings, 3 track, REC, BT |
 | SW1–4 | TS-1187A-B-A-B | [C318884](https://jlcpcb.com/partdetail/C318884) | |
 | J1 | USB-C 16P | [C165948](https://jlcpcb.com/partdetail/C165948) | + 2 × 5.1 kΩ CC pulldowns — mandatory |
 | R12 | 100 Ω | [C25076](https://jlcpcb.com/partdetail/C25076) | Microphone supply isolation, per the MSM261DHT006 datasheet |

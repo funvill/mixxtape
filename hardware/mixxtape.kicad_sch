@@ -4865,7 +4865,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "mixxtape_parts:WS2812B-2020"
+		(symbol "mixxtape_parts:XL-1615RGBC-2812B"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -4881,7 +4881,7 @@
 					)
 				)
 			)
-			(property "Value" "WS2812B-2020"
+			(property "Value" "XL-1615RGBC-2812B"
 				(at 0 -6.35 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4891,7 +4891,7 @@
 					)
 				)
 			)
-			(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+			(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 				(at 0 -8.89 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4902,7 +4902,7 @@
 					)
 				)
 			)
-			(property "Datasheet" "https://www.lcsc.com/product-detail/C52923.html"
+			(property "Datasheet" "https://www.lcsc.com/product-detail/C5349954.html"
 				(at 0 -11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4924,7 +4924,7 @@
 					)
 				)
 			)
-			(property "Manufacturer" "worldsemi"
+			(property "Manufacturer" "XINGLIGHT"
 				(at 0 -13.97 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4935,7 +4935,7 @@
 					)
 				)
 			)
-			(property "MPN" "WS2812B-2020"
+			(property "MPN" "XL-1615RGBC-2812B"
 				(at 0 -16.51 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4946,7 +4946,7 @@
 					)
 				)
 			)
-			(property "LCSC Part" "C5349955"
+			(property "LCSC Part" "C5349954"
 				(at 0 -19.05 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -4968,7 +4968,7 @@
 					)
 				)
 			)
-			(symbol "WS2812B-2020_0_1"
+			(symbol "XL-1615RGBC-2812B_0_1"
 				(rectangle
 					(start -6.35 3.81)
 					(end 6.35 -3.81)
@@ -5001,7 +5001,7 @@
 							)
 						)
 					)
-					(number "1"
+					(number "4"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5019,7 +5019,7 @@
 							)
 						)
 					)
-					(number "2"
+					(number "1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5037,7 +5037,7 @@
 							)
 						)
 					)
-					(number "3"
+					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5055,7 +5055,7 @@
 							)
 						)
 					)
-					(number "4"
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -11310,7 +11310,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 218.44 0)
 		(unit 1)
 		(body_style 1)
@@ -11330,7 +11330,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 214.63 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11340,7 +11340,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -11373,7 +11373,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -11406,7 +11406,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 187.96 0)
 		(unit 1)
 		(body_style 1)
@@ -11426,7 +11426,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11436,7 +11436,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -11469,7 +11469,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -11502,7 +11502,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 218.44 0)
 		(unit 1)
 		(body_style 1)
@@ -11522,7 +11522,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 214.63 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11532,7 +11532,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -11565,7 +11565,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -11688,7 +11688,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 172.72 0)
 		(unit 1)
 		(body_style 1)
@@ -11708,7 +11708,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 168.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11718,7 +11718,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -11751,7 +11751,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -11874,7 +11874,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 187.96 0)
 		(unit 1)
 		(body_style 1)
@@ -11894,7 +11894,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -11904,7 +11904,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -11937,7 +11937,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -12061,7 +12061,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 360.68 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -12081,7 +12081,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 360.68 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12091,7 +12091,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 360.68 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -12124,7 +12124,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 360.68 160.02 0)
 			(hide yes)
 			(show_name no)
@@ -12157,7 +12157,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 142.24 0)
 		(unit 1)
 		(body_style 1)
@@ -12177,7 +12177,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12187,7 +12187,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -12220,7 +12220,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -12523,7 +12523,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 187.96 0)
 		(unit 1)
 		(body_style 1)
@@ -12543,7 +12543,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12553,7 +12553,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -12586,7 +12586,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -12985,7 +12985,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 187.96 0)
 		(unit 1)
 		(body_style 1)
@@ -13005,7 +13005,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13015,7 +13015,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -13048,7 +13048,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -13081,7 +13081,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 203.2 0)
 		(unit 1)
 		(body_style 1)
@@ -13101,7 +13101,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13111,7 +13111,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 203.2 0)
 			(hide yes)
 			(show_name no)
@@ -13144,7 +13144,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -13177,7 +13177,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 203.2 0)
 		(unit 1)
 		(body_style 1)
@@ -13197,7 +13197,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13207,7 +13207,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 203.2 0)
 			(hide yes)
 			(show_name no)
@@ -13240,7 +13240,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -13273,7 +13273,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 172.72 0)
 		(unit 1)
 		(body_style 1)
@@ -13293,7 +13293,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 168.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13303,7 +13303,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -13336,7 +13336,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -13639,7 +13639,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 142.24 0)
 		(unit 1)
 		(body_style 1)
@@ -13659,7 +13659,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -13669,7 +13669,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -13702,7 +13702,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -14113,7 +14113,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 142.24 0)
 		(unit 1)
 		(body_style 1)
@@ -14133,7 +14133,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14143,7 +14143,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -14176,7 +14176,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -14209,7 +14209,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 360.68 142.24 0)
 		(unit 1)
 		(body_style 1)
@@ -14229,7 +14229,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 360.68 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14239,7 +14239,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 360.68 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -14272,7 +14272,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 360.68 144.78 0)
 			(hide yes)
 			(show_name no)
@@ -14506,7 +14506,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 172.72 0)
 		(unit 1)
 		(body_style 1)
@@ -14526,7 +14526,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 168.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14536,7 +14536,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -14569,7 +14569,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -14878,7 +14878,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 360.68 172.72 0)
 		(unit 1)
 		(body_style 1)
@@ -14898,7 +14898,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 360.68 168.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -14908,7 +14908,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 360.68 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -14941,7 +14941,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 360.68 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -15064,7 +15064,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -15084,7 +15084,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15094,7 +15094,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -15127,7 +15127,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 160.02 0)
 			(hide yes)
 			(show_name no)
@@ -15457,7 +15457,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 228.6 203.2 0)
 		(unit 1)
 		(body_style 1)
@@ -15477,7 +15477,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 228.6 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15487,7 +15487,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 228.6 203.2 0)
 			(hide yes)
 			(show_name no)
@@ -15520,7 +15520,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 228.6 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -16009,7 +16009,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 172.72 0)
 		(unit 1)
 		(body_style 1)
@@ -16029,7 +16029,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 168.91 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16039,7 +16039,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -16072,7 +16072,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 175.26 0)
 			(hide yes)
 			(show_name no)
@@ -16195,7 +16195,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 218.44 0)
 		(unit 1)
 		(body_style 1)
@@ -16215,7 +16215,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 214.63 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16225,7 +16225,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -16258,7 +16258,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -16483,7 +16483,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -16503,7 +16503,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16513,7 +16513,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -16546,7 +16546,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 160.02 0)
 			(hide yes)
 			(show_name no)
@@ -16669,7 +16669,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -16689,7 +16689,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16699,7 +16699,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -16732,7 +16732,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 160.02 0)
 			(hide yes)
 			(show_name no)
@@ -16844,7 +16844,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 360.68 187.96 0)
 		(unit 1)
 		(body_style 1)
@@ -16864,7 +16864,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 360.68 184.15 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16874,7 +16874,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 360.68 187.96 0)
 			(hide yes)
 			(show_name no)
@@ -16907,7 +16907,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 360.68 190.5 0)
 			(hide yes)
 			(show_name no)
@@ -17063,7 +17063,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 203.2 0)
 		(unit 1)
 		(body_style 1)
@@ -17083,7 +17083,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17093,7 +17093,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 203.2 0)
 			(hide yes)
 			(show_name no)
@@ -17126,7 +17126,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -17471,7 +17471,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 360.68 203.2 0)
 		(unit 1)
 		(body_style 1)
@@ -17491,7 +17491,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 360.68 199.39 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17501,7 +17501,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 360.68 203.2 0)
 			(hide yes)
 			(show_name no)
@@ -17534,7 +17534,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 360.68 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -17567,7 +17567,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 261.62 218.44 0)
 		(unit 1)
 		(body_style 1)
@@ -17587,7 +17587,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 261.62 214.63 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17597,7 +17597,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 261.62 218.44 0)
 			(hide yes)
 			(show_name no)
@@ -17630,7 +17630,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 261.62 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -17663,7 +17663,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 294.64 157.48 0)
 		(unit 1)
 		(body_style 1)
@@ -17683,7 +17683,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 294.64 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17693,7 +17693,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 294.64 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -17726,7 +17726,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 294.64 160.02 0)
 			(hide yes)
 			(show_name no)
@@ -17759,7 +17759,7 @@
 		)
 	)
 	(symbol
-		(lib_id "mixxtape_parts:WS2812B-2020")
+		(lib_id "mixxtape_parts:XL-1615RGBC-2812B")
 		(at 327.66 142.24 0)
 		(unit 1)
 		(body_style 1)
@@ -17779,7 +17779,7 @@
 				)
 			)
 		)
-		(property "Value" "WS2812B-2020"
+		(property "Value" "XL-1615RGBC-2812B"
 			(at 327.66 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17789,7 +17789,7 @@
 				)
 			)
 		)
-		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020"
+		(property "Footprint" "mixxtape_parts:LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B"
 			(at 327.66 142.24 0)
 			(hide yes)
 			(show_name no)
@@ -17822,7 +17822,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5349955"
+		(property "LCSC" "C5349954"
 			(at 327.66 144.78 0)
 			(hide yes)
 			(show_name no)

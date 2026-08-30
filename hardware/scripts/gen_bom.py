@@ -97,10 +97,24 @@ NOTES = {
         "0805. C5674 is $0.11 but extended: 40 pieces costs $13.00 as-is "
         "versus $4.47 + $3.00 fee. Worth ~$5.50 if you want it."
     ),
-    "C5349955": (
-        "Fitted in place of the genuine Worldsemi WS2812B-2020 (C965555), "
-        "which is end-of-life at JLC with single-digit stock. Same protocol "
-        "and land pattern; Steven has used these before."
+    "C5349954": (
+        "XINGLIGHT XL-1615RGBC-2812B, 1.6 x 1.5 mm. Steven has used these "
+        "before. REPLACES the 2020-size C5349955, which was a LATENT FATAL "
+        "FAULT: the board's footprint had been drawn for the GENUINE Worldsemi "
+        "WS2812B-2020 (C965555) and still carried that part number, while the "
+        "BOM shipped the XINGLIGHT clone - whose pad 1 is on the DIAGONALLY "
+        "OPPOSITE corner. Every one of the 29 LEDs would have had VDD on the "
+        "GND net and GND on VBUS: reverse-powered across the 5 V rail, with no "
+        "bodge possible. ERC, DRC, the netlist and the BOM/CPL cross-check all "
+        "passed, because every one of them trusts the footprint. The 1615's "
+        "pin FUNCTIONS land in the same corners the board already routes to, "
+        "so the swap needed no re-routing at all - 0 unconnected. Its pad "
+        "NUMBERING is the manufacturer's (1=GND 2=DIN 3=VDD 4=DOUT), NOT the "
+        "1=DO 2=GND 3=DI 4=VDD order Worldsemi uses; the schematic symbol was "
+        "renumbered to match. NEVER renumber one without the other. Also "
+        "cheaper ($0.040 vs $0.060) with double the stock. THE LESSON: a "
+        "footprint carrying a different LCSC number from the BOM line is a "
+        "defect in itself - check that they agree."
     ),
     "C701341": (
         "N4 (4 MB). N16 is C701343 — take it if the delta is small, though "

@@ -72,9 +72,19 @@ in a real deck (patent risk — do not design toward it).
 
 - Every part carries an `LCSC` field with its JLC part number; keep it correct
   — it drives JLCPCB assembly BOM export.
-- WS2812B-2020 positions are fitted with XINGLIGHT XL-2020RGBC-2812B
-  (C5349955) — the genuine Worldsemi part is EOL at JLC. Same protocol and
-  land pattern.
+- The reel/status LEDs are XINGLIGHT **XL-1615RGBC-2812B (C5349954)**, footprint
+  `LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B`. Its pad numbering is the
+  MANUFACTURER'S — **1=GND 2=DIN 3=VDD 4=DOUT** — not the 1=DO 2=GND 3=DI 4=VDD
+  order Worldsemi uses. The schematic symbol was renumbered to match. **Never
+  renumber one without the other.**
+- **A footprint whose `LCSC Part` differs from the BOM line is a defect, not an
+  annotation.** This board previously carried a WS2812B-2020 footprint drawn for
+  the genuine Worldsemi C965555 while the BOM shipped the XINGLIGHT C5349955,
+  whose pad 1 is on the diagonally opposite corner. All 29 LEDs would have been
+  reverse-powered across the 5 V rail. **ERC, DRC, the netlist and the BOM/CPL
+  cross-check all passed** — every one of them trusts the footprint. When a part
+  is substituted, verify the LAND PATTERN against the new manufacturer's data,
+  not just the protocol. "Same protocol" says nothing about pad 1.
 - ERC must stay at 0 errors: run
   `kicad-cli sch erc --severity-error --exit-code-violations hardware/mixxtape.kicad_sch`.
 

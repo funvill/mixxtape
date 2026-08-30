@@ -65,7 +65,7 @@ would wreck the audio path.
 | MCU | ESP32-WROOM-32E-N4 | [C701341](https://jlcpcb.com/partdetail/C701341) | 1 | The original Xtensa ESP32 — the only one with Classic Bluetooth, so the only one that can be an A2DP *source* |
 | Microphone | MSM261DHT006 | [C51928215](https://jlcpcb.com/partdetail/C51928215) | 1 | **PDM** digital MEMS, mono, **top-ported** — sound enters from the component side, so there is no hole through the board |
 | Storage | GD25Q128ESIG | [C2758105](https://jlcpcb.com/partdetail/C2758105) | 1 | 16 MB NOR flash, separate from the module's own flash. Three fixed slots, ~4 min each. Winbond W25Q128JVSIQ ([C97521](https://jlcpcb.com/partdetail/C97521)) is a drop-in second source |
-| Indicators | XL-2020RGBC-2812B | [C5349955](https://jlcpcb.com/partdetail/C5349955) | 29 | WS2812-compatible RGB. Two 12-LED reel rings, three track lamps, REC, BT |
+| Indicators | XL-2020RGBC-2812B | [C5349954](https://jlcpcb.com/partdetail/C5349954) | 29 | WS2812-compatible RGB. Two 12-LED reel rings, three track lamps, REC, BT |
 | LED data buffer | SN74AHCT1G125 | [C7484](https://jlcpcb.com/partdetail/C7484) | 1 | Lifts the ESP32's 3.3 V data line to the LEDs' 5 V rail |
 | Regulator | AMS1117-3.3 | [C6186](https://jlcpcb.com/partdetail/C6186) | 1 | 5 V USB down to 3.3 V |
 | USB-C | TYPE-C-31-M-12 | [C165948](https://jlcpcb.com/partdetail/C165948) | 1 | Power and CC sensing only — no data lines |

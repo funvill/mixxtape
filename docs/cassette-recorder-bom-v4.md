@@ -20,7 +20,7 @@ piece.
 | C5 | 10uF | C15525 | C0402 | 1 | 20 | 10,659,536 | basic | $0.0255 | $0.51 |
 | C6–C27 (12) | 100nF | C1525 | C0402 | 12 | 240 | 37,557,517 | basic | $0.0055 | $1.32 |
 | C9 | 1uF | C52923 | C0402 | 1 | 20 | 11,781,626 | basic | $0.0120 | $0.24 |
-| D1–D29 (29) | WS2812B-2020 | C5349955 | LED-SMD_4P-L2.0-W2.0-TL_WS2812B-2020 | 29 | 580 | 180,034 | ext | $0.0603 | $34.97 |
+| D1–D29 (29) | XL-1615RGBC-2812B | C5349954 | LED-SMD_4P-L1.6-W1.5_XL-1615RGBC-2812B | 29 | 580 | 366,246 | ext | $0.0401 | $23.26 |
 | J1 | USB-C-16P | C165948 | USB-C_SMD-TYPE-C-31-M-12_1 | 1 | 20 | 390,037 | ext | $0.1855 | $3.71 |
 | J5 | PROG-JIG | — | PROG_JIG_6PAD | 1 | 20 | — | ? | — | — |
 | R1, R2 | 5.1k | C25905 | R0402 | 2 | 40 | 8,910,424 | basic | $0.0043 | $0.17 |
@@ -50,9 +50,9 @@ on the default build and let a variant be built without a respin.
 
 | | Per board | Run of 20 |
 |---|---|---|
-| Components | $7.72 | $154.37 |
+| Components | $7.13 | $142.66 |
 | Extended-part setup fees (6 × $3.00) | $0.90 | $18.00 |
-| **Parts subtotal** | **$8.62** | **$172.37** |
+| **Parts subtotal** | **$8.03** | **$160.66** |
 
 68 placements per board across 17 distinct fitted
 parts, 6 of them extended.
@@ -69,10 +69,6 @@ adding more of one you already use is nearly free.
   No digital MEMS microphone at JLCPCB meets the 5,000 rule - the whole category is thin, and the best-stocked digital part is only ~3.5k. The one microphone that does clear the bar (ZTS6216, C481302, 29k) is ANALOG: it needs a DC-blocking cap and a gain stage into the ESP32's ADC, which the brief already describes as a lo-fi path with ~9 effective bits. Meeting the rule there would wreck the product's only input. A digital part at ~3.5k is the lesser risk: the run needs 20 pieces, so that is 174x coverage, and three alternates are qualified.
 
 ## Needs attention before ordering
-
-**D1, D2, D3… — WS2812B-2020 (`C5349955`)**
-
-Fitted in place of the genuine Worldsemi WS2812B-2020 (C965555), which is end-of-life at JLC with single-digit stock. Same protocol and land pattern; Steven has used these before.
 
 **U1 — ESP32-WROOM-32E-N4 (`C701341`)**
 
