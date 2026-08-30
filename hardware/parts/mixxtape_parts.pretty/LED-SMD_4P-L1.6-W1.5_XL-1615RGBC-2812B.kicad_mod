@@ -15,7 +15,7 @@
 	(property "LCSC" "C5349954")
 	(fp_line (start -0.80 -0.90) (end 0.80 -0.90) (layer F.SilkS) (width 0.15))
 	(fp_line (start -0.80 0.90) (end 0.80 0.90) (layer F.SilkS) (width 0.15))
-	(fp_circle (center -1.15 0.75) (end -1.07 0.75) (layer F.SilkS) (width 0.15))
+	(fp_circle (center -1.35 0.95) (end -1.27 0.95) (layer F.SilkS) (width 0.15))
 	(fp_line (start -0.80 -0.75) (end 0.80 -0.75) (layer F.Fab) (width 0.10))
 	(fp_line (start 0.80 -0.75) (end 0.80 0.75) (layer F.Fab) (width 0.10))
 	(fp_line (start 0.80 0.75) (end -0.80 0.75) (layer F.Fab) (width 0.10))
