@@ -17822,7 +17822,7 @@
 	)
 	(gr_rect
 		(start 104.1 35.85)
-		(end 121.25 46.65)
+		(end 121.25 46.4)
 		(stroke
 			(width 0.5)
 			(type solid)
@@ -20121,8 +20121,8 @@
 		(layers "F.Cu" "B.Cu")
 		(free yes)
 		(tenting
-			(front no)
-			(back no)
+			(front yes)
+			(back yes)
 		)
 		(net "GND")
 		(uuid "0bb38fdc-5621-46c3-a6e3-7577ca918315")
