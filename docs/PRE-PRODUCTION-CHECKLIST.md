@@ -69,17 +69,23 @@ LCSC's own library data and the netlist is correct, but:
 So the previewer is necessary and not sufficient. Look at it anyway, and give
 D1–D29 and J1 their own minute.
 
-### 0d. Confirm the microphone's acoustic port direction ⬜
+### 0d. Microphone port direction — RESOLVED ✅
 
-`gen_layout.py` argues at length that no through-board hole is needed because
-the mic is top-ported — but it names **MSM261S4030H0R**, while the BOM ships
-**MSM261DHT006** (C51928215), a part with a completely different pinout that
-replaced it. Two reviewers independently could not confirm the port face from
-the repo, and one found a port marker on `Cmts.User` at (0, −0.75) which is the
-convention for a *bottom*-ported device.
+**MSM261DHT006 (C51928215) is TOP-PORTED.** Confirmed 2026-08-30 from LCSC's
+own product page, which states: *"The MSM261DHT006 is an omnidirectional,
+top-port MEMS microphone with PDM digital output."*
+[C51928215](https://www.lcsc.com/product-detail/C51928215.html) ·
+[datasheet](https://www.lcsc.com/datasheet/C51928215.pdf)
 
-**If it is bottom-ported there is no acoustic hole and all 20 boards are
-deaf.** This is unrecoverable after fab. Open the C51928215 PDF and confirm.
+So the board is correct as drawn: **no through-hole under U2**, and the top
+face is the acoustic path. This was flagged because `gen_layout.py` argues the
+case using the name of the part it *replaced* (MSM261S4030H0R), and two
+reviewers could not close it from the repo. It is closed now.
+
+**What still applies:** keep U2's top face clear. Nothing tall beside it — the
+only neighbours within 14 mm are C7 at 2.70 mm and R12 at 3.79 mm, both 0402,
+so that is fine. But check during the case-fit test that no shell rib lands
+over it, and remember a written label on the B-side artwork must not cover it.
 
 ### 0e. Decide on the protective components that were NOT added ⬜
 
