@@ -117,9 +117,6 @@ the A2DP plumbing, LED output, and A2DP against real earbuds.
 
 - [Cassette insert template](docs/jcard-template-1to1.pdf) — double-sided
   J-card for the case, 1:1, print at 100% ([side 1](docs/jcard-template-side1.svg), [side 2](docs/jcard-template-side2.svg))
-- [B-side silkscreen brief](docs/b-side-silkscreen-brief.html) — the design
-  brief for the blank back face, with dimensioned keepouts and a 1:1
-  [template](hardware/mixxtape-back-silkscreen-template.svg)
 - [Documentation index](docs/README.md) — everything below, organised
 - [Quick-start pictograms](docs/quick-start-pictograms.html) — wordless
   instructions, one printable sheet

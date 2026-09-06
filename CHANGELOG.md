@@ -8,6 +8,25 @@ first prototype run.
 
 ## [Unreleased]
 
+### Changed (2026-09-06, three pre-production questions answered)
+
+- **The peony is the final B-side artwork.** The designer brief that used to
+  live at `docs/b-side-silkscreen-brief.html` has been retired — there is no
+  outstanding artwork commission. The 1:1 template
+  (`hardware/mixxtape-back-silkscreen-template.svg`) stays for anyone reworking
+  it later.
+- **The four mounting holes are correct as drawn**, measured against the real
+  shell. They are deliberately *not* a rectangle: 0.350 mm of skew across the
+  rows and 0.250 mm between the columns, because the moulded bosses are not
+  square either. A review flagged this as a defect on the reasonable assumption
+  that they would be. **Leave them alone** — the note in the checklist now says
+  so, so the next person to measure them does not "fix" it.
+- **A real USB-C plug seats against a 1:1 print.** J1's mating face still sits
+  0.767 mm inside the board edge with no relief notch; the setback is real but
+  the predicted fouling is not. Whether the *closed shell* leaves room in front
+  of the port is a separate question and stays open.
+
+
 ### Fixed (2026-08-30, a latent fatal fault in the LED footprint)
 
 - **All 29 LEDs would have been reverse-powered.** The footprint

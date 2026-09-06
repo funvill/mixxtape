@@ -16,28 +16,27 @@ Everything they found that could be fixed deterministically **has been fixed**
 (see the CHANGELOG). What is left below needs either a physical object or your
 judgement, and **each one can still cost the run.**
 
-### 0a. Test-fit a USB-C plug against a 1:1 print — do this first ⬜
+### 0a. USB-C plug fit — RESOLVED ✅
 
-J1's mating face sits at x = 129.568; the board edge is at x = 130.330. That
-leaves **0.762 mm of bare FR4 protruding in front of the receptacle mouth**,
-with no relief notch in the outline.
+**Steven test-fitted a real USB-C plug against a 1:1 print on 2026-09-06 and
+it seats.** J1 was not moved and the outline was not notched.
 
-A USB-C plug's overmould shoulder seats flush against the receptacle at full
-insertion, and the overmould extends below the plug axis — into exactly that
-0.762 mm lip. Add the cassette shell wall in front of it and the plug may
-bottom out before it latches. **A board that cannot be powered or flashed is
-20 dead units.**
+The measurement that prompted this stands and is worth keeping, because it
+will be re-discovered: J1's mating face sits at x = 129.613 against a board
+edge at 130.380, so **0.767 mm of bare FR4 protrudes in front of the
+receptacle mouth**, with no relief notch. A review reasoned that a plug's
+overmould shoulder seats flush against the receptacle at full insertion and
+would foul that lip. The setback is real; the consequence was inferred from
+generic plug geometry, and a real plug says otherwise.
 
-The setback is measured and certain. The *consequence* is inferred from
-standard plug geometry — nobody has put a real plug against a real board.
-**Print `case-fit-test-1to1.pdf` at 1:1 again, cut it, and offer a real USB-C
-cable up to where J1 sits.** If it fouls, either move J1 +0.762 mm in x or cut
-a relief notch across y 76.0–85.5.
+**Still open, separately:** whether the closed cassette shell leaves room in
+front of the port. That is a different question from whether the plug seats on
+a bare board, and it is tracked under the case-fit items below.
 
-### 0b. Re-derive the four mounting holes ⬜
+### 0b. Mounting holes — RESOLVED ✅
 
-All four are 2.200 mm and the old 0.54 mm regression is long gone — but they
-**are not a rectangle**:
+**Steven measured them against the real shell on 2026-09-06 and they are
+correct as drawn.** No change needed.
 
 | | Position | Board-relative |
 |---|---|---|
@@ -46,13 +45,13 @@ All four are 2.200 mm and the old 0.54 mm regression is long gone — but they
 | 3 | 127.250, 33.000 | 96.420, 60.500 |
 | 4 | 127.600, 90.750 | 96.770, 2.750 |
 
-Bottom row spans 94.020 mm, top row 93.670 — **0.350 mm of skew**. Left column
-pitch 58.000, right 57.750 — **0.250 mm**. A 2.2 mm hole over a ~2.0 mm shell
-boss has about 0.20 mm of total slack, so the skew eats more than all of it:
-the board will seat on three bosses and stand off the fourth.
-
-Only the *internal* inconsistency is proven. Which pair is right needs the
-shell. **Measure your case and put all four on an exact rectangle.**
+For the record, because it will look like a defect to the next person who
+measures it: the four holes are **not** a rectangle. The bottom row spans
+94.020 mm against the top row's 93.670 — 0.350 mm of skew — and the left
+column's pitch is 58.000 against the right's 57.750, another 0.250 mm. A
+review flagged this on the reasonable assumption that a moulded shell has
+square bosses. It does not, and the holes follow the plastic. **Leave them
+alone.**
 
 ### 0c. Step through D1–D29 in JLCPCB's previewer ⬜
 
@@ -284,9 +283,17 @@ These are all flagged in the repo but need an actual answer before copper.
 ⬜ **Tab count** — one for the whole tape (recommended, faithful) or three,
    one per track (more useful).
 
-⬜ **Silkscreen artwork.** On a bare-PCB product the art *is* the industrial
-   design. Nobody should generate this but you. The five decorative guide
-   holes along the bottom edge are deferred until this happens.
+✅ **Silkscreen artwork — done.** The peony on the back face is **final**
+   (Steven, 2026-09-06). It lives in the board file as the `LOGO` footprint at
+   (80.582, 61.700), 2.16 MB across 193 shapes, deliberately full-bleed with
+   ~0.42 mm hanging off each side for the fab to clip. The designer brief that
+   used to sit in `docs/` has been retired — there is no outstanding artwork
+   commission. The 1:1 template
+   ([`mixxtape-back-silkscreen-template.svg`](../hardware/mixxtape-back-silkscreen-template.svg))
+   stays for anyone reworking it later.
+
+   Still deferred, and only if you want them: the five decorative guide holes
+   along the bottom edge.
 
 ---
 

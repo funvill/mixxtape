@@ -30,7 +30,7 @@ holds the working documents behind it.
 
 | | |
 |---|---|
-| [B-side silkscreen brief](b-side-silkscreen-brief.html) | The design brief for the back face, with dimensioned keepouts, process limits and the delivery spec. Pairs with the 1:1 [template](../hardware/mixxtape-back-silkscreen-template.svg) (`gen_silk_template.py`). |
+| [B-side silkscreen template](../hardware/mixxtape-back-silkscreen-template.svg) | 1:1 outline of the back face with the keepouts marked, for anyone reworking the artwork. Rebuild with `gen_silk_template.py`. The art itself — the peony — is final and lives in the board file. |
 | [Cassette insert template](jcard-template-1to1.pdf) | Double-sided J-card for the case, 1:1, two pages for duplex printing. Editable sides: [1](jcard-template-side1.svg), [2](jcard-template-side2.svg). Rebuild with `gen_jcard_template.py`. |
 
 ## Design record
