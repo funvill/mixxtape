@@ -34,6 +34,25 @@ schematic agree on every pad.
 | Assembly | Top side only |
 | Parts | 66 placements across 15 BOM lines |
 
+## Reference renders
+
+`artwork/renders/` holds 3D renders of both sides, to compare against
+JLCPCB's placement previewer before paying:
+
+| | |
+|---|---|
+| `board-top-white.png`, `board-bottom-white.png` | Rendered with the stackup actually ordered — matte white mask, black silkscreen |
+| `board-top.png`, `board-bottom.png` | KiCad's default green, which shows the copper more clearly |
+
+The board file itself carries **no stackup block**, so KiCad renders it green.
+The white pair was produced from a throwaway copy carrying the ordered
+stackup; stackup colours do not affect the Gerbers either way. Regenerate
+with:
+
+```
+kicad-cli pcb render --output out.png --side top --quality high hardware/mixxtape.kicad_pcb
+```
+
 ## Things worth checking in their previewer
 
 **Rotations.** Twenty parts sit at angles that are not multiples of 90° — the
